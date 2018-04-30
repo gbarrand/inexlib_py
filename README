@@ -12,7 +12,7 @@
     UNIX> ./bin_gnu/hello_py  # on a Linux.
 
  Note that the access to Python is in the shell script :
-   <install_path>/bush/use/Python
+    <install_path>/bush/use/Python
  The "-sys_Python" option tells bush to use the Python found on the system.
 
  To activate .py examples from the Python prompt :
@@ -21,10 +21,19 @@
       sh> . ./setup.sh  # to setup PYTHONPATH to find inlib.py, exlib.py.
    ( csh> source ./setup.csh )
     UNIX> cd bin_<config>  # exa bin_gnu on Linux, bin_clang on macOS.
-    UNIX> <source ../setup>
-    UNIX> <python of config> ../h1d.py
-    UNIX> <python of config> ../waxml.py
+    UNIX> <python> ../h1d.py          # inlib histo.
+    UNIX> <python> ../waxml.py        # write histos at the AIDA XML file format.
+    UNIX> <python> ../plotter.py      # plot an histo by using softinex graphics and plotting.
+    UNIX> <python> ../polyhedron.py   # visualise a solid/shape boolean operation.
+    UNIX> <python> ../cfitsio_hst.py  # visualise an image in a fits file.
+    UNIX> <python> ../tree.py         # project a ntuple found in the pawdemo.root file and plot the histo.
  or :
-    UNIX> <python of config>
+    UNIX> <python>
     >>> import h1d
+
+ IMPORTANT : in the upper "<python>" means the program corresponding to the Python installation used to build.
+ Someone must be aware than multiple Python installations may be present on one system, and must be cautious
+ to use the python program corresponding to the one used to link the inlib_swig_py.so, exlib_swig_py.so.
+ (On macOS, there is a Python under /System and another one may be found under /opt/local/bin coming indirectly
+ from some MacPorts installation).
 
