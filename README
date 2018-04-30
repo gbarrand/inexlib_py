@@ -22,11 +22,12 @@
    ( csh> source ./setup.csh )
     UNIX> cd bin_<config>  # exa bin_gnu on Linux, bin_clang on macOS.
     UNIX> <python> ../h1d.py          # inlib histo.
-    UNIX> <python> ../waxml.py        # write histos at the AIDA XML file format.
+    UNIX> <python> ../rroot.py        # read an histo in a root file.
     UNIX> <python> ../plotter.py      # plot an histo by using softinex graphics and plotting.
-    UNIX> <python> ../polyhedron.py   # visualise a solid/shape boolean operation.
-    UNIX> <python> ../cfitsio_hst.py  # visualise an image in a fits file.
     UNIX> <python> ../tree.py         # project a ntuple found in the pawdemo.root file and plot the histo.
+    UNIX> <python> ../waxml.py        # write histos at the AIDA XML file format.
+    UNIX> <python> ../cfitsio_hst.py  # visualise an image in a fits file.
+    UNIX> <python> ../polyhedron.py   # visualise a solid/shape boolean operation.
  or :
     UNIX> <python>
     >>> import h1d
