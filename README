@@ -1,10 +1,15 @@
 
- To build :
+ To build C++ apps activating Python :
    cd ./inexlib/exlib/examples/cpp
-   ./build <app>.cpp
- or to have a light traceback :
-   ./build -v <app>.cpp
+   ./build -sys_Python hello_py.cpp            # to check Python activation from C++.
+   ./build -sys_Python h1d_spy.cpp             # inlib histogram wrapped with swig.
+   ./build -sys_Python plotter_spy_screen.cpp  # exlib plotting wrapped with swig.
+   ./build -sys_Python mandel_py.cpp           # check calling a C++ function from Python.
 
  To run :
    ./bin_[gnu,clang]/<app> [options]
+   ./bin_gnu/hello_py  # on a Linux.
+
+ Note that the access to Python is in the shell script :
+   ./bush/use/Python
 
