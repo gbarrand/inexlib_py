@@ -7,9 +7,9 @@ EXIT_FAILURE = 1
 EXIT_SUCCESS = 0
 
 def main():
-  rfile = inlib.rroot_file(inlib.get_cout(),'wroot.root',False) # wroot.root produced by inlib/examples/cpp/wroot.cpp.
+  rfile = inlib.rroot_file(inlib.get_cout(),'../../../data/wroot.root',False) # wroot.root produced by inlib/examples/cpp/wroot.cpp.
   if rfile.is_open() == False :
-    print "can't open out.root"
+    print "can't open ../../../data/wroot.root"
     return EXIT_FAILURE
 
   keys = rfile.dir().keys()
