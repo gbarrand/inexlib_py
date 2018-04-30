@@ -12,7 +12,8 @@ EXIT_SUCCESS = 0
 #//////////////////////////////////////////////////
 
 # pawdemo.root can be found in exlib/data.
-path = 'pawdemo.root'
+#path = 'pawdemo.root'
+path = '../../../data/pawdemo.root'
 
 #//////////////////////////////////////////////////
 #// open the file and get an histo : //////////////
