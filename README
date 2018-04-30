@@ -17,7 +17,8 @@
 
  To activate .py examples from the Python prompt :
     UNIX> cd <install_path>/inexlib/exlib/examples/py
-    UNIX> ./build -sys_Python   # to build the inlib_swig_py.so, exlib_swig_py.so modules wrapping inlib/exlib with swig.
+    UNIX> ./build -sys_Python   # to build the inlib_swig_py.so, exlib_swig_py.so modules
+                                # wrapping inlib/exlib with swig.
       sh> . ./setup.sh  # to setup PYTHONPATH to find inlib.py, exlib.py.
    ( csh> source ./setup.csh )
     UNIX> cd bin_<config>  # exa bin_gnu on Linux, bin_clang on macOS.
@@ -32,9 +33,9 @@
     UNIX> <python>
     >>> import h1d
 
- IMPORTANT : in the upper "<python>" means the program corresponding to the Python installation used to build.
- Someone must be aware than multiple Python installations may be present on one system, and must be cautious
- to use the python program corresponding to the one used to link the inlib_swig_py.so, exlib_swig_py.so.
- (On macOS, there is a Python under /System and another one may be found under /opt/local/bin coming indirectly
- from some MacPorts installation).
+ IMPORTANT : in the upper "<python>" means the program corresponding to the Python installation
+ used to build. Someone must be aware than multiple Python installations may be present on one
+ system, and must be cautious to use the python program corresponding to the one used to link
+ the inlib_swig_py.so, exlib_swig_py.so. (On macOS, there is a Python under /System and another
+ one may be found under /opt/local/bin coming indirectly from some MacPorts installation).
 
