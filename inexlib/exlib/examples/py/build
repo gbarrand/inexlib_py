@@ -1,0 +1,44 @@
+#!/bin/sh -f
+
+bush_home=../../../../bush
+
+. ${bush_home}/args
+
+save_args="${build_args}"
+
+build_args=
+while test $# -ge 1 ; do
+  case $1 in
+   -sys_Python) ;;
+     *) build_args="${build_args} $1";;
+  esac
+  shift
+done
+
+. ${bush_home}/header
+
+build_args="${save_args}"
+
+/bin/mkdir -p ${build_path}
+
+exlib_mgr=../../../exlib/mgr
+
+save_dir=`pwd`
+
+cd ${exlib_mgr}
+./build ${build_args} ../exlib/spy/inlib_swig_py.cpp
+cd ${save_dir}
+if [ -f ${exlib_mgr}/${build_dir}/inlib_swig_py.${pgpy} ] ; then
+  /bin/mv ${exlib_mgr}/${build_dir}/inlib_swig_py.${pgpy} ${build_path}/.
+else
+  echo "${exlib_mgr}/${build_dir}/inlib_swig_py.${pgpy} not found."
+fi
+
+cd ${exlib_mgr}
+./build ${build_args} ../exlib/spy/exlib_swig_py.cpp
+cd ${save_dir}
+if [ -f ${exlib_mgr}/${build_dir}/exlib_swig_py.${pgpy} ] ; then
+  /bin/mv ${exlib_mgr}/${build_dir}/exlib_swig_py.${pgpy} ${build_path}/.
+else
+  echo "${exlib_mgr}/${build_dir}/exlib_swig_py.${pgpy} not found."
+fi
