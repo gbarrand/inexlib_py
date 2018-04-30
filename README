@@ -1,15 +1,30 @@
 
  To build C++ apps activating Python :
-   cd ./inexlib/exlib/examples/cpp
-   ./build -sys_Python hello_py.cpp            # to check Python activation from C++.
-   ./build -sys_Python h1d_spy.cpp             # inlib histogram wrapped with swig.
-   ./build -sys_Python plotter_spy_screen.cpp  # exlib plotting wrapped with swig.
-   ./build -sys_Python mandel_py.cpp           # check calling a C++ function from Python.
+    UNIX> cd <install_path>/inexlib/exlib/examples/cpp
+    UNIX> ./build -sys_Python hello_py.cpp            # to check Python activation from C++.
+    UNIX> ./build -sys_Python h1d_spy.cpp             # inlib histogram wrapped with swig.
+    UNIX> ./build -sys_Python plotter_spy_screen.cpp  # exlib plotting wrapped with swig.
+    UNIX> ./build -sys_Python mandel_py.cpp           # check calling a C++ function from Python.
+(UNIX is for Linux, macOS or Windows-10/cygwin).
 
  To run :
-   ./bin_[gnu,clang]/<app> [options]
-   ./bin_gnu/hello_py  # on a Linux.
+    UNIX> ./bin_[gnu,clang]/<app> [options]
+    UNIX> ./bin_gnu/hello_py  # on a Linux.
 
  Note that the access to Python is in the shell script :
-   ./bush/use/Python
+   <install_path>/bush/use/Python
+ The "-sys_Python" option tells bush to use the Python found on the system.
+
+ To activate .py examples from the Python prompt :
+    UNIX> cd <install_path>/inexlib/exlib/examples/py
+    UNIX> ./build -sys_Python   # to build the inlib_swig_py.so, exlib_swig_py.so modules wrapping inlib/exlib with swig.
+      sh> . ./setup.sh  # to setup PYTHONPATH to find inlib.py, exlib.py.
+   ( csh> source ./setup.csh )
+    UNIX> cd bin_<config>  # exa bin_gnu on Linux, bin_clang on macOS.
+    UNIX> <source ../setup>
+    UNIX> <python of config> ../h1d.py
+    UNIX> <python of config> ../waxml.py
+ or :
+    UNIX> <python of config>
+    >>> import h1d
 
