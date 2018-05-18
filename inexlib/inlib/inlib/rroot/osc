@@ -12,8 +12,7 @@ namespace inlib {
 namespace rroot {
 
 template <class H>
-inline bool from_osc(buffer& a_buffer,const std::string& a_cls,
-                     H& a_histo){
+inline bool from_osc(buffer& a_buffer,const std::string& a_cls,H& a_histo){
 
   //Stream as in a BatchLab/Rio/Data.h :
 

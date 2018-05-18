@@ -15,6 +15,8 @@
 #include "osc"
 #endif
 
+#include "THistogram"
+
 namespace inlib {
 namespace rroot {
 
@@ -267,6 +269,30 @@ inline bool read_key(std::ostream& a_out,ifile& a_file,key& a_key,bool a_dump){
       if(a_dump) h.hprint(a_out);
     }
 #endif
+
+  } else if(a_key.object_class()==THistogram_cls()) { //produced with osc/AIDA through BatchLab/Rio/THistogram.
+
+    pd_data_t data; 
+    annotations_t annotations;
+    if(!read_THistogram(b,data,annotations)) {
+      a_out << "inlib::rroot::read_key : read_THistogram() failed." << std::endl;
+    } else {
+      if(histo::h1d* _h1d = THistogram_to_h1d(data)) {
+        if(a_dump) _h1d->hprint(a_out);
+        delete _h1d;
+      } else if(histo::h2d* _h2d = THistogram_to_h2d(data)) {
+        if(a_dump) _h2d->hprint(a_out);
+        delete _h2d;
+      } else if(histo::p1d* _p1d = THistogram_to_p1d(data)) {
+        if(a_dump) _p1d->hprint(a_out);
+        delete _p1d;
+      } else if(histo::p2d* _p2d = THistogram_to_p2d(data)) {
+        if(a_dump) _p2d->hprint(a_out);
+        delete _p2d;
+      } else {
+        a_out << "inlib::rroot::read_key : can't convert THistogram dat to h1d,h2d,p1d or p2d." << std::endl;
+      }
+    }
 
   } else if(a_key.object_class()==TDirectory_cls()) {
 
