@@ -1,6 +1,6 @@
 /**
 
-@page pmx_usage Usage
+@page inexlib_py_usage Usage
 
 <p>
 

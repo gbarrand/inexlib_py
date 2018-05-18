@@ -1,6 +1,6 @@
 /**
-@page pmx_gallery Gallery
+@page inexlib_py_gallery Gallery
 
-- <a href="../../../download/pmx/videos/pmx_demo.mov">pmx_demo.mov</a>
+- <a href="../../../download/inexlib_py/videos/inexlib_py_demo.mov">inexlib_py_demo.mov</a>
 
 */

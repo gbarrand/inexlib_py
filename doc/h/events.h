@@ -1,6 +1,6 @@
 /**
 
-@page pmx_events Events
+@page inexlib_py_events Events
 
 <p>
   To have a default layout of the detector : 
@@ -33,16 +33,16 @@
 @endverbatim
  (Touch/click again on this button to stop the animation).
 
-@section pmx_data_files More data files
+@section inexlib_py_data_files More data files
 
   You can bring more data files and install them in the
- "document directory" of the pmx application. The procedure
+ "document directory" of the inexlib_py application. The procedure
  is similar to what is explained in the ioda web pages
  under the "Data files" section (you have to replace
- "ioda" by "pmx" in the explanations). You can use the "ftp"
+ "ioda" by "inexlib_py" in the explanations). You can use the "ftp"
  main menu item to get some files with the "good old FTP" from
- the pmx download area but also from a site of your own by
- customizing a pmx.ftp file deposited in the document
+ the inexlib_py download area but also from a site of your own by
+ customizing a inexlib_py.ftp file deposited in the document
  directory (see the ioda Data files section for more).
 
 */

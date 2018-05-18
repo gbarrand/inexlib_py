@@ -1,8 +1,8 @@
 /**
 
-@page pmx_introduction Introduction
+@page inexlib_py_introduction Introduction
 
-  pmx is a smartphone/tablet like event display for the LHC/LHCb experiment.
+  inexlib_py is a smartphone/tablet like event display for the LHC/LHCb experiment.
  For the moment it is more a proof of concept (a "concept app") than an application
  ready to do physics. Anyway it can give to someone novice in high energy physics (HEP)
  a glance at what a HEP detector looks like.
