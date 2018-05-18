@@ -15,6 +15,7 @@ extern "C" {
 
 #include <inlib/mem>
 #include <inlib/system>
+#include <inlib/file>
 
 #include <inlib/S_STRING>
 INLIB_GLOBAL_STRING(PYTHONHOME)
@@ -33,7 +34,18 @@ int main(int,char**) {
     inlib::putenv(s_PYTHONHOME(),"../../../ourex/Python");
   }
 #endif
-  inlib::putenv(s_PYTHONPATH(),"../../exlib/spy"); //to find [in,ex]lib.py.
+  //so that python find inlib.py :
+  if(inlib::file::exists("../../exlib/spy/inlib.py")) { //if run from exlib/examples/cpp.
+    inlib::putenv(s_PYTHONPATH(),"../../exlib/spy");
+  } else if(inlib::file::exists("inlib.py")) {
+    inlib::putenv(s_PYTHONPATH(),".");
+  } else {
+    if(!inlib::is_env(s_PYTHONPATH())) {
+      std::cout << "environment variable PYTHONPATH not defined and we can't define it since we don't know where inlib.py is."
+		<< std::endl;
+      return EXIT_FAILURE;
+    }      
+  }
 
   if(!::Py_IsInitialized()) ::Py_Initialize();
   ::PyEval_InitThreads();

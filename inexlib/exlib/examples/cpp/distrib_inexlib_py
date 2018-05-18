@@ -1,0 +1,71 @@
+#!/bin/sh -f
+
+bush_home=`dirname $0`/../../../../bush
+. ${bush_home}/args
+. ${bush_home}/exlib_header
+
+pack_name=inexlib_py   
+version=1.0.0
+
+/bin/rm -R -f ${build_path}/distrib
+/bin/mkdir -p ${build_path}/distrib/${pack_name}/${version}
+
+to=${build_path}/distrib/${pack_name}/${version}
+
+items="hello_py h1d_spy plotter_spy_screen mandel_py"
+for item in ${items} ; do
+  if [ ! -x ${build_path}/${item} ] ; then
+    echo "${build_path}/${item} not found."
+  else    
+    /bin/cp ${build_path}/${item} ${to}/.
+  fi
+done
+
+if [ ! -x ../py/${build_dir}/inlib_swig_py.so ] ; then
+  echo "../py/${build_dir}/inlib_swig_py.so not found."
+else    
+  /bin/cp ../py/${build_dir}/inlib_swig_py.so ${to}/.
+fi
+
+if [ ! -x ../py/${build_dir}/exlib_swig_py.so ] ; then
+  echo "../py/${build_dir}/exlib_swig_py.so not found."
+else    
+  /bin/cp ../py/${build_dir}/exlib_swig_py.so ${to}/.
+fi
+
+/bin/cp ../../exlib/spy/inlib.py ${to}/.
+/bin/cp ../../exlib/spy/exlib.py ${to}/.
+
+/bin/cp ../../data/mandel.py ${to}/.
+/bin/cp ../../data/arialbd.ttf ${to}/.
+/bin/cp ../../data/hst-img-2010x1890.fits ${to}/.
+/bin/cp ../../data/wroot.root ${to}/.
+/bin/cp ../../data/pawdemo.root ${to}/.
+
+find ../py -name '*.py' -exec /bin/cp {} ${to}/. \;
+
+platform=`${bush_home}/platform "${cpp_compiler}"`
+if [ "${platform}" = "" ] ; then
+  echo "bush/app_distrib : can't guess platform for ${cpp_compiler}."
+else
+  if [ ${build_verbose} = yes ] ; then
+    echo "bush/app_distrib : platform is ${platform}."
+  fi
+    
+  #///////////////////////////////////////////////////
+  #/// zip : /////////////////////////////////////////
+  #///////////////////////////////////////////////////
+  save_dir=`pwd`
+        
+  ${bush_home}/check_app zip 'zip not found, we use tar.'
+  use_status=$?;
+  if [ ${use_status} != 0 ] ; then
+    cd ${build_path}/distrib
+    tar cf ${pack_name}-${version}-${platform}.tar ./${pack_name}
+    cd ${save_dir}
+  else
+    cd ${build_path}/distrib
+    zip -qr ${pack_name}-${version}-${platform}.zip ./${pack_name}
+    cd ${save_dir}
+  fi
+fi
