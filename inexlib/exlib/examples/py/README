@@ -1,0 +1,16 @@
+
+  UNIX> <if needed edit bush/use/Python>
+  UNIX> <if needed edit bush/use/swig>
+  UNIX> <if needed source setup Python>
+
+  UNIX> ./build -sys_Python   #NOTE : in ourex/Python, we have disconnected import of compiled plugins that is needed here.
+  UNIX> cd bin_<config>
+  UNIX> <source ../setup>
+  UNIX> <python of config> ../h1d.py
+  UNIX> <python of config> ../waxml.py
+ or :
+  UNIX> <python of config>
+  >>> import h1d
+
+
+
