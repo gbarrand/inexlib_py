@@ -7,13 +7,20 @@
 # macOS : the ">>> cfitsio_hst._process.terminate()" stops the whole program.
 # Windows : it does not work.
 
+import os.path
+
+file = '../../../data/hst-img-2010x1890.fits'
+if os.path.isfile(file) == False :
+  file = './hst-img-2010x1890.fits'
+  if os.path.isfile(file) == False :
+    print 'file hst-img-2010x1890.fits not found.'
+    exit()
+    
 import inlib
 
 cmap = inlib.SOPI_colrj32()
 
 lut = inlib.lut_double(-0.04,0.4,cmap.size())
-
-file = '../../../data/hst-img-2010x1890.fits'
 
 import exlib
 

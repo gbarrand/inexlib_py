@@ -1,26 +1,28 @@
 # Copyright (C) 2010, Guy Barrand. All rights reserved.
 # See the file exlib.license for terms.
 
+import os.path
+
+file = '../../../data/pawdemo.root'
+if os.path.isfile(file) == False :
+  file = './pawdemo.root'
+  if os.path.isfile(file) == False :
+    print 'file pawdemo.root not found.'
+    exit()
+    
 import inlib
 
 out = inlib.get_cout()
 
 EXIT_FAILURE = 1
 EXIT_SUCCESS = 0
-#//////////////////////////////////////////////////
-#//////////////////////////////////////////////////
-#//////////////////////////////////////////////////
-
-# pawdemo.root can be found in exlib/data.
-#path = 'pawdemo.root'
-path = '../../../data/pawdemo.root'
 
 #//////////////////////////////////////////////////
 #// open the file and get an histo : //////////////
 #//////////////////////////////////////////////////
 
 def tree_main():
-  rfile = inlib.rroot_file(inlib.get_cout(),path,False)
+  rfile = inlib.rroot_file(inlib.get_cout(),file,False)
   if rfile.is_open() == False :
     print "can't open file"
     return EXIT_FAILURE

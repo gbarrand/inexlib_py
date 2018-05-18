@@ -1,13 +1,22 @@
 # Copyright (C) 2010, Guy Barrand. All rights reserved.
 # See the file exlib.license for terms.
 
+import os.path
+
+file = '../../../data/wroot.root'
+if os.path.isfile(file) == False :
+  file = './wroot.root'
+  if os.path.isfile(file) == False :
+    print 'file wroot.root not found.'
+    exit()
+    
 import inlib
 
 EXIT_FAILURE = 1
 EXIT_SUCCESS = 0
 
 def main():
-  rfile = inlib.rroot_file(inlib.get_cout(),'../../../data/wroot.root',False) # wroot.root produced by inlib/examples/cpp/wroot.cpp.
+  rfile = inlib.rroot_file(inlib.get_cout(),file,False) # wroot.root produced by inlib/examples/cpp/wroot.cpp.
   if rfile.is_open() == False :
     print "can't open ../../../data/wroot.root"
     return EXIT_FAILURE
