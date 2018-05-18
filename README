@@ -1,4 +1,8 @@
 
+ Note that the access to Python to build is in the shell script :
+    <install_path>/bush/use/Python
+ The "-sys_Python" option below tells bush to use the Python found on the system.
+
  To build C++ apps activating Python :
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
     UNIX> ./build -sys_Python hello_py.cpp            # to check Python activation from C++.
@@ -7,33 +11,40 @@
     UNIX> ./build -sys_Python mandel_py.cpp           # check calling a C++ function from Python.
 (UNIX is for Linux, macOS or Windows-10/cygwin).
 
- To run :
-    UNIX> ./bin_[gnu,clang]/<app> [options]
-    UNIX> ./bin_gnu/hello_py  # on a Linux.
-
- Note that the access to Python is in the shell script :
-    <install_path>/bush/use/Python
- The "-sys_Python" option tells bush to use the Python found on the system.
-
- To activate .py examples from the Python prompt :
+ To build the inlib_swig_py.so, exlib_swig_py.so modules wrapping inlib/exlib with swig.
     UNIX> cd <install_path>/inexlib/exlib/examples/py
-    UNIX> ./build -sys_Python   # to build the inlib_swig_py.so, exlib_swig_py.so modules
-                                # wrapping inlib/exlib with swig.
-      sh> . ./setup.sh  # to setup PYTHONPATH to find inlib.py, exlib.py.
-   ( csh> source ./setup.csh )
-    UNIX> cd bin_<config>  # exa bin_gnu on Linux, bin_clang on macOS.
-    UNIX> <python> ../h1d.py          # inlib histo.
-    UNIX> <python> ../rroot.py        # read an histo in a root file.
-    UNIX> <python> ../plotter.py      # plot an histo by using softinex graphics and plotting.
-    UNIX> <python> ../tree.py         # project a ntuple found in the pawdemo.root file and plot the histo.
-    UNIX> <python> ../waxml.py        # write histos at the AIDA XML file format.
-    UNIX> <python> ../cfitsio_hst.py  # visualise an image in a fits file.
-    UNIX> <python> ../polyhedron.py   # visualise a solid/shape boolean operation.
+    UNIX> ./build -sys_Python
+
+ To build the distribution :
+    UNIX> cd <install_path>/inexlib/exlib/examples/cpp
+    UNIX> ./distrib_inexlib_py
+ At end, you should have a :
+    <bin_dir>/distrib/inexlib_py-<version>-<platfrom>.zip
+ ready for distribution.
+
+ To install and run :
+    UNIX> cd <somewhere>
+    UNIX> <get inexlib_py-<version>-<platfrom>.zip>
+    UNIX> unzip -q inexlib_py-<version>-<platfrom>.zip
+    UNIX> cd inexlib_py/<version>
+ to run C++ python apps :
+    UNIX> ./hello_py
+    UNIX> ./h1d_spy
+    UNIX> ./plotter_spy_screen
+    UNIX> ./mandel_py  # this is a unitary test. If passing it says nothing.
+ to activate .py examples from the Python prompt :
+    UNIX> <python> ./h1d.py          # inlib histo.
+    UNIX> <python> ./rroot.py        # read an histo in a root file.
+    UNIX> <python> ./plotter.py      # plot an histo by using softinex graphics and plotting.
+    UNIX> <python> ./tree.py         # project a ntuple found in the pawdemo.root file and plot the histo.
+    UNIX> <python> ./waxml.py        # write histos at the AIDA XML file format.
+    UNIX> <python> ./cfitsio_hst.py  # visualise an image in a fits file.
+    UNIX> <python> ./polyhedron.py   # visualise a solid/shape boolean operation.
  or :
     UNIX> <python>
     >>> import h1d
 
- IMPORTANT : in the upper "<python>" means the program corresponding to the Python installation
+ IMPORTANT : in the upper, "<python>" means the program corresponding to the Python installation
  used to build. Someone must be aware than multiple Python installations may be present on one
  system, and must be cautious to use the python program corresponding to the one used to link
  the inlib_swig_py.so, exlib_swig_py.so. (On macOS, there is a Python under /System and another
