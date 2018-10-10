@@ -1,0 +1,192 @@
+#!/bin/bash
+
+#/////////////////////////////////////////////////////////////////
+#/// arguments : /////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+run_set_x=no
+run_args=
+run_use_py3=no
+what=
+
+while test $# -ge 1 ; do
+  case $1 in
+    -py3) run_use_py3=yes;;
+    -x)   run_set_x=yes;;
+
+    -*) run_args="${run_args} $1";;  
+     *) if [ "${what}" = "" ] ; then
+          what=$1
+        else         
+          run_args="${run_args} $1"
+        fi
+        ;;
+  esac
+  shift
+done
+
+if [ ${run_set_x} = "yes" ] ; then set -x; fi
+
+if [ -x inlib_swig_py.so ] ; then
+  # running from an inexlib_py distribution :
+  build_path=.
+else    
+  build_args=
+  bush_home=`dirname $0`/../../../../bush
+  . ${bush_home}/exlib_header  # to get build_path
+fi
+
+if [ "${what}" = "all" ] ; then
+  if [ ${run_use_py3} = yes ] ; then
+    find . -name 'spark_*.py' -exec ./spark_run -py3 {} \;
+  else
+    find . -name 'spark_*.py' -exec ./spark_run {} \;
+  fi      
+  exit
+fi
+
+if [ "${what}" = "" ] ; then
+  echo 'give a python script.'
+  exit
+fi
+
+script="${what}"
+if [ ! -f ${script} ] ; then
+  echo "${script} not found."
+  exit
+fi
+
+#/////////////////////////////////////////////////////////////////
+#/// where : /////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+on_lal_spark_cluster=no
+if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
+
+#/////////////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+if [ ${on_lal_spark_cluster} = yes ] ; then
+  # hdfs dfs -put <file>
+  # hdfs dfs -ls
+  data_file="hdfs:///user/guy.barrand/test_data.fits"
+  if [ "`basename ${script}`" = "spark_cfitsio_ntuple.py" ] ; then
+    data_file="hdfs:///user/guy.barrand/cfitsio_write_ntuple.fits"
+  fi
+  #if [ ! -f ${data_file} ] ; then
+  #  echo "Data file ${data_file} not found."
+  #  exit
+  #fi
+else
+  data_file_name=spark_test_data.fits
+  if [ "`basename ${script}`" = "spark_cfitsio_ntuple.py" ] ; then data_file_name=cfitsio_write_ntuple.fits; fi
+  data_file="../../data/${data_file_name}"
+  if [ ! -f ${data_file} ] ; then
+    data_file="./data/${data_file_name}"  # if running from inexlib_py distribution.
+    if [ ! -f ${data_file} ] ; then
+      echo "data file ${data_file_name} not found."
+      exit      
+    fi
+  fi
+fi
+
+#/////////////////////////////////////////////////////////////////
+#/// Python : ////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+# WARNING : spark must use the Python used to build
+#           the plugins inlib_swig_py.so, exlib_[offscreen,window]_swig_py.so.
+
+group=spy
+if [ ${on_lal_spark_cluster} = yes ] ; then
+  if [ ${run_use_py3} = yes ] ; then
+    PYSPARK_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_PYTHON
+    PYSPARK_DRIVER_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_DRIVER_PYTHON
+    group=spy3    
+  else
+    PYSPARK_PYTHON=/usr/bin/python2.7;export PYSPARK_PYTHON
+    PYSPARK_DRIVER_PYTHON=/usr/bin/python2.7;export PYSPARK_DRIVER_PYTHON
+  fi
+else  
+  if [ ${run_use_py3} = yes ] ; then
+    PYSPARK_PYTHON=/opt/local/bin/python3.6;export PYSPARK_PYTHON
+    PYSPARK_DRIVER_PYTHON=/opt/local/bin/python3.6;export PYSPARK_DRIVER_PYTHON
+    group=spy3    
+  else    
+    PYSPARK_PYTHON=/opt/local/bin/pythonw2.7;export PYSPARK_PYTHON
+    PYSPARK_DRIVER_PYTHON=/opt/local/bin/pythonw2.7;export PYSPARK_DRIVER_PYTHON
+  fi
+fi
+
+if [ ! -e ${PYSPARK_PYTHON} ] ; then
+  echo "Python program ${PYSPARK_PYTHON} not found."
+  exit    
+fi    
+
+#/////////////////////////////////////////////////////////////////
+#/// PYTHONPATH : ////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+sep=':'
+if [ "`uname | grep CYGWIN`" != "" ] ; then sep=';' ;fi
+
+py_path="../../exlib/${group}"
+py_path="${py_path}${sep}${build_path}"
+
+py_curr=`printenv PYTHONPATH`
+if [ "${py_curr}" = "" ] ; then
+  PYTHONPATH="${py_path}"
+  export PYTHONPATH
+else
+  not_in=`echo "${py_curr}" | grep "${py_path}" `
+  if [ "${not_in}" = "" ] ; then
+    PYTHONPATH="${PYTHONPATH}${sep}${py_path}"
+    export PYTHONPATH
+  fi
+fi
+unset py_curr
+unset py_path
+
+#printenv PYTHONPATH
+
+#/////////////////////////////////////////////////////////////////
+#/// envs before startup : ///////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+echo "PYSPARK_PYTHON = ${PYSPARK_PYTHON}"
+echo "PYSPARK_DRIVER_PYTHON = ${PYSPARK_DRIVER_PYTHON}"
+echo "PATH = ${PATH}"
+echo "PYTHONPATH = ${PYTHONPATH}"
+
+#/////////////////////////////////////////////////////////////////
+#/// spark : /////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+spark_flags=
+if [ ${on_lal_spark_cluster} = yes ] ; then
+  spark_home=/opt/spark-2.3.1-bin-hadoop2.7
+
+  packs=com.github.astrolabsoftware:spark-fits_2.11:0.6.0
+
+  spark_flags="${spark_flags} --master spark://134.158.75.222:7077"
+  spark_flags="${spark_flags} --driver-memory 4g --executor-memory 30g"
+  spark_flags="${spark_flags} --executor-cores 17 --total-executor-cores 34"
+  
+else
+  spark_home=/usr/local/spark/2.3.0/spark-2.3.0-bin-hadoop2.7
+
+  packs=com.github.astrolabsoftware:spark-fits_2.11:0.6.0
+
+  spark_flags="${spark_flags} --master local[*]"
+  
+fi
+
+spark_flags="${spark_flags} --packages ${packs}"
+
+spark_exe="${spark_home}/bin/spark-submit"
+if [ ! -x ${spark_exe} ] ; then
+  echo "${spark_exe} not found."
+  exit
+fi    
+
+${spark_exe} ${spark_flags} ${script} -fits ${data_file} -hdu 1
+
+

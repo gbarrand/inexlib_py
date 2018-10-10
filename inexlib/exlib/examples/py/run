@@ -1,0 +1,180 @@
+#!/bin/bash
+
+#/////////////////////////////////////////////////////////////////
+#/// arguments : /////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+run_set_x=no
+run_args=
+run_use_py3=no
+what=
+
+while test $# -ge 1 ; do
+  case $1 in
+    -py3) run_use_py3=yes;;
+    -x)   run_set_x=yes;;
+
+    -*) run_args="${run_args} $1";;  
+     *) if [ "${what}" = "" ] ; then
+          what=$1
+        else         
+          run_args="${run_args} $1"
+        fi
+        ;;
+  esac
+  shift
+done
+
+if [ ${run_set_x} = "yes" ] ; then set -x; fi
+
+if [ -x inlib_swig_py.so ] ; then
+  # running from an inexlib_py distribution :
+  build_path=.
+else    
+  build_args=
+  bush_home=`dirname $0`/../../../../bush
+  . ${bush_home}/exlib_header  # to get build_path
+fi
+
+if [ "${what}" = "all" ] ; then
+  if [ ${run_use_py3} = yes ] ; then
+    find . -name '*.py' -exec ./run -py3 {} \;
+  else
+    find . -name '*.py' -exec ./run {} \;
+  fi      
+  exit
+fi
+
+if [ "${what}" = "" ] ; then
+  echo 'give a python script.'
+  exit
+fi
+
+if [ "`echo ${what} | sed -e 's:spark_::g'`" != "${what}" ] ; then
+  echo "skip ${what}. Execute it with ./spark_run_[local,cluster]."
+  exit
+fi
+
+script="${what}"
+if [ ! -f ${script} ] ; then
+  echo "${script} not found."
+  exit
+fi
+
+#/////////////////////////////////////////////////////////////////
+#/// where : /////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+on_lal_spark_cluster=no
+if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
+
+#/////////////////////////////////////////////////////////////////
+#/// Python : ////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+# WARNING : spark must use the Python used to build
+#           the plugins inlib_swig_py.so, exlib_[offscreen,window]_swig_py.so.
+
+group=spy
+if [ ${on_lal_spark_cluster} = yes ] ; then
+  if [ ${run_use_py3} = yes ] ; then
+    py_exe=/opt/anaconda/bin/python3.6
+    group=spy3    
+  else
+    py_exe=/usr/bin/python2.7
+  fi
+else
+  if [ ${run_use_py3} = yes ] ; then
+    if [ "`uname | grep CYGWIN`" != "" ] ; then
+      py_exe=/cygdrive/c/Users/barrand/AppData/Local/Programs/Python/Python36/python.exe
+    elif [ `uname` = "Darwin" ] ; then
+      py_exe=/opt/local/bin/python3.6
+    else	
+      py_exe=/usr/local/Python/3.6.6/bin/python3.6
+      ld_path="/usr/local/Python/3.6.6/lib"
+    fi      
+    group=spy3    
+  else    
+    if [ "`uname | grep CYGWIN`" != "" ] ; then
+      py_exe=/cygdrive/c/Python27/pythonw.exe
+    elif [ `uname` = Darwin ] ; then
+      py_exe=/opt/local/bin/pythonw2.7
+    else
+      py_exe=/usr/bin/python2.7
+    fi      
+  fi
+fi    
+
+if [ ! -e ${py_exe} ] ; then
+  echo "Python program ${py_exe} not found."
+  exit    
+fi    
+
+#/////////////////////////////////////////////////////////////////
+#/// PYTHONPATH : ////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+sep=':'
+if [ "`uname | grep CYGWIN`" != "" ] ; then sep=';' ;fi
+
+py_path="../../exlib/${group}"
+py_path="${py_path}${sep}${build_path}"
+
+py_curr=`printenv PYTHONPATH`
+if [ "${py_curr}" = "" ] ; then
+  PYTHONPATH="${py_path}"
+  export PYTHONPATH
+else
+  not_in=`echo "${py_curr}" | grep "${py_path}" `
+  if [ "${not_in}" = "" ] ; then
+    PYTHONPATH="${PYTHONPATH}${sep}${py_path}"
+    export PYTHONPATH
+  fi
+fi
+unset py_curr
+unset py_path
+
+#printenv PYTHONPATH
+
+#/////////////////////////////////////////////////////////////////
+#/// LD_LIBRARY_PATH : ///////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+if [ "${ld_path}" != "" ] ; then
+    
+if [ "`uname | grep CYGWIN`" != "" ] ; then
+  ld_curr=`printenv PATH`
+  if [ "${ld_curr}" = "" ] ; then
+    PATH="${ld_path}"
+    export PATH
+  else
+    not_in=`echo "${ld_curr}" | grep "${ld_path}" `
+    if [ "${not_in}" = "" ] ; then
+      PATH="${PATH}:${ld_path}"
+      export PATH
+    fi
+  fi
+  unset ld_curr
+  unset ld_path
+
+elif [ `uname` = "Linux" ] ; then
+  ld_curr=`printenv LD_LIBRARY_PATH`
+  if [ "${ld_curr}" = "" ] ; then
+    LD_LIBRARY_PATH="${ld_path}"
+    export LD_LIBRARY_PATH
+  else
+    not_in=`echo "${ld_curr}" | grep "${ld_path}" `
+    if [ "${not_in}" = "" ] ; then
+      LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${sep}${ld_path}"
+      export LD_LIBRARY_PATH
+    fi
+  fi
+  unset ld_curr
+  unset ld_path
+fi
+
+fi #ld_path
+
+#/////////////////////////////////////////////////////////////////
+#/// run : ///////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+${py_exe} ${script}

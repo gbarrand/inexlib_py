@@ -1,0 +1,234 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_X11_gui_plotter
+#define exlib_X11_gui_plotter
+
+#include "session"
+
+#include "../sg/pv_holder"
+#include "../sg/GL_action"
+
+#include "../sg/GL_VIEWER" //for after_render().
+#include "../jpeg"
+#include "../png"
+
+#include "gui_dispatcher"
+
+#include <inlib/sg/gui_viewer>
+
+#include <inlib/sg/noderef>
+#include <inlib/sg/ortho>
+#include <inlib/sg/head_light>
+#include <inlib/sg/plots>
+
+#include <inlib/sg/h2plot_cp>
+#include <inlib/sg/f2plot>
+#include <inlib/sg/xy2plot>
+#include <inlib/sg/fit2plot>
+#include <inlib/sg/cloud2plot_cp>
+#include <inlib/cbk/background_popup>
+#include <inlib/cbk/image_popup>
+
+#include <X11/cursorfont.h>
+
+namespace exlib {
+namespace X11 {
+
+//IMPORTANT : pv_holder must come first.
+
+class gui_plotter : protected sg::pv_holder, public inlib::sg::gui_viewer {
+  typedef exlib::sg::pv_holder parent_pv_holder;
+  typedef inlib::sg::gui_viewer parent;
+private:
+  class dispatcher : public gui_dispatcher {
+    typedef gui_dispatcher parent;
+  public:
+    virtual void set_size(unsigned int a_width,unsigned int a_height) {
+      m_plotter.set_size(a_width,a_height);
+      m_plotter.m_plots.adjust_size(a_width,a_height);
+    }
+    virtual dispatcher* copy() const {return new dispatcher(*this);}
+  public:
+    dispatcher(gui_plotter& a_plotter)
+    :parent(a_plotter.m_session,a_plotter.m_win,a_plotter)
+    ,m_plotter(a_plotter){}
+    virtual ~dispatcher(){}
+  protected:
+    dispatcher(const dispatcher& a_from)
+    :parent(a_from)
+    ,m_plotter(a_from.m_plotter)
+    {}
+    dispatcher& operator=(const dispatcher& a_from) {
+      parent::operator=(a_from);
+      return *this;
+    }
+  protected:
+    gui_plotter& m_plotter;
+  };
+public: //exlib::sg::viewer
+  virtual bool set_cursor_shape(inlib::sg::cursor_shape a_shape) {
+    if(!parent::set_cursor_shape(a_shape)) return false;
+    if(a_shape==inlib::sg::cursor_default) {
+      ::XUndefineCursor(m_session.display(),m_win);
+      ::XSync(m_session.display(),False);
+      return true;
+    } else if(a_shape==inlib::sg::cursor_target) {
+      Cursor cursor = ::XCreateFontCursor(m_session.display(),XC_X_cursor);
+      if(!cursor) return false;
+      ::XDefineCursor(m_session.display(),m_win,cursor);
+      ::XSync(m_session.display(),False);
+      return true;
+    } else {
+      return false;
+    }
+  }
+private:
+  EXLIB_GL_VIEWER_AFTER_RENDER
+  virtual void win_render() { //ui::win_render()
+    if(!m_ww) return;
+    if(!m_wh) return;
+    if(!m_win) return;
+    if(::glXMakeCurrent(m_session.display(),m_win,m_session.context())==False){
+      m_session.out() << "X11::gui_plotter::win_render :"
+                      << " glXMakeCurrent failed."
+                      << std::endl;
+      return;
+    }
+    
+    check_gui_cursor(); //IMPORTANT.
+    if(m_mgr_gra.begin_render(0,0,m_ww,m_wh,
+                              m_clear_color.r(),
+                              m_clear_color.g(),
+                              m_clear_color.b(),
+                              m_clear_color.a())) {
+      sg::GL_action action(m_mgr_gra,m_out,m_ww,m_wh);
+      action.state().m_use_gsto = m_use_gsto;
+      m_sg.render(action);
+      if(!action.end()) { //check that matrices stack are ok.
+        m_out << "exib::sg::viewer :" 
+              << " bad gl_action end."
+              << std::endl;
+      }
+
+      after_render();
+      m_mgr_gra.end_render();
+    }
+    
+    ::glXSwapBuffers(m_session.display(),m_win);
+    if(::glXMakeCurrent(m_session.display(),None,NULL)==False){
+      m_session.out() << "X11::gui_plotter::win_render :"
+                      << " glXMakeCurrent(None,NULL) failed."
+                      << std::endl;
+    }
+  }
+
+protected:
+  virtual inlib::sg::node* create_main_menu() {
+    //m_out << "pmx::main::create_home_menu : " << std::endl;
+
+    inlib::sg::list* list = new inlib::sg::list(parent::ttf());
+    set_style(*list);
+    
+    if(!inlib::device::stop_app_button()){
+      inlib::sg::add_image_item(*this,*list,"exit","application_exit.jpg",inlib::sg::action_set_to_exit);
+    }
+
+    return list;
+  }
+public:
+  gui_plotter(session& a_session,
+              unsigned int a_cols = 1,unsigned int a_rows = 1,
+              int a_x = 0,int a_y = 0,
+              unsigned int a_width = 500,unsigned int a_height = 500,
+              const std::string& a_win_title = "")
+  :parent_pv_holder(a_session.out())
+  ,parent(a_session.out(),
+          parent_pv_holder::gra_mgr(),parent_pv_holder::ttf(),parent_pv_holder::selection(),
+          a_width,a_height)
+  ,m_session(a_session)
+  ,m_win(0)
+  ,m_plots(parent_pv_holder::ttf())
+  {
+    //////////////////////////////////////////////////////////
+    /// windowing : //////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+    if(!m_session.display()) return; //throw
+    m_win = m_session.create_window(a_win_title.c_str(),a_x,a_y,a_width,a_height);
+    if(!m_win) return; //throw
+    m_session.add_dispatcher(new dispatcher(*this));
+    //m_session.add_dispatcher(new gui_dispatcher(m_session,m_win,*this));
+
+#include "../sg_common.icc"    
+
+#include "../style_common.icc"    
+    
+    push_home();
+  }
+  virtual ~gui_plotter() {
+    if(m_win) {
+      m_session.remove_dispatchers_with_window(m_win);
+      m_session.delete_window(m_win);
+      m_session.sync();
+    }
+  }
+public:
+  gui_plotter(const gui_plotter& a_from)
+  :parent_pv_holder(a_from)
+  ,parent(a_from)
+  ,m_session(a_from.m_session)
+  ,m_win(a_from.m_win)
+  ,m_selection(a_from.m_selection)
+  ,m_plots(a_from.m_plots)  
+  {}
+  gui_plotter& operator=(const gui_plotter& a_from){
+    parent::operator=(a_from);
+    m_win = a_from.m_win;
+    m_plots = a_from.m_plots;
+    return *this;
+  }
+public:
+  bool has_window() const {return m_win?true:false;} //for SWIG
+
+  X11::session& x11() {return m_session;}
+
+  Window window() const {return m_win;}
+
+  bool show() {
+    if(!m_win) return false;
+    m_session.show_window(m_win);
+    return true;
+  }
+
+  bool steer() {
+    bool is;
+    while(!to_exit()) { 
+      if(num_cbks()) {
+        do_works();
+	if(!m_session.event_pending(is)) return false;
+        if(!is) continue;
+      }
+      if(!m_session.next_event()) return false;
+    }
+    return true;
+  }
+
+public:
+#include "../plotter_common.icc"
+
+protected:
+  session& m_session;
+  Window m_win;
+  inlib::sg::selection m_selection;
+  inlib::sg::plots m_plots;
+};
+
+}}
+
+//exlib_build_use inlib inlib_glutess freetype
+//exlib_build_use png jpeg zlib
+
+//exlib_build_use X11 GLX GL
+
+#endif
+
