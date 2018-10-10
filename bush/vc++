@@ -20,7 +20,9 @@ debug=no
 file_o=
 file_cpp=
 
+dll=no
 bigobj=no
+std_cpp14=no
 
 libs=
 objs=
@@ -36,15 +38,24 @@ while test $# -ge 1 ; do
     -L*) path="`echo $1 | sed -e 's:-L::g'`";path="`cygpath -w -a ${path}`";path="'${path}'";Ls="${Ls} /LIBPATH:${path}";;
     -w*) ws="${ws} $1";;
     -g)  debug=yes;;
+    -dll) dll=yes;;
     -bigobj) bigobj=yes;;
+    -std=c++14) std_cpp14=yes;;
     -*) echo "bush/vc++ : unknown minus option $1";exit;;
      *) suffix=`echo $1 | sed 's:.*\.::'`
+        if [ "`basename $1`" = "$1" ] ; then
+          path="$1"
+        else
+          path="`cygpath -w -a $1`";path="'${path}'";
+        fi
         if [ "${suffix}" = a ] ; then
-          libs="${libs} $1"
+          libs="${libs} ${path}"
         elif [ "${suffix}" = lib ] ; then
-          libs="${libs} $1"
+          libs="${libs} ${path}"
         elif [ "${suffix}" = o ] ; then
-          objs="${objs} $1"
+          objs="${objs} ${path}"
+        elif [ "${suffix}" = exp ] ; then
+          objs="${objs} ${path}"
         else
           if [ $# = 1 ] ; then
             file_cpp=$1
@@ -115,6 +126,11 @@ if [ "${compile}" = "yes" ] ; then
 
   if [ ${language} = c++ ] ; then
     cl_exe_cmd="${cl_exe_cmd} /nologo /O2 /W3 /EHsc /GR"
+    if [ ${std_cpp14} = yes ] ; then
+      cl_exe_cmd="${cl_exe_cmd} /std:c++latest"  # to pass ourex/cern_root_arte.
+    fi	
+   #cl_exe_cmd="${cl_exe_cmd} /std:c++17"
+   #cl_exe_cmd="${cl_exe_cmd} /std:c++14"
   else
     cl_exe_cmd="${cl_exe_cmd} /nologo /O2 /W3" 
   fi
@@ -160,27 +176,9 @@ else
 #/// link : //////////////////////////////////////////
 #/////////////////////////////////////////////////////
 
-  link_exe_cmd=
-
-  # NOTE : cygwin adds /usr/bin in front of PATH, and this directory
-  #        contains a link.exe which is not the VisualC++ one. Then
-  #        we arrange to give the full path toward the VisualC++ one.
-
-  if [ "${MSVCDir}" != "" ] ;  then
-    # Visual Studio 2003
-    vc_linker_path="`cygpath \"${MSVCDir}\"/bin`"
-    link_exe_cmd="\"${vc_linker_path}\"/link.exe"
-  else
-    if [ "${VCINSTALLDIR}" != "" ] ;  then
-      # Visual Studio >= 9.0
-      vc_linker_path="`cygpath \"${VCINSTALLDIR}\"/bin`"
-      link_exe_cmd="\"${vc_linker_path}\"/link.exe"
-    else
-      echo "bush/vc++ : Env variables MSVCDir and VCINSTALLDIR not defined."
-      echo "bush/vc++ : You have to setup Visual."
-      exit
-    fi  
-  fi  
+  bush_home=`dirname $0`
+  . ${bush_home}/find_link_exe    
+  link_exe_cmd="${visual_link_exe}"
 
   link_exe_cmd="${link_exe_cmd} /nologo" 
 
@@ -193,9 +191,14 @@ else
 
   if [ "${Ls}" != "" ] ; then link_exe_cmd="${link_exe_cmd} ${Ls}"; fi
 
-  file_o="`echo ${file_o} | sed 's:.exe::g'`"
-
-  file_o="${file_o}.exe"
+  if [ ${dll} = yes ] ; then
+    link_exe_cmd="${link_exe_cmd} /dll"
+    file_o="`echo ${file_o} | sed 's:.dll::g'`"
+    file_o="${file_o}.dll"
+  else      
+    file_o="`echo ${file_o} | sed 's:.exe::g'`"
+    file_o="${file_o}.exe"
+  fi
 
   link_exe_cmd="${link_exe_cmd} /out:${file_o} ${objs} ${libs}"
 

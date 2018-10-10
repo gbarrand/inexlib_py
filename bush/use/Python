@@ -43,14 +43,14 @@ if [ "${use_sys_Python}" = "yes" ] ; then
 
   if [ ${build_visual} = "yes" ] ; then
 
-    if [ -d "c:/usr/local/Python27" ] ; then
-      Python_home=c:/usr/local/Python27
+    if [ -d "/cygdrive/c/usr/local/Python27" ] ; then
+      Python_home=/cygdrive/c/usr/local/Python27
       cppflags="${cppflags} -I${Python_home}/include"
       libs="${libs} ${Python_home}/libs/python27.lib"
       py_exe="${Python_home}/python.exe"
 
-    elif [ -d "c:/Python27" ] ; then
-      Python_home=c:/Python27
+    elif [ -d "/cygdrive/c/Python27" ] ; then
+      Python_home=/cygdrive/c/Python27
       cppflags="${cppflags} -I${Python_home}/include"
       libs="${libs} ${Python_home}/libs/python27.lib"
       py_exe="${Python_home}/python.exe"
@@ -81,6 +81,8 @@ if [ "${use_sys_Python}" = "yes" ] ; then
     #  Python_home=/System/Library/Frameworks/Python.framework/Versions/Current
     #fi
 
+    #Python_home=/System/Library/Frameworks/Python.framework/Versions/2.7
+    
     # if working with boost/python from MacPorts, you have to use :
     Python_home=/opt/local/Library/Frameworks/Python.framework/Versions/2.7
 
@@ -91,13 +93,9 @@ if [ "${use_sys_Python}" = "yes" ] ; then
       exit
     fi
 
-    ccflags="${ccflags}   -I${Python_home}/Headers"
-    cppflags="${cppflags} -I${Python_home}/Headers"
-    libs="${libs} ${Python_home}/Python"
-
-   #ccflags="${ccflags}   -I${Python_home}/include/python2.7"
-   #cppflags="${cppflags} -I${Python_home}/include/python2.7"
-   #libs="${libs} -L${Python_home}/lib -lpython2.7"
+    ccflags="${ccflags}   -I${Python_home}/include/python2.7"
+    cppflags="${cppflags} -I${Python_home}/include/python2.7"
+    libs="${libs} -L${Python_home}/lib -lpython2.7"
 
     py_exe="${Python_home}/bin/pythonw"
 

@@ -28,6 +28,9 @@ if [ ${build_gnu} = "yes" ] ; then
     elif [ "`echo ${osx_vers} | sed -e 's:10.12::g'`" != "${osx_vers}" ] ; then
       cpp_compiler=/opt/local/bin/g++-mp-5
       cpp_linker=/opt/local/bin/g++-mp-5
+    elif [ "`echo ${osx_vers} | sed -e 's:10.13::g'`" != "${osx_vers}" ] ; then
+      cpp_compiler=/opt/local/bin/g++-mp-5
+      cpp_linker=/opt/local/bin/g++-mp-5
     else
       echo 'bush/use_cpp : g++ not found under /opt/local/bin.'
       exit
@@ -39,6 +42,8 @@ if [ ${build_gnu} = "yes" ] ; then
 
   if [ ${build_cxx11} = "yes" ] ; then
     cppflags="${cppflags} -std=c++11"
+  elif [ ${build_cxx14} = "yes" ] ; then
+    cppflags="${cppflags} -std=c++14"
   fi
 
 elif [ ${build_intel} = "yes" ] ; then
@@ -77,7 +82,11 @@ elif [ ${build_clang} = "yes" ] ; then
     if [ "`uname -n | grep iridium`" != "" ] ; then
       cppflags="${cppflags} -I/usr/include/c++/v1"
       cpp_linker_flags="${cpp_linker_flags} /usr/lib64/libc++.so"
-    fi    
+    fi
+    
+  elif [ ${build_cxx14} = "yes" ] ; then
+    cppflags="${cppflags} -std=c++14"
+   #cppflags="${cppflags} -stdlib=libc++"
   fi
 
 elif [ ${build_cling_clang} = "yes" ] ; then
@@ -100,6 +109,9 @@ elif [ ${build_cling_clang} = "yes" ] ; then
   if [ ${build_cxx11} = "yes" ] ; then
     cppflags="${cppflags} -std=c++11"
    #cppflags="${cppflags} -stdlib=libc++"
+  elif [ ${build_cxx14} = "yes" ] ; then
+    cppflags="${cppflags} -std=c++14"
+   #cppflags="${cppflags} -stdlib=libc++"
   fi
 
 elif [ ${build_sdk_mac} = "yes" -o ${build_sdk_mac_gnu} = "yes" ] ; then
@@ -113,6 +125,8 @@ elif [ ${build_sdk_mac} = "yes" -o ${build_sdk_mac_gnu} = "yes" ] ; then
     cpp_linker=clang++
     if [ ${build_cxx11} = "yes" ] ; then
       cppflags="${cppflags} -std=c++11 -stdlib=libc++"
+    elif [ ${build_cxx14} = "yes" ] ; then
+      cppflags="${cppflags} -std=c++14 -stdlib=libc++"
     fi
   else
     config_name=sdk_mac_gnu
@@ -120,6 +134,8 @@ elif [ ${build_sdk_mac} = "yes" -o ${build_sdk_mac_gnu} = "yes" ] ; then
     cpp_linker=g++
     if [ ${build_cxx11} = "yes" ] ; then
       cppflags="${cppflags} -std=c++11"
+    elif [ ${build_cxx14} = "yes" ] ; then
+      cppflags="${cppflags} -std=c++14"
     fi
     #Darwin : NOTE : we need a g++ knowing also objective-c++. /opt/local/bin/g++-mp-4.8 does not work.
   fi
@@ -164,7 +180,7 @@ elif [ ${build_sdk_mac} = "yes" -o ${build_sdk_mac_gnu} = "yes" ] ; then
     macosx_sdk="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
   fi
 
-  if [ ${build_cxx11} = "yes" ] ; then
+  if [ ${build_cxx11} = "yes" -o ${build_cxx14} = "yes" ] ; then
     #macosx_target=10.7
     # Xcode-8 : to avoid warning :
     #  clang: warning: libstdc++ is deprecated; move to libc++ with a minimum deployment target of OS X 10.9
@@ -216,6 +232,8 @@ elif [ ${build_sdk_ios} = "yes" -o ${build_sdk_ios_gnu} = "yes" ] ; then
     cppflags="${cppflags} -mno-thumb" 
     if [ ${build_cxx11} = "yes" ] ; then
       cppflags="${cppflags} -std=c++11 -stdlib=libc++"
+    elif [ ${build_cxx14} = "yes" ] ; then
+      cppflags="${cppflags} -std=c++14 -stdlib=libc++"
     fi
   else
     config_name=sdk_ios_gnu
@@ -223,6 +241,8 @@ elif [ ${build_sdk_ios} = "yes" -o ${build_sdk_ios_gnu} = "yes" ] ; then
     cpp_linker=${cpp_compiler}
     if [ ${build_cxx11} = "yes" ] ; then
       cppflags="${cppflags} -std=c++11"
+    elif [ ${build_cxx14} = "yes" ] ; then
+      cppflags="${cppflags} -std=c++14"
     fi
   fi
 
@@ -328,6 +348,12 @@ elif [ ${build_visual} = "yes" ] ; then
   fi
   cpp_compiler=${bush_home}/vc++
 
+  if [ ${build_cxx11} = "yes" ] ; then
+    cppflags="${cppflags} -std=c++11"
+  elif [ ${build_cxx14} = "yes" ] ; then
+    cppflags="${cppflags} -std=c++14"
+  fi
+  
   if [ "${build_set_x}" = "yes" ] ; then cppflags="${cppflags} -verbose"; fi
 
   cpp_linker=${bush_home}/vc++
@@ -337,76 +363,22 @@ elif [ ${build_visual} = "yes" ] ; then
 elif [ ${build_sdk_android} = "yes" ] ; then
   config_name=sdk_android
 
-  sdk_home=/usr/local/Android/android-sdk_r16-macosx
+  . ${bush_home}/use_android
   
-  # WARNING : must be in sync with use_cc, plugin, use/Android.
+  cpp_compiler=${ndk_cpp_compiler}
 
- #build_ndk_vers=r15b
- #build_ndk_vers=r7
-  build_ndk_vers=r10e
-  
-  if [ ${build_verbose} = yes ] ; then
-    echo "bush/use_cpp : ndk version is ${build_ndk_vers}."
-  fi
-  
-  ndk_home=/usr/local/Android/android-ndk-${build_ndk_vers}
-
-  if [ ${build_ndk_vers} = r7 ] ; then
-    ndk_bin=${ndk_home}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/bin
-    ndk_platform="${ndk_home}/platforms/android-9/arch-arm"
-  elif [ ${build_ndk_vers} = r10e ] ; then
-    ndk_bin=${ndk_home}/toolchains/arm-linux-androideabi-4.8/prebuilt/darwin-x86_64/bin
-    ndk_platform="${ndk_home}/platforms/android-9/arch-arm"
-  else
-    echo "bush/use_cpp : ndk version ${build_ndk_vers} not yet supported."
-    exit
-  fi    
-
-  cpp_compiler=${ndk_bin}/arm-linux-androideabi-g++
-  
   if [ ${build_cxx11} = "yes" ] ; then
     cppflags="${cppflags} -std=c++11"
+  elif [ ${build_cxx14} = "yes" ] ; then
+    cppflags="${cppflags} -std=c++14"
+  else    
+    if [ ${build_ndk_vers} = r17 ] ; then
+      cppflags="${cppflags} -std=c++11"
+    fi
   fi
 
- #if [ ${build_cxx11} = "yes" ] ; then
- #  cppflags="${cppflags} -std=c++11"
- #fi
-    
-  # same options as use_cc/ccflags :
-  if [ ${build_ndk_vers} = r7 ] ; then
-    cppflags="${cppflags} -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__"
-    cppflags="${cppflags} -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__"
-  fi
-  
-  cppflags="${cppflags} -fpic"
-  cppflags="${cppflags} -ffunction-sections -funwind-tables -fstack-protector"
-  cppflags="${cppflags} -fomit-frame-pointer -fno-strict-aliasing"
-  cppflags="${cppflags} -finline-limit=64"
-  
-  cppflags="${cppflags} -mthumb"
-  cppflags="${cppflags} -Os"
-  cppflags="${cppflags} -march=armv5te -mtune=xscale -msoft-float"
-  
-  cppflags="${cppflags} -Wno-psabi -Wa,--noexecstack"
-  
-  cppflags="${cppflags} -I${ndk_platform}/usr/include"
-
+  cppflags="${cppflags} ${ndk_cppflags}"
   cppflags="${cppflags} -DANDROID"
-
-  if [ ${build_ndk_vers} = r10e ] ; then
-    cppflags="${cppflags} -no-canonical-prefixes -Wformat -Werror=format-security"
-  fi
-  
-  # c++ flags :
-  #cppflags="${cppflags} -fno-exceptions -fno-rtti"
-  if [ ${build_ndk_vers} = r7 ] ; then
-    cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/gnu-libstdc++/include"
-    cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include"
-  elif [ ${build_ndk_vers} = r10e ] ; then
-    cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/gnu-libstdc++/4.8/include"
-    cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi/include"
-    cppflags="${cppflags} -I${ndk_home}/sources/cxx-stl/gnu-libstdc++/4.8/include/backward"
-  fi
 
   cpp_linker=${cpp_compiler}
 
@@ -467,7 +439,7 @@ elif [ ${build_sdk_android} = "yes" ] ; then
 
 else
 
-  if [ ${build_cxx11} = "yes" ] ; then
+  if [ ${build_cxx11} = "yes" -o ${build_cxx14} = "yes" ] ; then
     G4_cppflags="-W -Wall -pedantic -Wno-non-virtual-dtor -Wno-long-long -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"
   else
     G4_cppflags="-W -Wall -ansi -pedantic -Wno-non-virtual-dtor -Wno-long-long -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"

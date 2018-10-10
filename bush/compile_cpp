@@ -10,15 +10,13 @@ for file in ${cppfiles} ; do echo ${file} >> cpp_tmp; done
 
 if [ -f cpp_tmp ] ; then
 
-parallel_found=yes
-${bush_home}/check_app parallel
-use_status=$?;if [ ${use_status} != 0 ] ; then parallel_found=no;fi
-
-if [ ${build_parallel} = yes -a ${parallel_found} = no ] ; then
-  echo 'bush/compile_cpp : -parallel but parallel not found. Continue without it.'
+if [ ${build_parallel} = yes ] ; then
+  if [ "${parallel_exe}" = "" ] ; then
+    echo 'bush/compile_cpp : -parallel but parallel_exe not defined (in bush/use_sys). Continue without it.'
+  fi
 fi
 
-if [ ${build_parallel} = yes -a ${parallel_found} = yes ] ; then
+if [ ${build_parallel} = yes -a "${parallel_exe}" != "" ] ; then
 
   if [ ${build_verbose} = yes ] ; then
     echo 'bush/compile_cpp : use parallel.'
@@ -43,7 +41,7 @@ END
   
   ${bush_home}/find_rm ${build_path} '*.o.parallel'
 
-  parallel -a cpp_tmp './tmp_compile_one_cpp {}'
+  ${parallel_exe} -a cpp_tmp './tmp_compile_one_cpp {}'
 
   /bin/rm -f ./tmp_objs
   find ${build_path} -name '*.o.parallel' -print >> ./tmp_objs

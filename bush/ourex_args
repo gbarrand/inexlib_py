@@ -8,6 +8,7 @@ for arg in ${build_args} ; do
     -clang)        ourex_args="${ourex_args} ${arg}";;
     -cling_clang)  ourex_args="${ourex_args} ${arg}";;
     -c++11)        ourex_args="${ourex_args} ${arg}";;
+    -c++14)        ourex_args="${ourex_args} ${arg}";;
     -visual)       ourex_args="${ourex_args} ${arg}";;
     -sdk_mac)      ourex_args="${ourex_args} ${arg}";;
     -sdk_mac_gnu)  ourex_args="${ourex_args} ${arg}";;

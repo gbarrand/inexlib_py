@@ -20,6 +20,9 @@ if [ ${build_gnu} = "yes" ] ; then
     elif [ "`echo ${osx_vers} | sed -e 's:10.12::g'`" != "${osx_vers}" ] ; then
       cc_compiler=/opt/local/bin/gcc-mp-5
       cc_linker=/opt/local/bin/gcc-mp-5
+    elif [ "`echo ${osx_vers} | sed -e 's:10.13::g'`" != "${osx_vers}" ] ; then
+      cc_compiler=/opt/local/bin/gcc-mp-5
+      cc_linker=/opt/local/bin/gcc-mp-5
     else
       echo 'bush/use_cc : gcc not found under /opt/local/bin.'
       exit
@@ -227,58 +230,13 @@ elif [ ${build_visual} = "yes" ] ; then
 elif [ ${build_sdk_android} = "yes" ] ; then
   config_name=sdk_android
 
-  sdk_home=/usr/local/Android/android-sdk_r16-macosx
+  . ${bush_home}/use_android
 
-  # WARNING : must be in sync with use_cpp, plugin, use/Android.
+  cc_compiler=${ndk_cc_compiler}
 
- #build_ndk_vers=r15b
-  build_ndk_vers=r7
-  build_ndk_vers=r10e
-  
-  ndk_home=/usr/local/Android/android-ndk-${build_ndk_vers}
-
-  if [ ${build_ndk_vers} = r7 ] ; then
-    ndk_bin=${ndk_home}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/bin
-    ndk_platform="${ndk_home}/platforms/android-9/arch-arm"
-  elif [ ${build_ndk_vers} = r10e ] ; then
-    ndk_bin=${ndk_home}/toolchains/arm-linux-androideabi-4.8/prebuilt/darwin-x86_64/bin
-    ndk_platform="${ndk_home}/platforms/android-9/arch-arm"
-  else
-    echo "bush/use_cc : ndk version ${build_ndk_vers} not yet supported."
-    exit
-  fi    
-
-  cc_compiler=${ndk_bin}/arm-linux-androideabi-gcc
-
- #ccflags="${ccflags} -MMD -MP -MF <some .d path>"
- #ccflags="${ccflags} -O2 -DNDEBUG -g"
- #ccflags="${ccflags} -Ijni"
- #ccflags="${ccflags} -I${ndk_home}/sources/cxx-stl/system/include"
-
-  if [ ${build_ndk_vers} = r7 ] ; then
-    ccflags="${ccflags} -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__"
-    ccflags="${ccflags} -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__"
-  fi
-  
-  ccflags="${ccflags} -fpic"
-  ccflags="${ccflags} -ffunction-sections -funwind-tables -fstack-protector"
-  ccflags="${ccflags} -fomit-frame-pointer -fno-strict-aliasing"
-  ccflags="${ccflags} -finline-limit=64"
-  
-  ccflags="${ccflags} -mthumb"
-  ccflags="${ccflags} -Os"
-  ccflags="${ccflags} -march=armv5te -mtune=xscale -msoft-float"
-
-  ccflags="${ccflags} -Wno-psabi -Wa,--noexecstack"
-  
-  ccflags="${ccflags} -I${ndk_platform}/usr/include"
-  
+  ccflags="${ccflags} ${ndk_ccflags}"
   ccflags="${ccflags} -DANDROID"
 
-  if [ ${build_ndk_vers} = r10e ] ; then
-    ccflags="${ccflags} -no-canonical-prefixes -Wformat -Werror=format-security"
-  fi
-  
   cc_linker=${cc_compiler}
 
 else

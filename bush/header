@@ -18,6 +18,7 @@ build_sdk_android=no
 build_m32=no
 
 build_cxx11=no
+build_cxx14=no
 build_debug=no
 build_set_x=no
 build_verbose=no
@@ -85,6 +86,7 @@ for arg in ${build_args} ; do
     -sdk_android) build_sdk_android=yes;;
 
     -c++11)        build_cxx11=yes;;
+    -c++14)        build_cxx14=yes;;
     -g)            build_debug=yes;;
     -debug)        build_debug=yes;;
     -x)            build_set_x=yes;;

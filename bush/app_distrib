@@ -42,8 +42,8 @@ elif [ ${build_sdk_android} = "yes" ] ; then
   fi
 
   /bin/rm -R -f ./libs
-  /bin/mkdir -p ./libs/armeabi
-  /bin/cp ${save_dir}/${build_path}/lib${app}.so ./libs/armeabi/
+  /bin/mkdir -p ./libs/${ndk_distrib_platform}
+  /bin/cp ${save_dir}/${build_path}/lib${app}.so ./libs/${ndk_distrib_platform}/.
 
   if [ ${build_verbose} = yes ] ; then
     echo 'bush/app_distrib : ant -silent release :'

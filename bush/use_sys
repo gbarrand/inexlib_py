@@ -63,10 +63,8 @@ if [ ${build_sdk_android} = "yes" ] ; then
   shex=so
   shopts="${shopts} -shared"
 
-  ar_cmd=${ndk_bin}/arm-linux-androideabi-ar
-  ranlib_cmd=${ndk_bin}/arm-linux-androideabi-ranlib
-
-  strip_cmd="${ndk_bin}/arm-linux-androideabi-strip --strip-unneeded"
+  ar_cmd="${ndk_ar_cmd}"
+  ranlib_cmd="${ndk_ranlib_cmd}"
 
 elif [ ${build_visual} = "yes" ] ; then
 
@@ -125,3 +123,21 @@ if [ `uname` = "Linux" ] ; then
     pgflags="${pgflags} -Wl,--no-as-needed"  # for exa for OnXXt.so plugin.
   fi
 fi
+
+#////////////////////////////////////////////////////////////////
+#/// parallel : /////////////////////////////////////////////////
+#////////////////////////////////////////////////////////////////
+parallel_exe=
+if [ `uname` = Darwin ] ; then
+  if [ -x /opt/local/bin/parallel ] ; then
+    parallel_exe=/opt/local/bin/parallel
+  fi    
+elif [ `uname` = Linux ] ; then
+  if [ "`uname -n`" = barrand-centos7.lal.in2p3.fr ]; then
+    if [ -x /usr/local/parallel/20120122/bin/parallel ] ; then #ostacku
+      LC_ALL=en_US.UTF-8;export LC_ALL
+      parallel_exe=/usr/local/parallel/20120122/bin/parallel
+    fi
+  fi    
+fi
+

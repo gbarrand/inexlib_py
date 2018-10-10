@@ -34,5 +34,6 @@ fi
 . ${bush_home}/use/Android
 . ${bush_home}/use/wx
 
+. ${bush_home}/use/GLU
 . ${bush_home}/use/GL
 

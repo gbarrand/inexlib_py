@@ -94,6 +94,7 @@ else
       /bin/rm -f ./cl_exe_tmp
       eval cl.exe /nologo /MD /O2 /W3 /wd4996 /Fewindef.exe ${bush_home}/visual/windef.c > ./cl_exe_tmp
       use_status=$?;if [ ${use_status} != 0 ] ; then cat ./cl_exe_tmp;/bin/rm -f ./cl_exe_tmp;exit ${use_status}; fi
+      /bin/rm -f ./cl_exe_tmp
 
       # Building the .def file :
       /bin/rm -f ./dumpbin_exe_tmp
@@ -111,21 +112,9 @@ else
       /bin/rm -f ./lib_exe_tmp
 
       # Bulding the runtime library (dll) :
-      if [ "${MSVCDir}" != "" ] ;  then
-        # Visual Studio 2003
-        vc_linker_path="`cygpath \"${MSVCDir}\"/bin`"
-        archive_linker="\"${vc_linker_path}\"/link.exe"
-      else
-        if [ "${VCINSTALLDIR}" != "" ] ;  then
-          # Visual Studio >= 9.0
-          vc_linker_path="`cygpath \"${VCINSTALLDIR}\"/bin`"
-          archive_linker="\"${vc_linker_path}\"/link.exe"
-        else
-          echo "bush/archive : Env variables MSVCDir and VCINSTALLDIR not defined."
-          echo "bush/archive : You have to setup Visual."
-          exit
-         fi  
-      fi  
+
+      . ${bush_home}/find_link_exe    
+      archive_linker="${visual_link_exe}"
 
       if [ ${build_debug} = "yes" ] ; then
         archive_linker="${archive_linker} /nologo /DEBUG:FULL" 

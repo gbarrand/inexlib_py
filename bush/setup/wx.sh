@@ -9,17 +9,24 @@ if [ "`uname | grep CYGWIN`" != "" ] ; then
 
 else
 
-  if [ -x /usr/local/wxWidgets/3.1.0/bin/wx-config ] ; then
+  if [ "`uname -n`" = deco.lal.in2p3.fr ] ; then
+    wxWidgets_home=/exp/si/barrand/usr/local/wxWidgets/3.1.0
+  else
     wxWidgets_home=/usr/local/wxWidgets/3.1.0
+  fi
+
+  if [ -x ${wxWidgets_home}/bin/wx-config ] ; then
     PATH="${wxWidgets_home}/bin:${PATH}"
-    if [ `uname` = "Linux" ]; then
+    if [ `uname` = "Linux" ] ; then
       lib_path="${wxWidgets_home}/lib"
       if [ -z "${LD_LIBRARY_PATH}" ] ; then
         LD_LIBRARY_PATH="${lib_path}"
+        export LD_LIBRARY_PATH
       else
         wx_status=1;(echo $LD_LIBRARY_PATH | grep "${lib_path}" > /dev/null  ) && wx_status=0
         if [ $wx_status != 0 ] ; then
           LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${lib_path}"
+          export LD_LIBRARY_PATH
         fi
         unset wx_status
       fi

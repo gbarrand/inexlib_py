@@ -29,6 +29,7 @@ else
     /bin/rm -f ./cl_exe_tmp
     eval cl.exe /nologo /MD /O2 /W3 /wd4996 /Fewindef.exe ${bush_home}/visual/windef.c > ./cl_exe_tmp
     use_status=$?;if [ ${use_status} != 0 ] ; then cat ./cl_exe_tmp;/bin/rm -f ./cl_exe_tmp;exit ${use_status}; fi
+    /bin/rm -f ./cl_exe_tmp
 
     # Building the .def file :
     /bin/rm -f ./dumpbin_exe_tmp
@@ -43,32 +44,7 @@ else
     use_status=$?;if [ ${use_status} != 0 ] ; then cat ./lib_exe_tmp;/bin/rm -f ./lib_exe_tmp;exit ${use_status}; fi
 
     # Building the dynamically loadable library (dll) :
-    if [ "${MSVCDir}" != "" ] ;  then
-      # Visual Studio 2003
-      vc_linker_path="`cygpath \"${MSVCDir}\"/bin`"
-      plugin_linker="\"${vc_linker_path}\"/link.exe"
-    else
-      if [ "${VCINSTALLDIR}" != "" ] ;  then
-        # Visual Studio >= 9.0
-        vc_linker_path="`cygpath \"${VCINSTALLDIR}\"/bin`"
-        plugin_linker="\"${vc_linker_path}\"/link.exe"
-      else
-        echo "bush/plugin : Env variables MSVCDir and VCINSTALLDIR not defined."
-        echo "bush/plugin : You have to setup Visual."
-        exit
-      fi  
-    fi  
-
-    plugin_linker="${plugin_linker} /nologo" 
-
-    if [ ${build_debug} = "yes" ] ; then
-     #plugin_linker="${plugin_linker} /DEBUG:FULL" 
-      plugin_linker="${plugin_linker} /DEBUG"
-    fi
-
-    # plugin_linker="${plugin_linker} /NODEFAULTLIB:LIBCMT.lib /DEFAULTLIB:MSVCRT.lib" 
-
-    eval ${plugin_linker} /dll /out:${file_plugin} ${file_exp} ${file_a} ${libs}
+    eval ${cpp_linker} ${cpp_linker_flags} -dll -o ${file_plugin} ${file_exp} ${file_a} ${libs}
 
     /bin/rm -f ${file_a} ${file_o} ${file_symbs} ${file_def} ${file_lib} ${file_exp} windef.exe
     /bin/rm -f windef.obj windef.exe.manifest
@@ -77,39 +53,14 @@ else
 
     if [ ${build_sdk_android} = "yes" ] ; then
 
-      if [ ${build_ndk_vers} = r7 ] ; then
-        echo dummy > /dev/null
-      elif [ ${build_ndk_vers} = r10e ] ; then
-        echo dummy > /dev/null
-      else
-        echo "bush/plugin : ndk version ${build_ndk_vers} not yet supported."
+      if [ "${ndk_home}" = "" ] ; then
+        echo "bush/plugin : ndk_home not set."
         exit
       fi
 
       pgflags="${pgflags} -Wl,-soname,${plugin}.so"
-	
-      pgflags="${pgflags} -shared"
-      pgflags="${pgflags} -Wl,--no-undefined -Wl,-z,noexecstack"
-
-      if [ ${build_ndk_vers} = r7 ] ; then
-        pgflags="${pgflags} --sysroot=${ndk_home}/platforms/android-9/arch-arm"
-      elif [ ${build_ndk_vers} = r10e ] ; then
-        pgflags="${pgflags} --sysroot=${ndk_home}/platforms/android-9/arch-arm"
-        pgflags="${pgflags} -Wl,-z,relro -Wl,-z,now -mthumb"
-      fi
-      
-      # NOTE : it is very touchy concerning the order in the below :
-      if [ ${build_ndk_vers} = r7 ] ; then
-        libs="${libs} ${ndk_home}/sources/cxx-stl/gnu-libstdc++/libs/armeabi/libgnustl_static.a"
-        libs="${libs} ${ndk_home}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/darwin-x86/lib/gcc/arm-linux-androideabi/4.4.3/libgcc.a"
-        libs="${libs} -L${ndk_home}/platforms/android-9/arch-arm/usr/lib -lGLESv1_CM"
-      elif [ ${build_ndk_vers} = r10e ] ; then
-     #else
-        libs="${libs} ${ndk_home}/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi/libgnustl_static.a"
-        libs="${libs} ${ndk_home}/toolchains/arm-linux-androideabi-4.8/prebuilt/darwin-x86_64/lib/gcc/arm-linux-androideabi/4.8/libgcc.a"
-        libs="${libs} -L${ndk_home}/platforms/android-9/arch-arm/usr/lib -lGLESv1_CM"
-      fi
-      libs="${libs} -ldl -llog -lz -lc -lm"
+      pgflags="${pgflags} ${ndk_pgflags}"
+      libs="${libs} ${ndk_libs}"
 
     elif [ `uname` = Darwin ] ; then
       pgflags="${pgflags} -bundle -twolevel_namespace"
@@ -132,10 +83,6 @@ else
     fi
 
     eval ${cpp_linker} ${pgflags} -o ${file_plugin} ${objs} ${libs}
-
-    if [ ${build_sdk_android} = "yes" ] ; then
-      ${strip_cmd} ${file_plugin}
-    fi
 
   fi
 

@@ -9,7 +9,12 @@ if ( "`uname | grep CYGWIN`" != "" ) then
 
 else
 
-  set wxWidgets_home=/usr/local/wxWidgets/3.1.0
+  if ( "`uname -n`" == deco.lal.in2p3.fr ) then
+    set wxWidgets_home=/exp/si/barrand/usr/local/wxWidgets/3.1.0
+  else
+    set wxWidgets_home=/usr/local/wxWidgets/3.1.0
+  endif
+  
   if ( -x ${wxWidgets_home}/bin/wx-config ) then
     setenv PATH "${wxWidgets_home}/bin:${PATH}"
   
