@@ -2,7 +2,7 @@
  Note that the access to Python to build is in the shell script :
     <install_path>/bush/use/Python
  The upper is for using a Python2.x, which is the default in bush scripts.
- If using a Python3 :     
+ If using a Python3, it is in :     
     <install_path>/bush/use/Python3
  Then, if needed, customize these files according your Python installation.
 
@@ -17,18 +17,16 @@
 
  To build some C++ examples activating Python :
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
-    UNIX> ./build -sys_Python
+    UNIX> ./build
  or one by one :
-    UNIX> ./build -sys_Python hello_py.cpp            # to check Python activation from C++.
-    UNIX> ./build -sys_Python h1d_spy.cpp             # inlib histogram wrapped with swig.
-    UNIX> ./build -sys_Python plotter_spy_screen.cpp  # exlib plotting wrapped with swig.
-    UNIX> ./build -sys_Python mandel_py.cpp           # check calling a C++ function from Python.
+    UNIX> ./build hello_py.cpp            # to check Python activation from C++.
+    UNIX> ./build h1d_spy.cpp             # inlib histogram wrapped with swig.
+    UNIX> ./build plotter_spy_screen.cpp  # exlib plotting wrapped with swig.
+    UNIX> ./build mandel_py.cpp           # check calling a C++ function from Python.
  To build with Python3 :
-    UNIX> ./build -sys_Python -py3
+    UNIX> ./build -py3
 
  (UNIX is for Linux, MacOS or Windows-10/cygwin).
- The "-sys_Python" option in the upper lines tells bush to use the Python found on the system.
- (It is enforced in the exlib/examples/py/build script).
 
  To build the distribution :
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
@@ -43,11 +41,12 @@
     UNIX> unzip -q inexlib_py-<version>-<platform>.zip
     UNIX> cd inexlib_py/<version>
  to run C++ python apps :
-    UNIX> ./hello_py
-    UNIX> ./mandel_py           # this is a unitary test. If passing it says nothing.
-    UNIX> ./h1d_spy             # example using inlib SWIG wrapping.
-    UNIX> ./plotter_spy_screen  # example using inlib/exlib SWIG wrapping.
+    UNIX> ./bin/hello_py
+    UNIX> ./bin/mandel_py           # this is a unitary test. If passing it says nothing.
+    UNIX> ./bin/h1d_spy             # example using inlib SWIG wrapping.
+    UNIX> ./bin/plotter_spy_screen  # example using inlib/exlib SWIG wrapping.
  to activate .py examples from the Python prompt :
+    UNIX> <setenv PYTHONPATH ./res/[spy,spy3]:./modules>
     UNIX> <python> ./h1d.py                 # inlib histo.
     UNIX> <python> ./rroot.py               # read an histo in a root file.
     UNIX> <python> ./plotter_window.py      # plot an histo by using softinex graphics and plotting.
@@ -61,6 +60,12 @@
  or :
     UNIX> <python>
     >>> import h1d
+ or :
+    <if needed, customize the run script file to find your Python>
+    UNIX> ./run ./<example>.py
+    UNIX> ./run ./h1d.py
+  To execute all examples :
+    UNIX> ./run all
     
  IMPORTANT : in the upper, "<python>" means the program corresponding to the Python installation
  used to build. Someone must be aware than multiple Python installations may be present on one
@@ -72,8 +77,6 @@
  To run a Spark python examples :
     <if needed, customize the spark_run script file to find your Spark and Python>
     UNIX> ./spark_run ./spark_<example>.py
- To run with Python3 :
-    UNIX> ./spark_run -py3 ./spark_<example>.py
  for example :     
     UNIX> ./spark_run ./spark_c3d_gui_window.py
     UNIX> ./spark_run ./spark_c3d_window_py3d.py
@@ -82,4 +85,6 @@
     UNIX> ./spark_run ./spark_cfitsio_ntuple.py
     UNIX> ./spark_run ./spark_c3d_window.py
     UNIX> ./spark_run ./spark_h1d.py
+  To execute all examples :
+    UNIX> ./spark_run all
 
