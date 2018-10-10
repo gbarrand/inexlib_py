@@ -17,7 +17,7 @@ del r
 #//////////////////////////////////////////////////////////
 #/// plotting : ///////////////////////////////////////////
 #//////////////////////////////////////////////////////////
-import exlib
+import exlib_window as exlib
 
 stop_thread = False
 
@@ -31,8 +31,6 @@ def plot_histo(a_h,a_stop):
       sgp = plotter.plots().current_plotter()
       sgp.bins_style(0).color.value(inlib.colorf_blue())
    
-      inlib.env_append_path('EXLIB_FONT_PATH','.')    
-      inlib.env_append_path('EXLIB_FONT_PATH','..')    
       sgp.infos_style().font.value(inlib.font_arialbd_ttf())
   
       sgp.infos_x_margin.value(0.01) #percent of plotter width.

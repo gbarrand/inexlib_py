@@ -5,9 +5,9 @@ import time
 from threading import Thread
 
 def myfunc(i):
-    print "sleeping 5 sec from thread %d" % i
+    print("sleeping 5 sec from thread ");print(i)
     time.sleep(5)
-    print "finished sleeping from thread %d" % i
+    print("finished sleeping from thread ");print(i)
 
 for i in range(3):
     t = Thread(target=myfunc, args=(i,))

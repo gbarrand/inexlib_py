@@ -256,7 +256,18 @@ public:
       update_sg(a_action.out(),lines);
       reset_touched();
     }
-    a_action.add_points(m_xyzs);
+    if(solid.value()) {
+      inlib_vforcit(prims_t,m_primss,itt) {
+        const prims_t& prims = *itt;
+        inlib_vforcit(tess_prim*,prims,it) {
+          const tess_prim& item = *(*it);
+          const std::vector<float>& coords = item.m_coords;
+          a_action.add_points(coords);
+        }
+      }
+    } else {
+      a_action.add_points(m_xyzs);
+    }
   }
 
   virtual void pick(pick_action& a_action) {
@@ -265,9 +276,7 @@ public:
       update_sg(a_action.out(),what);
       reset_touched();
     }
-
     if(solid.value()) {
-
       inlib_vforcit(prims_t,m_primss,itt) {
         const prims_t& prims = *itt;
         inlib_vforcit(tess_prim*,prims,it) {
@@ -276,7 +285,6 @@ public:
           if(a_action.add__primitive(*this,item.m_mode,coords,true)) return;
         }
       }
-
     } else {
       a_action.add__lines(*this,m_xyzs,true);
     }

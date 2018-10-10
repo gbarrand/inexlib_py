@@ -146,6 +146,12 @@ public:
     return true;
   }
 
+  bool event_pending(bool& a_is) {
+    if(!m_display) {a_is = false;return false;}
+    a_is = ::XPending(m_display)?true:false;
+    return true;
+  }
+
   bool next_event() {
     if(!m_display) return false;
     XEvent xevent;

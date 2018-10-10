@@ -9,6 +9,8 @@ exlib_home=${bush_home}/../inexlib/exlib
 
 build_clean=no
 build_verbose_name=no
+build_use_qt5=no
+build_use_py3=no
 
 what=""
 args=""
@@ -22,6 +24,9 @@ while test $# -ge 1 ; do
     -cocoa)  echo "-cocoa not accepted";exit;;
     -ios)    echo "-ios not accepted";exit;;
     -iossim) echo "-iossim not accepted";exit;;
+
+    -qt5)    build_use_qt5=yes;;
+    -py3)    build_use_py3=yes;;
 
     -*) args="${args} $1";;
      *) if [ $# = 1 ] ; then
@@ -83,6 +88,8 @@ if [ ${name} = "moc_Qt" ] ; then exit ;fi
 
 . ${bush_home}/on_where
 
+build_arg_cxx11=no
+
 build_geant4_10x=yes
 if [ ${base_name} = "clhep.cpp" ] ; then
   if [ ${on_my_win_xp} = yes ] ; then
@@ -92,11 +99,21 @@ if [ ${base_name} = "clhep.cpp" ] ; then
     if [ ${on_macpro4} = yes ] ; then #clang++ knows c++11, but we do not have libc++ here.
       args="${args} -gnu"
     fi	
-    args="${args} -c++11 -bdir_suffix=_c++11"
+    build_arg_cxx11=yes
   fi
 fi
 
+if [ ${base_name} = "button_Qt.cpp" -o ${base_name} = "GL_Qt.cpp" -o ${base_name} = "cube_SoQt.cpp" ] ; then
+  if [ ${build_use_qt5} = yes ] ; then
+    build_arg_cxx11=yes
+  fi      
+fi
+
 if [ ${base_name} = "hello_cling.cpp" ] ; then
+  build_arg_cxx11=yes
+fi
+
+if [ ${build_arg_cxx11} = yes ] ; then
   args="${args} -c++11 -bdir_suffix=_c++11"
 fi
 
@@ -135,6 +152,11 @@ if [ "${use_csz}" = "yes" ] ; then
   cppflags="${cppflags} -DINLIB_USE_CSZ"
 fi
 
+if [ ${build_use_py3} = yes ] ; then
+  use_Python=no  
+  use_Python3=yes
+fi
+
 #/////////////////////////////////////////////////////////
 #/// not automatic flags /////////////////////////////////
 #/////////////////////////////////////////////////////////
@@ -160,16 +182,44 @@ if [ ${name} = "plotter_slua_screen" -o ${name} = "plotter_spy_screen" -o ${name
   if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
 fi
 
+if [ ${name} = "h1d_spy" ] ; then
+  if [ ${build_use_py3} = yes ] ; then
+    cppfiles="${cppfiles} ${exlib_home}/exlib/spy3/inlib_swig_py.cpp"
+  else	
+    cppfiles="${cppfiles} ${exlib_home}/exlib/spy/inlib_swig_py.cpp"
+  fi
+fi
+
+if [ ${name} = "plotter_spy_screen" ] ; then
+  if [ ${build_use_py3} = yes ] ; then
+    cppfiles="${cppfiles} ${exlib_home}/exlib/spy3/inlib_swig_py.cpp"
+    cppfiles="${cppfiles} ${exlib_home}/exlib/spy3/exlib_window_swig_py.cpp"
+  else	
+    cppfiles="${cppfiles} ${exlib_home}/exlib/spy/inlib_swig_py.cpp"
+    cppfiles="${cppfiles} ${exlib_home}/exlib/spy/exlib_window_swig_py.cpp"
+  fi
+fi
+
 #/////////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////
   
-. ${bush_home}/use/Qt
+if [ ${build_use_qt5} = yes ] ; then
+  . ${bush_home}/use/qt5
+else
+  . ${bush_home}/use/Qt
+fi
+
+if [ ${name} = "button_Qt" ] ; then
+  cppfiles="${cppfiles} moc_button_Qt.cpp"
+  ${moc_exe} -o moc_button_Qt.cpp button_Qt.h
+  to_rm="${to_rm} moc_button_Qt.cpp"
+fi
 
 if [ ${name} = "GL_Qt" ] ; then
-  cppfiles="${cppfiles} moc_Qt.cpp"
-  ${moc_exe} -o moc_Qt.cpp Qt.h
-  to_rm="${to_rm} moc_Qt.cpp"
+  cppfiles="${cppfiles} moc_GL_Qt.cpp"
+  ${moc_exe} -o moc_GL_Qt.cpp GL_Qt.h
+  to_rm="${to_rm} moc_GL_Qt.cpp"
 fi
 
 # -Wshadow is a pain with CLHEP.
@@ -223,6 +273,7 @@ fi
 
 . ${bush_home}/use/Xpm
 
+. ${bush_home}/use/GLU
 . ${bush_home}/use/GL
 
 #/////////////////////////////////
@@ -267,6 +318,7 @@ fi
 . ${bush_home}/use/pythia8
 . ${bush_home}/use/Getline
 . ${bush_home}/use/Python
+. ${bush_home}/use/Python3
 . ${bush_home}/use/lua
 . ${bush_home}/use/cling
 . ${bush_home}/use/mpi

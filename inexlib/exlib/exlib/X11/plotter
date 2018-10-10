@@ -8,19 +8,22 @@
 
 #include "session"
 
-#include <inlib/sg/noderef>
-#include <inlib/sg/ortho>
-#include <inlib/sg/h2plot>
-#include <inlib/sg/h2plot_cp>
-#include <inlib/sg/f2plot>
-#include <inlib/sg/xy2plot>
-#include <inlib/sg/fit2plot>
-#include <inlib/sg/plots>
-
 #include "../sg/viewer"
 #include "../sg/text_freetype"
 
 #include "simple_dispatcher"
+
+#include <inlib/sg/noderef>
+#include <inlib/sg/ortho>
+#include <inlib/sg/plots>
+
+#include <inlib/sg/h2plot_cp>
+#include <inlib/sg/f2plot>
+#include <inlib/sg/xy2plot>
+#include <inlib/sg/fit2plot>
+#include <inlib/sg/cloud2plot_cp>
+
+#include <inlib/sys/dir>
 
 namespace exlib {
 namespace X11 {
@@ -28,8 +31,8 @@ namespace X11 {
 class plotter : public sg::viewer {
   typedef sg::viewer parent;
 private:
-  class dispatcher : public exlib::X11::simple_dispatcher {
-    typedef exlib::X11::simple_dispatcher parent;
+  class dispatcher : public simple_dispatcher {
+    typedef simple_dispatcher parent;
   public:
     virtual void win_render() {m_plotter.win_render();}
     virtual void set_size(unsigned int a_width,unsigned int a_height) {
@@ -76,6 +79,14 @@ public:
     m_session.add_dispatcher(new dispatcher(*this));
 
     //////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+   {std::string path = "."+inlib::sep()+"res";
+    if(inlib::dir::is_a(path)) inlib::env_append_path("EXLIB_FONT_PATH",path);}
+   {std::string path = ".."+inlib::sep()+"res";
+    if(inlib::dir::is_a(path)) inlib::env_append_path("EXLIB_FONT_PATH",path);}
+    
+    //////////////////////////////////////////////////////////
     /// scene graph //////////////////////////////////////////
     //////////////////////////////////////////////////////////
     m_camera.height = 1;
@@ -92,6 +103,7 @@ public:
     m_plots.adjust_size(a_width,a_height);
 
     m_sg.add(new inlib::sg::noderef(m_plots));
+
   }
   virtual ~plotter() {
     //std::cout << "debug : ~plotter" << std::endl;
@@ -127,6 +139,8 @@ public:
     return true;
   }
 
+  bool steer() {return m_session.steer();}
+
   void win_render() {
     if(!m_win) return;
     if(::glXMakeCurrent(m_session.display(),m_win,m_session.context())==False){
@@ -144,82 +158,9 @@ public:
     }
   }
 
-public: 
-  //proxies to have less verbose user programming :
+public:
 
-  //WARNING : the plotter must have at least 1x1 plotting area,
-  //          else the below will crash because current_plotter()
-  //          will return a null pointer.
-
-  inlib::sg::plots& plots() {return m_plots;}
-  const inlib::sg::plots& plots() const {return m_plots;}
-
-  void add_plottable(inlib::sg::plottable* a_plottable) {
-    m_plots.current_plotter().add_plottable(a_plottable); //it takes ownership.
-  }
-
-  inlib::sg::plottable* plot(const inlib::histo::h1d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h1d2plot(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  inlib::sg::plottable* plot(const inlib::histo::h2d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h2d2plot(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  inlib::sg::plottable* plot(const inlib::histo::p1d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::p1d2plot(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  inlib::sg::plottable* plot_cp(const inlib::histo::h1d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h1d2plot_cp(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  inlib::sg::plottable* plot_cp(const inlib::histo::h2d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h2d2plot_cp(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  inlib::sg::plottable* plot_cp(const inlib::histo::p1d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::p1d2plot_cp(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-
-  //inlib::sg::plottable* plot(const inlib::histo::p2d& a_histo) {
-  //  inlib::sg::plottable* p = new inlib::sg::p2d2plot(a_histo);
-  //  m_plots.current_plotter().add_plottable(p); //it takes ownership.
-  //  return p;
-  //}
-
-  template <class T>
-  inlib::sg::plottable* plot(const T& a_func) {
-    inlib::sg::plottable* p = new inlib::sg::f1d2plot<T>(a_func);
-    m_plots.current_plotter().add_plottable(p);
-    return p;
-  }
-
-  template <class T>
-  inlib::sg::plottable* plot(const std::vector<T>& a_xs,const std::vector<T>& a_ys) {
-    inlib::sg::plottable* p = new inlib::sg::xy2plot<T>(a_xs,a_ys);
-    m_plots.current_plotter().add_plottable(p);
-    return p;
-  }
-
-  inlib::sg::plottable* plot_fit(const std::vector<std::string>& a_names,const std::vector<double>& a_output) {
-    inlib::sg::plottable* p = new inlib::sg::fit2plot(a_names,a_output);
-    m_plots.current_plotter().add_plottable(p);
-    return p;
-  }
+#include "../plotter_common.icc"
 
 protected:
   session& m_session;

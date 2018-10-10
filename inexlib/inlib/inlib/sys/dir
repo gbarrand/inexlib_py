@@ -100,6 +100,12 @@ inline bool is_a(const std::string& a_path,bool& a_value) {
   return true;
 }
 
+inline bool is_a(const std::string& a_path) {
+  bool _is;
+  if(!is_a(a_path,_is)) return false;
+  return _is;
+}
+
 inline bool is_dot(const std::string& a_path) {
 #ifdef _WIN32
   char sep = '\\';

@@ -5,7 +5,7 @@ bush_home=`dirname $0`/../../../../bush
 . ${bush_home}/exlib_header
 
 pack_name=inexlib_py   
-version=1.0.0
+version=1.1.0
 
 /bin/rm -R -f ${build_path}/distrib
 /bin/mkdir -p ${build_path}/distrib/${pack_name}/${version}
@@ -27,20 +27,27 @@ else
   /bin/cp ../py/${build_dir}/inlib_swig_py.so ${to}/.
 fi
 
-if [ ! -x ../py/${build_dir}/exlib_swig_py.so ] ; then
-  echo "../py/${build_dir}/exlib_swig_py.so not found."
+if [ ! -x ../py/${build_dir}/exlib_offscreen_swig_py.so ] ; then
+  echo "../py/${build_dir}/exlib_offscreen_swig_py.so not found."
 else    
-  /bin/cp ../py/${build_dir}/exlib_swig_py.so ${to}/.
+  /bin/cp ../py/${build_dir}/exlib_offscreen_swig_py.so ${to}/.
+fi
+
+if [ ! -x ../py/${build_dir}/exlib_window_swig_py.so ] ; then
+  echo "../py/${build_dir}/exlib_window_swig_py.so not found."
+else    
+  /bin/cp ../py/${build_dir}/exlib_window_swig_py.so ${to}/.
 fi
 
 /bin/cp ../../exlib/spy/inlib.py ${to}/.
-/bin/cp ../../exlib/spy/exlib.py ${to}/.
+/bin/cp ../../exlib/spy/exlib_offscreen.py ${to}/.
+/bin/cp ../../exlib/spy/exlib_window.py ${to}/.
 
-/bin/cp ../../data/mandel.py ${to}/.
-/bin/cp ../../data/arialbd.ttf ${to}/.
-/bin/cp ../../data/hst-img-2010x1890.fits ${to}/.
-/bin/cp ../../data/wroot.root ${to}/.
-/bin/cp ../../data/pawdemo.root ${to}/.
+/bin/cp ../py/run       ${to}/.
+/bin/cp ../py/spark_run ${to}/.
+
+/bin/cp -R ./res ${to}/.
+/bin/cp -R ../../data ${to}/.
 
 find ../py -name '*.py' -exec /bin/cp {} ${to}/. \;
 

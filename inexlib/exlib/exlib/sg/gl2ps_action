@@ -124,19 +124,20 @@ public:
   virtual void set_lighting(bool a_on) {m_light_on = a_on;}
 
   virtual void restore_state(unsigned int /*a_ret_num_light*/) {
-    m_proj = m_state.m_proj;
-    m_model = m_state.m_model;
+    const inlib::sg::state& _state = state();
+    m_proj = _state.m_proj;
+    m_model = _state.m_model;
 
-    m_color = m_state.m_color;
-    m_ccw = (m_state.m_winding==inlib::sg::winding_ccw?true:false);
-    m_POLYGON_OFFSET_FILL = m_state.m_GL_POLYGON_OFFSET_FILL;
-    m_CULL_FACE = m_state.m_GL_CULL_FACE;
-    m_POINT_SMOOTH = m_state.m_GL_POINT_SMOOTH;
-    m_LINE_SMOOTH = m_state.m_GL_LINE_SMOOTH;
-    m_point_size = m_state.m_point_size;
-    m_line_width = m_state.m_line_width;
-    m_light_on = m_state.m_GL_LIGHTING;
-    m_DEPTH_TEST = m_state.m_GL_DEPTH_TEST;
+    m_color = _state.m_color;
+    m_ccw = (_state.m_winding==inlib::sg::winding_ccw?true:false);
+    m_POLYGON_OFFSET_FILL = _state.m_GL_POLYGON_OFFSET_FILL;
+    m_CULL_FACE = _state.m_GL_CULL_FACE;
+    m_POINT_SMOOTH = _state.m_GL_POINT_SMOOTH;
+    m_LINE_SMOOTH = _state.m_GL_LINE_SMOOTH;
+    m_point_size = _state.m_point_size;
+    m_line_width = _state.m_line_width;
+    m_light_on = _state.m_GL_LIGHTING;
+    m_DEPTH_TEST = _state.m_GL_DEPTH_TEST;
   }
 
   /////////////////////////////////////////////////////////////////

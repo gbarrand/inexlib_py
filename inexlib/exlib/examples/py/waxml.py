@@ -9,7 +9,7 @@ EXIT_SUCCESS = 0
 def main():
   writer = inlib.waxml_file()
   if writer.open('inlib_waxml.aida') == False :
-    print "can't open inlib_axml.aida."
+    print("can't open inlib_axml.aida.")
     return EXIT_FAILURE
 
   entries = 1000000
@@ -20,7 +20,7 @@ def main():
   for count in range(0,entries) :
     h.fill(rg.shoot(),1.4)
   if writer.write(h,'/histo','rg') == False :
-    print "can't write h1d."
+    print("can't write h1d.")
     return EXIT_FAILURE
   del rg,h,count
 
@@ -30,7 +30,7 @@ def main():
   for count in range(0,entries) :
     h.fill(rg.shoot(),rbw.shoot(),1)
   if writer.write(h,'/histo','prof') == False :
-    print "can't write prof."
+    print("can't write prof.")
     return EXIT_FAILURE
   del rg,rbw,h,count
 
@@ -40,7 +40,7 @@ def main():
   for count in range(0,entries) :
     h.fill(rg.shoot(),rbw.shoot(),0.8)
   if writer.write(h,'/histo','rgbw') == False :
-    print "can't write h2d."
+    print("can't write h2d.")
     return EXIT_FAILURE
   del rg,rbw,h,count
   

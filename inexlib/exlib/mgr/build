@@ -50,6 +50,17 @@ if [ "${what}" = "" ] ; then
   exit
 fi
 
+if [ "${what}" = "swig" ] ; then
+  ./build ${build_args} ../exlib/spy/inlib_swig.i
+  ./build ${build_args} ../exlib/spy/exlib_offscreen_swig.i
+  ./build ${build_args} ../exlib/spy/exlib_window_swig.i
+  
+  ./build ${build_args} ../exlib/spy3/inlib_swig.i
+  ./build ${build_args} ../exlib/spy3/exlib_offscreen_swig.i
+  ./build ${build_args} ../exlib/spy3/exlib_window_swig.i
+  exit
+fi
+
 if [ -d "${what}" ] ; then
   find ${what} -maxdepth 1 -name "*" -type f -exec ./build ${build_args} {} \;
   exit
@@ -115,7 +126,9 @@ fi
 
 if [ "`echo ${what} | grep '\.ps'`" != "" ] ; then exit; fi
 
-if [ ${group} = "CVS" ] ; then exit;fi
+if [ ${group} = "swig" ] ; then exit;fi
+if [ ${group} = "CVS"  ] ; then exit;fi
+
 if [ ${name} = "README" ] ; then exit;fi
 
 #////////////////////////////////////
@@ -176,6 +189,7 @@ is_swig_py=no
 is_swig_lua=no
 is_flex=no
 is_yacc=no
+swig_py3=no
 
 if [ ${group} = "apps" ] ; then
   is_app=yes
@@ -246,7 +260,8 @@ if [ ${is_app} = "yes" ] ; then
       fi
     fi
     use_GL=no
-    echo "exlib/build : ${name} : disconnect use/GL."
+    use_GLU=no
+    echo "exlib/build : ${name} : disconnect use/GLU,GL."
   fi
 
   if [ ${name} = "aida_cern_root" ] ; then
@@ -362,8 +377,9 @@ else # lib
 
   fi
 
-  if [ ${group} = "spy" ] ; then
+  if [ ${group} = "spy" -o ${group} = "spy3" ] ; then
     if [ ${base_name} = "inlib_swig.i" ] ; then
+      if [ ${group} = "spy3" ] ; then swig_py3=yes;fi
       is_swig_py=yes
       swig_incs="${swig_incs} -I../../inlib"
       swig_incs="${swig_incs} -I../../inlib/inlib"
@@ -380,7 +396,8 @@ else # lib
       if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
     fi
 
-    if [ ${base_name} = "exlib_swig.i" ] ; then
+    if [ ${base_name} = "exlib_window_swig.i" -o ${base_name} = "exlib_offscreen_swig.i" ] ; then
+      if [ ${group} = "spy3" ] ; then swig_py3=yes;fi
       is_swig_py=yes
       swig_incs="${swig_incs} -I../../inlib"
       swig_incs="${swig_incs} -I../../inlib/inlib"
@@ -401,7 +418,7 @@ else # lib
       swig_incs="${swig_incs} -I../../exlib/exlib/sg"
     fi
 
-    if [ ${name} = "exlib_swig_py" ] ; then
+    if [ ${name} = "exlib_offscreen_swig_py" ] ; then
       is_plugin=yes
       is_py_plugin=yes
       plugin=${name}
@@ -409,7 +426,26 @@ else # lib
       cppfiles="${cppfiles} ${what}"
       if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
     fi
+    
+    if [ ${name} = "exlib_window_swig_py" ] ; then
+      is_plugin=yes
+      is_py_plugin=yes
+      plugin=${name}
+      pyname=${name}
+      cppfiles="${cppfiles} ${what}"
+      if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
+    fi
+  fi
 
+  if [ ${group} = "bpy" ] ; then
+    if [ ${name} = "hello_spark" ] ; then
+      is_plugin=yes
+      is_py_plugin=yes
+      plugin=${name}
+      pyname=${name}
+      cppfiles="${cppfiles} ${what}"
+      if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
+    fi
   fi
 
   if [ ${group} = "yacc" ] ; then
@@ -432,7 +468,7 @@ else # lib
       if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
     fi
 
-    if [ ${base_name} = "exlib_swig.i" ] ; then
+    if [ ${base_name} = "exlib_offscreen_swig.i" -o ${base_name} = "exlib_window_swig.i" ] ; then
       is_swig_lua=yes
       swig_incs="${swig_incs} -I../../inlib"
       swig_incs="${swig_incs} -I../../inlib/inlib"
@@ -452,7 +488,13 @@ else # lib
       swig_incs="${swig_incs} -I../../ourex/gl2ps/gl2ps"
       swig_incs="${swig_incs} -I../../exlib/exlib/sg"
     fi
-    if [ ${name} = "exlib_swig_lua" ] ; then
+    if [ ${name} = "exlib_offscreen_swig_lua" ] ; then
+      is_plugin=yes
+      plugin=${name}
+      cppfiles="${cppfiles} ${what}"
+      if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
+    fi
+    if [ ${name} = "exlib_window_swig_lua" ] ; then
       is_plugin=yes
       plugin=${name}
       cppfiles="${cppfiles} ${what}"
@@ -599,6 +641,7 @@ fi
 #/////////////////////////////////
 . ${bush_home}/use/HEPVis
 . ${bush_home}/use/CoinGL
+. ${bush_home}/use/GLU
 . ${bush_home}/use/GL
 
 #/////////////////////////////////
@@ -616,6 +659,7 @@ fi
 . ${bush_home}/use/cfitsio
 . ${bush_home}/use/sqlite
 . ${bush_home}/use/Python
+. ${bush_home}/use/Python3
 . ${bush_home}/use/lua
 . ${bush_home}/use/cling
 . ${bush_home}/use/graphviz
@@ -635,6 +679,8 @@ fi
 . ${bush_home}/use/Getline
 . ${bush_home}/use/KUIP
 
+. ${bush_home}/use/boost_python
+. ${bush_home}/use/boost
 . ${bush_home}/use/swig
 . ${bush_home}/use/yacc
 
@@ -649,6 +695,7 @@ fi
 
 . ${bush_home}/use/AIDA
 . ${bush_home}/use/cern_root # :-(
+. ${bush_home}/use/cern_root_arte
 . ${bush_home}/use/pythia8
 
 . ${bush_home}/use/f77       # :-(
@@ -679,7 +726,7 @@ fi
 
 # let the freedom to not use G4_cppflags for some components :
 # -Wshadow is a pain with CLHEP.
-#if [ ${name} != "inlib_swig_py" -a ${name} != "exlib_swig_py" ] ; then
+#if [ ${name} != "inlib_swig_py" -a ${name} != "exlib_offscreen_swig_py" -a ${name} != "exlib_window_swig_py" ] ; then
 #  cppflags="${G4_cppflags} ${cppflags}"
 #fi
 
@@ -723,18 +770,22 @@ elif [ ${is_swig_py} = "yes" ] ; then
 
   swig_incs="-I${pivy_home} -I${pivy_home}/fake_headers ${swig_incs}"
 
-  swig_flags="-includeall -modern"
+  swig_flags="${swig_flags} -includeall -modern"
   swig_flags="${swig_flags} -D__PIVY__"
   swig_flags="${swig_flags} -w302,306,307,312,389,361,362,467,503,509,510"
   swig_flags="${swig_flags} -fcompact"
 
-  swig_out_file=../exlib/spy/${name}_py.icc
+  if [ ${swig_py3} = yes ] ; then
+    swig_flags="${swig_flags} -py3"
+  fi
+  
+  swig_out_file=../exlib/${group}/${name}_py.icc
     
   if [ ${build_verbose} = yes ] ; then
     echo "exlib/mgr/build : swig program is : ${swig_exe}"
   fi
 
-  eval ${swig_exe} -interface ${name}_py -python -c++ ${swig_flags} ${swig_incs} -o ${swig_out_file} ../exlib/spy/${name}.i
+  eval ${swig_exe} -interface ${name}_py -python -c++ ${swig_flags} ${swig_incs} -o ${swig_out_file} ../exlib/${group}/${name}.i
     
   sed -e 's#PyErr_Format(PyExc_RuntimeError, mesg)#PyErr_Format(PyExc_RuntimeError, "%s",mesg)#g' ${swig_out_file} > tmp_0
   mv tmp_0 ${swig_out_file}
@@ -746,7 +797,7 @@ elif [ ${is_swig_lua} = "yes" ] ; then
 
   swig_incs="-I${pivy_home} -I${pivy_home}/fake_headers ${swig_incs}"
 
-  swig_flags="-includeall"
+  swig_flags="${swig_flags} -includeall"
 #  swig_flags="${swig_flags} -modern"
 #  swig_flags="${swig_flags} -D__PIVY__"
   swig_flags="${swig_flags} -w302,306,307,312,389,361,362,467,503,509,510"
@@ -822,6 +873,8 @@ else
 
   if [ "${suffix}" = "f" ] ; then
     f77files="${f77files} ${what}"
+  elif [ "${suffix}" = "c" ] ; then
+    cfiles="${cfiles} ${what}"
   else	
     cppfiles="${cppfiles} ${what}"
   fi      

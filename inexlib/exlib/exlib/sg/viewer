@@ -14,8 +14,8 @@ namespace sg {
 
 class viewer : public inlib::sg::viewer {
   INLIB_HEADER(viewer,exlib::sg::viewer,inlib::sg::viewer)
-public:
-  virtual void after_render() {}
+//public:
+  //virtual void after_render() {}
 public:
   void render() {
     if(!m_ww) return;
@@ -37,7 +37,7 @@ public:
             << std::endl;
     }
 
-    after_render();
+    //after_render();
 
     m_gl_mgr.end_render();
   }

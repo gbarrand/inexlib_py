@@ -18,13 +18,11 @@ namespace X11 {
 class sg_viewer : public sg::viewer {
   typedef sg::viewer parent;
 private:
-  class dispatcher : public exlib::X11::simple_dispatcher {
-    typedef exlib::X11::simple_dispatcher parent;
+  class dispatcher : public simple_dispatcher {
+    typedef simple_dispatcher parent;
   public:
     virtual void win_render() {m_sg_viewer.win_render();}
-    virtual void set_size(unsigned int a_width,unsigned int a_height) {
-      m_sg_viewer.set_size(a_width,a_height);
-    }
+    virtual void set_size(unsigned int a_width,unsigned int a_height) {m_sg_viewer.set_size(a_width,a_height);}
     virtual dispatcher* copy() const {return new dispatcher(*this);}
   public:
     dispatcher(sg_viewer& a_sg_viewer)

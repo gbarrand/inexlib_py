@@ -13,6 +13,8 @@
 #include <inlib/histo/h3d>
 #include <inlib/histo/p1d>
 #include <inlib/histo/p2d>
+#include <inlib/histo/c2d>
+#include <inlib/histo/c3d>
 
 #include <inlib/waxml/file>
 #include <inlib/rroot/file>
@@ -54,6 +56,12 @@
 
 #include <inlib/sg/polyhedron>
 #include <inlib/sg/infos>
+#include <inlib/sg/set_plotter_camera>
+
+#include <inlib/wps>
+#include <inlib/sg/zb_action>
+
+#include <inlib/spark>
 
 // used to SWIG wrap functions/methods that uses std::string& in arguments :
 namespace inlib {

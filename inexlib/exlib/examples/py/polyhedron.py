@@ -2,7 +2,7 @@
 # See the file exlib.license for terms.
 
 import inlib
-import exlib
+import exlib_window as exlib
 
 def polyhedron():
   #//////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ def polyhedron():
   m.thisown = 0
   m.set_rotate(0,1,0,inlib.fhalf_pi()/2)
   m.mul_rotate(1,0,0,inlib.fhalf_pi()/2)
-  sep.add(m);
+  sep.add(m)
 
   mat = inlib.sg_rgba()
   mat.thisown = 0

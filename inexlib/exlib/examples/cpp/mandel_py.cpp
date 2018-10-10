@@ -41,6 +41,8 @@ int main() {
   //so that python find mandel.py :
   if(inlib::file::exists("../../data/mandel.py")) { //if run from exlib/examples/cpp.
     inlib::putenv(s_PYTHONPATH(),"../../data");
+  } else if(inlib::file::exists("./data/mandel.py")) { //if run from inexlib_py distribution.
+    inlib::putenv(s_PYTHONPATH(),"./data");
   } else if(inlib::file::exists("mandel.py")) {
     inlib::putenv(s_PYTHONPATH(),".");
   } else {

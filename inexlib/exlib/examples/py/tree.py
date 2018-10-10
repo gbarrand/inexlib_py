@@ -3,12 +3,14 @@
 
 import os.path
 
-file = '../../../data/pawdemo.root'
+file = '../../data/pawdemo.root'
 if os.path.isfile(file) == False :
-  file = './pawdemo.root'
+  file = './data/pawdemo.root'
   if os.path.isfile(file) == False :
-    print 'file pawdemo.root not found.'
-    exit()
+    file = './pawdemo.root'
+    if os.path.isfile(file) == False :
+      print('file pawdemo.root not found.')
+      exit()
     
 import inlib
 
@@ -24,46 +26,46 @@ EXIT_SUCCESS = 0
 def tree_main():
   rfile = inlib.rroot_file(inlib.get_cout(),file,False)
   if rfile.is_open() == False :
-    print "can't open file"
+    print("can't open file")
     return EXIT_FAILURE
 
   keys = rfile.dir().keys()
-  #print 'number of keys = ',keys.size()
+  #print('number of keys = ');print(keys.size())
 
   dir = inlib.rroot_find_dir(rfile.dir(),'STAFF')
   if dir == None :
-    print 'directory not found'
+    print('directory not found')
     return EXIT_FAILURE
     
   key = dir.find_key('h10')
   if key == None :
-    print 'tree not found'
+    print('tree not found')
     return EXIT_FAILURE
     
   fac = inlib.rroot_fac(out)
   tree = inlib.rroot_key_to_tree(rfile,fac,key)
   if tree == None :
-    print 'key is not a tree.'
+    print('key is not a tree.')
     return EXIT_FAILURE
 
   #tree.show(gv.out(),1)
-  #print tree.entries()
+  #print(tree.entries())
   
   leaf = tree.find_leaf("Age")
   if leaf == None :
-    print 'leaf not found.'
+    print('leaf not found.')
     return EXIT_FAILURE
 
-  #print 'leaf type : ',leaf.s_cls()
+  #print('leaf type : ');print(leaf.s_cls())
 
   li = inlib.rroot_cast_leaf_int(leaf)
   if leaf == None :
-    print 'leaf not a leaf<int>.'
+    print('leaf not a leaf<int>.')
     return EXIT_FAILURE
   
   branch = tree.find_leaf_branch(leaf)
   if branch == None :
-    print 'branch of leaf not found.'
+    print('branch of leaf not found.')
     return EXIT_FAILURE
 
 
@@ -71,21 +73,22 @@ def tree_main():
 
   for i in range(0,tree.entries()):
     if branch.find_entry(rfile,i) == False :
-      print 'branch.find_entry failed.'
+      print('branch.find_entry failed.')
       return EXIT_FAILURE
     v = li.value(0)
-    #print 'li ',i,' ',v
     h_age.fill(v,1)    
 
   rfile.close()
 
-  print h_age.entries(),h_age.mean(),h_age.rms()
+  print(h_age.entries())
+  print(h_age.mean())
+  print(h_age.rms())
   
   #//////////////////////////////////////////////////
   #// plot : ////////////////////////////////////////
   #//////////////////////////////////////////////////
 
-  import exlib
+  import exlib_window as exlib
 
   gl2ps_mgr = exlib.sg_gl2ps_manager()
   smgr = exlib.session(inlib.get_cout()) # screen manager
@@ -95,8 +98,6 @@ def tree_main():
       sgp = plotter.plots().current_plotter()
       sgp.bins_style(0).color.value(inlib.colorf_blue())
  
-      inlib.env_append_path('EXLIB_FONT_PATH','.')    
-      inlib.env_append_path('EXLIB_FONT_PATH','..')    
       sgp.infos_style().font.value(inlib.font_arialbd_ttf())
 
       sgp.infos_x_margin.value(0.01) #percent of plotter width.
@@ -114,7 +115,7 @@ def tree_main():
     
       plotter.show()
 
-      smgr.steer()
+      plotter.steer()
 
     del plotter
 

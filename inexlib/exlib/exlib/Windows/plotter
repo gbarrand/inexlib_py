@@ -8,17 +8,18 @@
 #include "window"
 #include "glarea"
 
+#include "../sg/viewer"
+#include "../sg/text_freetype"
+
 #include <inlib/sg/noderef>
 #include <inlib/sg/ortho>
-#include <inlib/sg/h2plot>
 #include <inlib/sg/h2plot_cp>
 #include <inlib/sg/f2plot>
 #include <inlib/sg/xy2plot>
 #include <inlib/sg/fit2plot>
+#include <inlib/sg/cloud2plot_cp>
 #include <inlib/sg/plots>
-
-#include "../sg/viewer"
-#include "../sg/text_freetype"
+#include <inlib/sys/dir>
 
 // disable the warning about the usage of "this" in the constructor.
 #pragma warning(disable:4355)
@@ -48,6 +49,14 @@ public:
     if(!m_hwnd) return; //throw
 
     //////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+   {std::string path = "."+inlib::sep()+"res";
+    if(inlib::dir::is_a(path)) inlib::env_append_path("EXLIB_FONT_PATH",path);}
+   {std::string path = ".."+inlib::sep()+"res";
+    if(inlib::dir::is_a(path)) inlib::env_append_path("EXLIB_FONT_PATH",path);}
+    
+    //////////////////////////////////////////////////////////
     /// scene graph //////////////////////////////////////////
     //////////////////////////////////////////////////////////
     inlib::sg::separator* sep = new inlib::sg::separator;
@@ -69,6 +78,7 @@ public:
     sep->add(new inlib::sg::noderef(m_plots));
 
     sg().add(sep); //give sep ownership to the viewer.
+    
   }
   virtual ~plotter() {}
 protected:
@@ -97,57 +107,11 @@ public:
     return true;
   }
 
-public:
-  inlib::sg::plots& plots() {return m_plots;}
-  const inlib::sg::plots& plots() const {return m_plots;}
-
-  void add_plottable(inlib::sg::plottable* a_plottable) {
-    m_plots.current_plotter().add_plottable(a_plottable); //it takes ownership.
-  }
+  bool steer() {return m_session.steer();}
   
-  inlib::sg::plottable* plot(const inlib::histo::h1d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h1d2plot(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
+public:
 
-  inlib::sg::plottable* plot(const inlib::histo::h2d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h2d2plot(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  inlib::sg::plottable* plot_cp(const inlib::histo::h1d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h1d2plot_cp(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  inlib::sg::plottable* plot_cp(const inlib::histo::h2d& a_histo) {
-    inlib::sg::plottable* p = new inlib::sg::h2d2plot_cp(a_histo);
-    m_plots.current_plotter().add_plottable(p); //it takes ownership.
-    return p;
-  }
-
-  template <class T>
-  inlib::sg::plottable* plot(const T& a_func) {
-    inlib::sg::plottable* p = new inlib::sg::f1d2plot<T>(a_func);
-    m_plots.current_plotter().add_plottable(p);
-    return p;
-  }
-
-  template <class T>
-  inlib::sg::plottable* plot(const std::vector<T>& a_xs,const std::vector<T>& a_ys) {
-    inlib::sg::plottable* p = new inlib::sg::xy2plot<T>(a_xs,a_ys);
-    m_plots.current_plotter().add_plottable(p);
-    return p;
-  }
-
-  inlib::sg::plottable* plot_fit(const std::vector<std::string>& a_names,const std::vector<double>& a_output) {
-    inlib::sg::plottable* p = new inlib::sg::fit2plot(a_names,a_output);
-    m_plots.current_plotter().add_plottable(p);
-    return p;
-  }
+#include "../plotter_common.icc"
 
 protected:
   class _glarea : public glarea {

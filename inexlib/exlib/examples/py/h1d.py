@@ -9,7 +9,7 @@ r = inlib.rgaussd(0,1)
 for I in range(0,10000):
   h.fill(r.shoot(),1)
 
-print h.entries(),h.mean(),h.rms()
+print(h.entries());print(h.mean());print(h.rms())
 
 del r
 del h

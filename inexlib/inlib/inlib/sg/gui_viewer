@@ -62,6 +62,7 @@
 #include "gv_cbk"
 #include "base_dumper"
 #include "zb_manager"
+#include "mem_action"
 #include "../atime2s"
 
 //#ifdef _MSC_VER
@@ -2371,7 +2372,7 @@ protected:
    {text_button* b = new text_button(a_ttf);
     set_arconf(a_params,*b,"scene to menu area (shown once)");
     set_button_style(a_params,*b);
-    b->back_area::color = colorf(0.7f,0.9f,1,0.2f);
+    b->back_area::color = colorf(0.7f,0.9f,1,0.4f);  //alpha = 0.5f so that it is visible on a black back (case of pmx).
     //b->width = wbutton*(1-2*0.3f);
     b->width = wbutton;
     b->height = a_hzone;
@@ -4638,8 +4639,9 @@ public:
   const args& argcv() const {return m_argcv;}
   args& argcv() {return m_argcv;}
   
-  //const dumpers_t& dumpers() const {return m_dumpers;}
-  //dumpers_t& dumpers() {return m_dumpers;}
+//const dumpers_t& dumpers() const {return m_dumpers;}
+  dumpers_t& dumpers() {return m_dumpers;}             //used in nemoview.
+  
   void add_dumper(const std::string& a_key,base_dumper* a_dumper) { //take ownership of a_dumper.
     add_unique(m_dumpers,a_key,a_dumper,true); //true=delete existing dumper on a_key.
   }
@@ -4663,8 +4665,8 @@ public:
 public:
   bool set_img_from_res_file(const std::string& a_file,img_byte& a_img) {
     if(a_file.empty()) {a_img.clear();return true;}
-    std::string path = m_res_dir;
-    path += sep();
+    std::string path;
+    if(m_res_dir.size()) path = m_res_dir+sep();
     path += a_file;
     inlib_vforcit(image::readers::named_reader,m_image_readers.named_readers(),it) {
       image::ireader* _reader = (*it).second;
@@ -4679,6 +4681,18 @@ public:
     return false;
   }
 
+  void separator_to_vertices(separator& a_sep) {
+    atb_vertices* pts = new atb_vertices;
+    atb_vertices* lns = new atb_vertices;
+    atb_vertices* trs = new atb_vertices;
+    mem_action action(m_mem_mgr,m_out,*pts,*lns,*trs);
+    a_sep.render(action);
+    a_sep.clear();
+    a_sep.add(pts);
+    a_sep.add(lns);
+    a_sep.add(trs);
+  }
+    
 public: //commands
   bool insh_exec(const std::string& a_file,bool a_verbose) {
     if(!file::exists(a_file)) {    
@@ -4886,6 +4900,7 @@ protected:
   render_manager& m_render_manager;
   const base_freetype& m_ttf;
   sg::zb_manager m_zb_mgr; //sg is needed.
+  mem_manager m_mem_mgr;
 
 private:
   selection* m_scene;

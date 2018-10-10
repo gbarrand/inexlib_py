@@ -52,7 +52,7 @@ inline bool read_params(std::ostream& a_out,
 }
 
 inline char* read_slice(std::ostream& a_out,
-                        const std::string& a_file,
+                        cfitsio::file& a_file,
                         unsigned int a_hdu,
                         unsigned int a_slice,
                         unsigned int& a_width,
@@ -63,37 +63,26 @@ inline char* read_slice(std::ostream& a_out,
   a_height = 0;
   a_sz = 0;
   a_bitpix = 0;
-  cfitsio::file ffile(a_out);
-  if(!ffile.open(a_file)) return 0;
-  if(!ffile.to_HDU(a_hdu)) {
-    ffile.close();
-    return 0;
-  }
+  if(!a_file.is_open()) return 0;
+  if(!a_file.to_HDU(a_hdu)) return 0;
   unsigned int hdu;
   int type;
-  if(!ffile.cur_HDU(hdu,type)) {
-    ffile.close();
-    return 0;
-  }
+  if(!a_file.cur_HDU(hdu,type)) return 0;
 
   std::vector<unsigned int> orders;
   int bitpix;
-  if(!ffile.IMAGE_HDU_infos(orders,bitpix)) {
-    ffile.close();
-    return 0;
-  }
+  if(!a_file.IMAGE_HDU_infos(orders,bitpix)) return 0;
+  
   if(orders.empty()) {
     a_out << "exlib::fits_image::read_slice :"
           << " zero naxis."
           << std::endl;
-    ffile.close();
     return 0;
   }
     
   unsigned int dw,dh;
   size_t dsz;
-  char* db = ffile.read_IMAGE_HDU_slice(a_slice,dw,dh,dsz); //data buffer.
-  ffile.close();
+  char* db = a_file.read_IMAGE_HDU_slice(a_slice,dw,dh,dsz); //data buffer.
   if(!db) return 0;
 
   a_width = dw;
@@ -102,6 +91,25 @@ inline char* read_slice(std::ostream& a_out,
   a_bitpix = bitpix;
 
   return db;          
+}
+
+inline char* read_slice(std::ostream& a_out,
+                        const std::string& a_file,
+                        unsigned int a_hdu,
+                        unsigned int a_slice,
+                        unsigned int& a_width,
+                        unsigned int& a_height,
+                        size_t& a_sz,
+                        int& a_bitpix) {
+  cfitsio::file ffile(a_out);
+  if(!ffile.open(a_file)) {
+    a_width = 0;
+    a_height = 0;
+    a_sz = 0;
+    a_bitpix = 0;
+    return 0;
+  }    
+  return read_slice(a_out,ffile,a_hdu,a_slice,a_width,a_height,a_sz,a_bitpix);
 }
 
 inline char* read_slice(std::ostream& a_out,
@@ -521,31 +529,6 @@ inline float* HEALPix_BINARY_TBL_read(std::ostream& a_out,
 namespace exlib {
 namespace fits_image {
 
-inline bool read_slice_to_img(std::ostream& a_out,
-                              const std::string& a_file,
-                              unsigned int a_hdu,
-                              unsigned int a_slice,
-                              bool a_yswap,
-                              const inlib::lut<double>& a_lut,
-                              const inlib::SOPI::cmap& a_cmap,
-			      inlib::img<inlib::byte>& a_img) { //for SWIG.
-  unsigned int width,height;
-  size_t sz;
-  int bitpix;
-  char* buffer = exlib::fits_image::read_slice(a_out,a_file,a_hdu,a_slice,width,height,sz,bitpix);
-  if(!buffer) {
-    a_img.clear();
-    a_out << "exlib::fits_image::read_slice_to_img : read_slice() failed." << std::endl;
-    return false;
-  }
-#ifdef INLIB_MEM
-  inlib::mem::decrement(inlib::s_new().c_str());
-#endif
-  bool status = inlib::array_to_img<float>(a_out,width,height,buffer,a_yswap,a_lut,a_cmap,a_img);
-  delete [] buffer;
-  return status;
-}
-
 inline bool buffer2img(std::ostream& a_out,
                        const char* a_buffer,unsigned int a_width,unsigned int a_height,int a_bitpix,
                        bool a_yswap,
@@ -570,6 +553,54 @@ inline bool buffer2img(std::ostream& a_out,
   }
   return true;
 }
+
+inline bool read_slice_to_img(std::ostream& a_out,
+                              const std::string& a_file,
+                              unsigned int a_hdu,
+                              unsigned int a_slice,
+                              bool a_yswap,
+                              const inlib::lut<double>& a_lut,
+                              const inlib::SOPI::cmap& a_cmap,
+			      inlib::img<inlib::byte>& a_img) { //for SWIG.
+  unsigned int width,height;
+  size_t sz;
+  int bitpix;
+  char* buffer = exlib::fits_image::read_slice(a_out,a_file,a_hdu,a_slice,width,height,sz,bitpix);
+  if(!buffer) {
+    a_img.clear();
+    a_out << "exlib::fits_image::read_slice_to_img : read_slice() failed." << std::endl;
+    return false;
+  }
+#ifdef INLIB_MEM
+  inlib::mem::decrement(inlib::s_new().c_str());
+#endif
+//bool status = inlib::array_to_img<float>(a_out,width,height,bitpix,buffer,a_yswap,a_lut,a_cmap,a_img);
+  bool status = buffer2img(a_out,buffer,width,height,bitpix,a_yswap,a_lut,a_cmap,a_img);
+  delete [] buffer;
+  return status;
+}
+
+class img : public inlib::img<char> {
+  typedef inlib::img<char> parent;
+public:  
+  INLIB_SCLASS(exlib::fits_image::img)
+  virtual const std::string& s_cls() const {return s_class();} //for gopaw/find_object().
+public:
+  img(unsigned int a_w,unsigned int a_h,int a_bitpix,char* a_buffer,bool a_owner)
+  :parent(a_w,a_h,1,a_buffer,a_owner),m_bitpix(a_bitpix) {} //WARNING : bpp is 1.
+  virtual ~img() {}
+public:  
+  img(const img& a_from):parent(a_from),m_bitpix(a_from.m_bitpix) {}
+  img& operator=(const img& a_from){
+    parent::operator=(a_from);
+    m_bitpix = a_from.m_bitpix;
+    return *this;
+  }
+public:
+  int bitpix() const {return m_bitpix;}
+protected:
+  int m_bitpix;
+};
 
 }}
 

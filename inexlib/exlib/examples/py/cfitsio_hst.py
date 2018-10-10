@@ -9,12 +9,14 @@
 
 import os.path
 
-file = '../../../data/hst-img-2010x1890.fits'
+file = '../../data/hst-img-2010x1890.fits'
 if os.path.isfile(file) == False :
-  file = './hst-img-2010x1890.fits'
+  file = './data/hst-img-2010x1890.fits'
   if os.path.isfile(file) == False :
-    print 'file hst-img-2010x1890.fits not found.'
-    exit()
+    file = './hst-img-2010x1890.fits'
+    if os.path.isfile(file) == False :
+      print('file hst-img-2010x1890.fits not found.')
+      exit()
     
 import inlib
 
@@ -22,16 +24,16 @@ cmap = inlib.SOPI_colrj32()
 
 lut = inlib.lut_double(-0.04,0.4,cmap.size())
 
-import exlib
+import exlib_window as exlib
 
 slice = 0
-ihdu = 1;
-img = inlib.img_byte();
+ihdu = 1
+img = inlib.img_byte()
 yswap = False
 if exlib.fits_image_read_slice_to_img(inlib.get_cout(),file,ihdu,slice,yswap,lut,cmap,img) == False :
   print('read_slice failed.')
 else:
-  print 'size ',img.size()
+  print ('size ');print(img.size())
 
 #//////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////
@@ -39,7 +41,7 @@ else:
 stop_thread = False
 
 def vis_img(a_img,a_stop):
-  if a_img.is_empty() == True : return;
+  if a_img.is_empty() == True : return
   #//////////////////////////////////////////////////////////
   #/// create scene graph ///////////////////////////////////
   #//////////////////////////////////////////////////////////

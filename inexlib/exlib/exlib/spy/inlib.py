@@ -440,6 +440,44 @@ class histo_p2d(object):
 histo_p2d_swigregister = inlib_swig_py.histo_p2d_swigregister
 histo_p2d_swigregister(histo_p2d)
 
+class histo_c2d(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_histo_c2d
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_histo_c2d(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def fill(self, *args): return inlib_swig_py.histo_c2d_fill(self, *args)
+    def entries(self): return inlib_swig_py.histo_c2d_entries(self)
+    def mean_x(self): return inlib_swig_py.histo_c2d_mean_x(self)
+    def rms_x(self): return inlib_swig_py.histo_c2d_rms_x(self)
+    def mean_y(self): return inlib_swig_py.histo_c2d_mean_y(self)
+    def rms_y(self): return inlib_swig_py.histo_c2d_rms_y(self)
+histo_c2d_swigregister = inlib_swig_py.histo_c2d_swigregister
+histo_c2d_swigregister(histo_c2d)
+
+class histo_c3d(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_histo_c3d
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_histo_c3d(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def fill(self, *args): return inlib_swig_py.histo_c3d_fill(self, *args)
+    def entries(self): return inlib_swig_py.histo_c3d_entries(self)
+    def mean_x(self): return inlib_swig_py.histo_c3d_mean_x(self)
+    def rms_x(self): return inlib_swig_py.histo_c3d_rms_x(self)
+    def mean_y(self): return inlib_swig_py.histo_c3d_mean_y(self)
+    def rms_y(self): return inlib_swig_py.histo_c3d_rms_y(self)
+    def mean_z(self): return inlib_swig_py.histo_c3d_mean_z(self)
+    def rms_z(self): return inlib_swig_py.histo_c3d_rms_z(self)
+histo_c3d_swigregister = inlib_swig_py.histo_c3d_swigregister
+histo_c3d_swigregister(histo_c3d)
+
 class rgaussd(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -1127,12 +1165,20 @@ rad2deg = inlib_swig_py.rad2deg
 class colorf(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
-    def __init__(self): 
-        this = inlib_swig_py.new_colorf()
-        try: self.this.append(this)
-        except: self.this = this
     __swig_destroy__ = inlib_swig_py.delete_colorf
     __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_colorf(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def r(self): return inlib_swig_py.colorf_r(self)
+    def g(self): return inlib_swig_py.colorf_g(self)
+    def b(self): return inlib_swig_py.colorf_b(self)
+    def a(self): return inlib_swig_py.colorf_a(self)
+    def set_r(self, *args): return inlib_swig_py.colorf_set_r(self, *args)
+    def set_g(self, *args): return inlib_swig_py.colorf_set_g(self, *args)
+    def set_b(self, *args): return inlib_swig_py.colorf_set_b(self, *args)
+    def set_a(self, *args): return inlib_swig_py.colorf_set_a(self, *args)
 colorf_swigregister = inlib_swig_py.colorf_swigregister
 colorf_swigregister(colorf)
 
@@ -1396,6 +1442,18 @@ colorf_yellow = inlib_swig_py.colorf_yellow
 def colorf_greenyellow():
   return inlib_swig_py.colorf_greenyellow()
 colorf_greenyellow = inlib_swig_py.colorf_greenyellow
+class vec2f(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_vec2f
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_vec2f(*args)
+        try: self.this.append(this)
+        except: self.this = this
+vec2f_swigregister = inlib_swig_py.vec2f_swigregister
+vec2f_swigregister(vec2f)
+
 class vec3f(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -1508,6 +1566,21 @@ class sf_rotf(object):
 sf_rotf_swigregister = inlib_swig_py.sf_rotf_swigregister
 sf_rotf_swigregister(sf_rotf)
 
+class mf_string(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_mf_string
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_mf_string(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def size(self): return inlib_swig_py.mf_string_size(self)
+    def empty(self): return inlib_swig_py.mf_string_empty(self)
+    def values(self): return inlib_swig_py.mf_string_values(self)
+mf_string_swigregister = inlib_swig_py.mf_string_swigregister
+mf_string_swigregister(mf_string)
+
 class sf_bool(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -1558,6 +1631,282 @@ class sf_img_byte(object):
 sf_img_byte_swigregister = inlib_swig_py.sf_img_byte_swigregister
 sf_img_byte_swigregister(sf_img_byte)
 
+class sf_enum_marker_tyle(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_marker_tyle
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_marker_tyle(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_marker_tyle_value(self, *args)
+sf_enum_marker_tyle_swigregister = inlib_swig_py.sf_enum_marker_tyle_swigregister
+sf_enum_marker_tyle_swigregister(sf_enum_marker_tyle)
+
+class sf_enum_font_modeling(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_font_modeling
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_font_modeling(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_font_modeling_value(self, *args)
+sf_enum_font_modeling_swigregister = inlib_swig_py.sf_enum_font_modeling_swigregister
+sf_enum_font_modeling_swigregister(sf_enum_font_modeling)
+
+class sf_enum_winding_type(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_winding_type
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_winding_type(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_winding_type_value(self, *args)
+sf_enum_winding_type_swigregister = inlib_swig_py.sf_enum_winding_type_swigregister
+sf_enum_winding_type_swigregister(sf_enum_winding_type)
+
+class sf_enum_marker_style(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_marker_style
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_marker_style(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_marker_style_value(self, *args)
+sf_enum_marker_style_swigregister = inlib_swig_py.sf_enum_marker_style_swigregister
+sf_enum_marker_style_swigregister(sf_enum_marker_style)
+
+class sf_enum_area_style(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_area_style
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_area_style(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_area_style_value(self, *args)
+sf_enum_area_style_swigregister = inlib_swig_py.sf_enum_area_style_swigregister
+sf_enum_area_style_swigregister(sf_enum_area_style)
+
+class sf_enum_painting_policy(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_painting_policy
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_painting_policy(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_painting_policy_value(self, *args)
+sf_enum_painting_policy_swigregister = inlib_swig_py.sf_enum_painting_policy_swigregister
+sf_enum_painting_policy_swigregister(sf_enum_painting_policy)
+
+class sf_enum_hatching_policy(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_hatching_policy
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_hatching_policy(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_hatching_policy_value(self, *args)
+sf_enum_hatching_policy_swigregister = inlib_swig_py.sf_enum_hatching_policy_swigregister
+sf_enum_hatching_policy_swigregister(sf_enum_hatching_policy)
+
+class sf_enum_projection_type(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_projection_type
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_projection_type(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_projection_type_value(self, *args)
+sf_enum_projection_type_swigregister = inlib_swig_py.sf_enum_projection_type_swigregister
+sf_enum_projection_type_swigregister(sf_enum_projection_type)
+
+class sf_enum_hjust(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_hjust
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_hjust(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_hjust_value(self, *args)
+sf_enum_hjust_swigregister = inlib_swig_py.sf_enum_hjust_swigregister
+sf_enum_hjust_swigregister(sf_enum_hjust)
+
+class sf_enum_vjust(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_vjust
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_vjust(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_vjust_value(self, *args)
+sf_enum_vjust_swigregister = inlib_swig_py.sf_enum_vjust_swigregister
+sf_enum_vjust_swigregister(sf_enum_vjust)
+
+class mf_float(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_mf_float
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_mf_float(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def size(self): return inlib_swig_py.mf_float_size(self)
+    def empty(self): return inlib_swig_py.mf_float_empty(self)
+    def values(self): return inlib_swig_py.mf_float_values(self)
+mf_float_swigregister = inlib_swig_py.mf_float_swigregister
+mf_float_swigregister(mf_float)
+
+class mf_vec_vec2f(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_mf_vec_vec2f
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_mf_vec_vec2f(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def size(self): return inlib_swig_py.mf_vec_vec2f_size(self)
+    def empty(self): return inlib_swig_py.mf_vec_vec2f_empty(self)
+    def values(self): return inlib_swig_py.mf_vec_vec2f_values(self)
+mf_vec_vec2f_swigregister = inlib_swig_py.mf_vec_vec2f_swigregister
+mf_vec_vec2f_swigregister(mf_vec_vec2f)
+
+class mf_enum_unit_type(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_mf_enum_unit_type
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_mf_enum_unit_type(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def size(self): return inlib_swig_py.mf_enum_unit_type_size(self)
+    def empty(self): return inlib_swig_py.mf_enum_unit_type_empty(self)
+    def values(self): return inlib_swig_py.mf_enum_unit_type_values(self)
+mf_enum_unit_type_swigregister = inlib_swig_py.mf_enum_unit_type_swigregister
+mf_enum_unit_type_swigregister(mf_enum_unit_type)
+
+line_solid = inlib_swig_py.line_solid
+line_dashed = inlib_swig_py.line_dashed
+line_dotted = inlib_swig_py.line_dotted
+line_dash_dotted = inlib_swig_py.line_dash_dotted
+marker_dot = inlib_swig_py.marker_dot
+marker_plus = inlib_swig_py.marker_plus
+marker_asterisk = inlib_swig_py.marker_asterisk
+marker_cross = inlib_swig_py.marker_cross
+marker_star = inlib_swig_py.marker_star
+marker_circle_line = inlib_swig_py.marker_circle_line
+marker_circle_filled = inlib_swig_py.marker_circle_filled
+marker_triangle_up_line = inlib_swig_py.marker_triangle_up_line
+marker_triangle_up_filled = inlib_swig_py.marker_triangle_up_filled
+marker_triangle_down_line = inlib_swig_py.marker_triangle_down_line
+marker_triangle_down_filled = inlib_swig_py.marker_triangle_down_filled
+marker_david_star_line = inlib_swig_py.marker_david_star_line
+marker_david_star_filled = inlib_swig_py.marker_david_star_filled
+marker_swiss_cross_line = inlib_swig_py.marker_swiss_cross_line
+marker_swiss_cross_filled = inlib_swig_py.marker_swiss_cross_filled
+marker_diamond_line = inlib_swig_py.marker_diamond_line
+marker_diamond_filled = inlib_swig_py.marker_diamond_filled
+marker_square_line = inlib_swig_py.marker_square_line
+marker_square_filled = inlib_swig_py.marker_square_filled
+marker_penta_star_line = inlib_swig_py.marker_penta_star_line
+marker_penta_star_filled = inlib_swig_py.marker_penta_star_filled
+marker_minus = inlib_swig_py.marker_minus
+area_solid = inlib_swig_py.area_solid
+area_hatched = inlib_swig_py.area_hatched
+area_checker = inlib_swig_py.area_checker
+area_edged = inlib_swig_py.area_edged
+projection_none = inlib_swig_py.projection_none
+projection_rz = inlib_swig_py.projection_rz
+projection_phiz = inlib_swig_py.projection_phiz
+projection_zr = inlib_swig_py.projection_zr
+projection_zphi = inlib_swig_py.projection_zphi
+painting_uniform = inlib_swig_py.painting_uniform
+painting_by_value = inlib_swig_py.painting_by_value
+painting_by_level = inlib_swig_py.painting_by_level
+painting_grey_scale = inlib_swig_py.painting_grey_scale
+painting_violet_to_red = inlib_swig_py.painting_violet_to_red
+painting_grey_scale_inverse = inlib_swig_py.painting_grey_scale_inverse
+hatching_none = inlib_swig_py.hatching_none
+hatching_right = inlib_swig_py.hatching_right
+hatching_left = inlib_swig_py.hatching_left
+hatching_left_and_right = inlib_swig_py.hatching_left_and_right
+left = inlib_swig_py.left
+center = inlib_swig_py.center
+right = inlib_swig_py.right
+bottom = inlib_swig_py.bottom
+middle = inlib_swig_py.middle
+top = inlib_swig_py.top
+latin = inlib_swig_py.latin
+greek = inlib_swig_py.greek
+special = inlib_swig_py.special
+font_outline = inlib_swig_py.font_outline
+font_filled = inlib_swig_py.font_filled
+font_pixmap = inlib_swig_py.font_pixmap
+arrow_up = inlib_swig_py.arrow_up
+arrow_down = inlib_swig_py.arrow_down
+arrow_left = inlib_swig_py.arrow_left
+arrow_right = inlib_swig_py.arrow_right
+winding_ccw = inlib_swig_py.winding_ccw
+winding_cw = inlib_swig_py.winding_cw
+move_rotate_right = inlib_swig_py.move_rotate_right
+move_translate_right = inlib_swig_py.move_translate_right
+move_rotate_left = inlib_swig_py.move_rotate_left
+move_translate_left = inlib_swig_py.move_translate_left
+move_up = inlib_swig_py.move_up
+move_down = inlib_swig_py.move_down
+move_forward = inlib_swig_py.move_forward
+move_backward = inlib_swig_py.move_backward
+move_zoom_in = inlib_swig_py.move_zoom_in
+move_zoom_out = inlib_swig_py.move_zoom_out
+move_rotate_around_focal_right = inlib_swig_py.move_rotate_around_focal_right
+move_rotate_around_focal_left = inlib_swig_py.move_rotate_around_focal_left
+move_zoom_in_out = inlib_swig_py.move_zoom_in_out
+move_zoom_in_out_rot = inlib_swig_py.move_zoom_in_out_rot
+move_curve = inlib_swig_py.move_curve
+anim_left = inlib_swig_py.anim_left
+anim_right = inlib_swig_py.anim_right
+anim_up = inlib_swig_py.anim_up
+anim_down = inlib_swig_py.anim_down
+key_left = inlib_swig_py.key_left
+key_right = inlib_swig_py.key_right
+key_up = inlib_swig_py.key_up
+key_down = inlib_swig_py.key_down
+number_uint = inlib_swig_py.number_uint
+number_int = inlib_swig_py.number_int
+number_real = inlib_swig_py.number_real
+number_ip = inlib_swig_py.number_ip
+number_radec = inlib_swig_py.number_radec
+camera_ortho = inlib_swig_py.camera_ortho
+camera_perspective = inlib_swig_py.camera_perspective
+gsto_memory = inlib_swig_py.gsto_memory
+gsto_gl_vbo = inlib_swig_py.gsto_gl_vbo
+gsto_gl_list = inlib_swig_py.gsto_gl_list
+layout_text_under_image = inlib_swig_py.layout_text_under_image
+layout_text_at_left_of_image = inlib_swig_py.layout_text_at_left_of_image
+auto_lut_none = inlib_swig_py.auto_lut_none
+auto_lut_min_max = inlib_swig_py.auto_lut_min_max
+auto_lut_mean_rms = inlib_swig_py.auto_lut_mean_rms
 
 def font_arialbd_ttf():
   return inlib_swig_py.font_arialbd_ttf()
@@ -1634,7 +1983,44 @@ class style(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
     color = _swig_property(inlib_swig_py.style_color_get, inlib_swig_py.style_color_set)
+    highlight_color = _swig_property(inlib_swig_py.style_highlight_color_get, inlib_swig_py.style_highlight_color_set)
+    back_color = _swig_property(inlib_swig_py.style_back_color_get, inlib_swig_py.style_back_color_set)
+    line_width = _swig_property(inlib_swig_py.style_line_width_get, inlib_swig_py.style_line_width_set)
+    marker_size = _swig_property(inlib_swig_py.style_marker_size_get, inlib_swig_py.style_marker_size_set)
+    font_size = _swig_property(inlib_swig_py.style_font_size_get, inlib_swig_py.style_font_size_set)
+    font_modeling = _swig_property(inlib_swig_py.style_font_modeling_get, inlib_swig_py.style_font_modeling_set)
+    front_face = _swig_property(inlib_swig_py.style_front_face_get, inlib_swig_py.style_front_face_set)
+    line_pattern = _swig_property(inlib_swig_py.style_line_pattern_get, inlib_swig_py.style_line_pattern_set)
+    marker_style = _swig_property(inlib_swig_py.style_marker_style_get, inlib_swig_py.style_marker_style_set)
+    area_style = _swig_property(inlib_swig_py.style_area_style_get, inlib_swig_py.style_area_style_set)
     modeling = _swig_property(inlib_swig_py.style_modeling_get, inlib_swig_py.style_modeling_set)
+    light_model = _swig_property(inlib_swig_py.style_light_model_get, inlib_swig_py.style_light_model_set)
+    tick_modeling = _swig_property(inlib_swig_py.style_tick_modeling_get, inlib_swig_py.style_tick_modeling_set)
+    encoding = _swig_property(inlib_swig_py.style_encoding_get, inlib_swig_py.style_encoding_set)
+    smoothing = _swig_property(inlib_swig_py.style_smoothing_get, inlib_swig_py.style_smoothing_set)
+    hinting = _swig_property(inlib_swig_py.style_hinting_get, inlib_swig_py.style_hinting_set)
+    cut = _swig_property(inlib_swig_py.style_cut_get, inlib_swig_py.style_cut_set)
+    painting = _swig_property(inlib_swig_py.style_painting_get, inlib_swig_py.style_painting_set)
+    hatching = _swig_property(inlib_swig_py.style_hatching_get, inlib_swig_py.style_hatching_set)
+    projection = _swig_property(inlib_swig_py.style_projection_get, inlib_swig_py.style_projection_set)
+    font = _swig_property(inlib_swig_py.style_font_get, inlib_swig_py.style_font_set)
+    multi_node_limit = _swig_property(inlib_swig_py.style_multi_node_limit_get, inlib_swig_py.style_multi_node_limit_set)
+    divisions = _swig_property(inlib_swig_py.style_divisions_get, inlib_swig_py.style_divisions_set)
+    rotation_steps = _swig_property(inlib_swig_py.style_rotation_steps_get, inlib_swig_py.style_rotation_steps_set)
+    spacing = _swig_property(inlib_swig_py.style_spacing_get, inlib_swig_py.style_spacing_set)
+    angle = _swig_property(inlib_swig_py.style_angle_get, inlib_swig_py.style_angle_set)
+    scale = _swig_property(inlib_swig_py.style_scale_get, inlib_swig_py.style_scale_set)
+    offset = _swig_property(inlib_swig_py.style_offset_get, inlib_swig_py.style_offset_set)
+    strip_width = _swig_property(inlib_swig_py.style_strip_width_get, inlib_swig_py.style_strip_width_set)
+    visible = _swig_property(inlib_swig_py.style_visible_get, inlib_swig_py.style_visible_set)
+    bar_offset = _swig_property(inlib_swig_py.style_bar_offset_get, inlib_swig_py.style_bar_offset_set)
+    bar_width = _swig_property(inlib_swig_py.style_bar_width_get, inlib_swig_py.style_bar_width_set)
+    editable = _swig_property(inlib_swig_py.style_editable_get, inlib_swig_py.style_editable_set)
+    automated = _swig_property(inlib_swig_py.style_automated_get, inlib_swig_py.style_automated_set)
+    options = _swig_property(inlib_swig_py.style_options_get, inlib_swig_py.style_options_set)
+    color_mapping = _swig_property(inlib_swig_py.style_color_mapping_get, inlib_swig_py.style_color_mapping_set)
+    enforced = _swig_property(inlib_swig_py.style_enforced_get, inlib_swig_py.style_enforced_set)
+    translation = _swig_property(inlib_swig_py.style_translation_get, inlib_swig_py.style_translation_set)
     def __init__(self): 
         this = inlib_swig_py.new_style()
         try: self.this.append(this)
@@ -1647,7 +2033,29 @@ style_swigregister(style)
 class text_style(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    visible = _swig_property(inlib_swig_py.text_style_visible_get, inlib_swig_py.text_style_visible_set)
+    color = _swig_property(inlib_swig_py.text_style_color_get, inlib_swig_py.text_style_color_set)
+    back_color = _swig_property(inlib_swig_py.text_style_back_color_get, inlib_swig_py.text_style_back_color_set)
+    back_shadow = _swig_property(inlib_swig_py.text_style_back_shadow_get, inlib_swig_py.text_style_back_shadow_set)
+    modeling = _swig_property(inlib_swig_py.text_style_modeling_get, inlib_swig_py.text_style_modeling_set)
     font = _swig_property(inlib_swig_py.text_style_font_get, inlib_swig_py.text_style_font_set)
+    font_size = _swig_property(inlib_swig_py.text_style_font_size_get, inlib_swig_py.text_style_font_size_set)
+    font_modeling = _swig_property(inlib_swig_py.text_style_font_modeling_get, inlib_swig_py.text_style_font_modeling_set)
+    encoding = _swig_property(inlib_swig_py.text_style_encoding_get, inlib_swig_py.text_style_encoding_set)
+    smoothing = _swig_property(inlib_swig_py.text_style_smoothing_get, inlib_swig_py.text_style_smoothing_set)
+    hinting = _swig_property(inlib_swig_py.text_style_hinting_get, inlib_swig_py.text_style_hinting_set)
+    hjust = _swig_property(inlib_swig_py.text_style_hjust_get, inlib_swig_py.text_style_hjust_set)
+    vjust = _swig_property(inlib_swig_py.text_style_vjust_get, inlib_swig_py.text_style_vjust_set)
+    scale = _swig_property(inlib_swig_py.text_style_scale_get, inlib_swig_py.text_style_scale_set)
+    x_orientation = _swig_property(inlib_swig_py.text_style_x_orientation_get, inlib_swig_py.text_style_x_orientation_set)
+    y_orientation = _swig_property(inlib_swig_py.text_style_y_orientation_get, inlib_swig_py.text_style_y_orientation_set)
+    rotated = _swig_property(inlib_swig_py.text_style_rotated_get, inlib_swig_py.text_style_rotated_set)
+    line_width = _swig_property(inlib_swig_py.text_style_line_width_get, inlib_swig_py.text_style_line_width_set)
+    line_pattern = _swig_property(inlib_swig_py.text_style_line_pattern_get, inlib_swig_py.text_style_line_pattern_set)
+    enforced = _swig_property(inlib_swig_py.text_style_enforced_get, inlib_swig_py.text_style_enforced_set)
+    translation = _swig_property(inlib_swig_py.text_style_translation_get, inlib_swig_py.text_style_translation_set)
+    front_face = _swig_property(inlib_swig_py.text_style_front_face_get, inlib_swig_py.text_style_front_face_set)
+    options = _swig_property(inlib_swig_py.text_style_options_get, inlib_swig_py.text_style_options_set)
     def __init__(self): 
         this = inlib_swig_py.new_text_style()
         try: self.this.append(this)
@@ -1905,16 +2313,140 @@ class base_freetype(object):
 base_freetype_swigregister = inlib_swig_py.base_freetype_swigregister
 base_freetype_swigregister(base_freetype)
 
-class sg_plotter(object):
+class plottable(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+plottable_swigregister = inlib_swig_py.plottable_swigregister
+plottable_swigregister(plottable)
+
+class h1d2plot(plottable):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_h1d2plot(*args)
+        try: self.this.append(this)
+        except: self.this = this
+h1d2plot_swigregister = inlib_swig_py.h1d2plot_swigregister
+h1d2plot_swigregister(h1d2plot)
+
+class h1d2plot_cp(plottable):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_h1d2plot_cp(*args)
+        try: self.this.append(this)
+        except: self.this = this
+h1d2plot_cp_swigregister = inlib_swig_py.h1d2plot_cp_swigregister
+h1d2plot_cp_swigregister(h1d2plot_cp)
+
+class sf_enum_shape_type(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_shape_type
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_shape_type(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_shape_type_value(self, *args)
+sf_enum_shape_type_swigregister = inlib_swig_py.sf_enum_shape_type_swigregister
+sf_enum_shape_type_swigregister(sf_enum_shape_type)
+
+class sf_enum_colormap_axis_labeling_type(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sf_enum_colormap_axis_labeling_type
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sf_enum_colormap_axis_labeling_type(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args): return inlib_swig_py.sf_enum_colormap_axis_labeling_type_value(self, *args)
+sf_enum_colormap_axis_labeling_type_swigregister = inlib_swig_py.sf_enum_colormap_axis_labeling_type_swigregister
+sf_enum_colormap_axis_labeling_type_swigregister(sf_enum_colormap_axis_labeling_type)
+
+class sg_plotter(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self): return inlib_swig_py.sg_plotter_copy(self)
+    width = _swig_property(inlib_swig_py.sg_plotter_width_get, inlib_swig_py.sg_plotter_width_set)
+    height = _swig_property(inlib_swig_py.sg_plotter_height_get, inlib_swig_py.sg_plotter_height_set)
+    left_margin = _swig_property(inlib_swig_py.sg_plotter_left_margin_get, inlib_swig_py.sg_plotter_left_margin_set)
+    right_margin = _swig_property(inlib_swig_py.sg_plotter_right_margin_get, inlib_swig_py.sg_plotter_right_margin_set)
+    bottom_margin = _swig_property(inlib_swig_py.sg_plotter_bottom_margin_get, inlib_swig_py.sg_plotter_bottom_margin_set)
+    top_margin = _swig_property(inlib_swig_py.sg_plotter_top_margin_get, inlib_swig_py.sg_plotter_top_margin_set)
+    depth = _swig_property(inlib_swig_py.sg_plotter_depth_get, inlib_swig_py.sg_plotter_depth_set)
+    down_margin = _swig_property(inlib_swig_py.sg_plotter_down_margin_get, inlib_swig_py.sg_plotter_down_margin_set)
+    up_margin = _swig_property(inlib_swig_py.sg_plotter_up_margin_get, inlib_swig_py.sg_plotter_up_margin_set)
+    title_up = _swig_property(inlib_swig_py.sg_plotter_title_up_get, inlib_swig_py.sg_plotter_title_up_set)
+    title_to_axis = _swig_property(inlib_swig_py.sg_plotter_title_to_axis_get, inlib_swig_py.sg_plotter_title_to_axis_set)
+    title_height = _swig_property(inlib_swig_py.sg_plotter_title_height_get, inlib_swig_py.sg_plotter_title_height_set)
+    title_automated = _swig_property(inlib_swig_py.sg_plotter_title_automated_get, inlib_swig_py.sg_plotter_title_automated_set)
+    title_hjust = _swig_property(inlib_swig_py.sg_plotter_title_hjust_get, inlib_swig_py.sg_plotter_title_hjust_set)
+    title = _swig_property(inlib_swig_py.sg_plotter_title_get, inlib_swig_py.sg_plotter_title_set)
+    colormap_visible = _swig_property(inlib_swig_py.sg_plotter_colormap_visible_get, inlib_swig_py.sg_plotter_colormap_visible_set)
+    cells = inlib_swig_py.sg_plotter_cells
+    min_max = inlib_swig_py.sg_plotter_min_max
+    colormap_axis_labeling = _swig_property(inlib_swig_py.sg_plotter_colormap_axis_labeling_get, inlib_swig_py.sg_plotter_colormap_axis_labeling_set)
+    colormap_attached = _swig_property(inlib_swig_py.sg_plotter_colormap_attached_get, inlib_swig_py.sg_plotter_colormap_attached_set)
+    colormap_axis_visible = _swig_property(inlib_swig_py.sg_plotter_colormap_axis_visible_get, inlib_swig_py.sg_plotter_colormap_axis_visible_set)
+    x_axis_enforced = _swig_property(inlib_swig_py.sg_plotter_x_axis_enforced_get, inlib_swig_py.sg_plotter_x_axis_enforced_set)
+    x_axis_automated = _swig_property(inlib_swig_py.sg_plotter_x_axis_automated_get, inlib_swig_py.sg_plotter_x_axis_automated_set)
+    x_axis_min = _swig_property(inlib_swig_py.sg_plotter_x_axis_min_get, inlib_swig_py.sg_plotter_x_axis_min_set)
+    x_axis_max = _swig_property(inlib_swig_py.sg_plotter_x_axis_max_get, inlib_swig_py.sg_plotter_x_axis_max_set)
+    x_axis_is_log = _swig_property(inlib_swig_py.sg_plotter_x_axis_is_log_get, inlib_swig_py.sg_plotter_x_axis_is_log_set)
+    y_axis_enforced = _swig_property(inlib_swig_py.sg_plotter_y_axis_enforced_get, inlib_swig_py.sg_plotter_y_axis_enforced_set)
+    y_axis_automated = _swig_property(inlib_swig_py.sg_plotter_y_axis_automated_get, inlib_swig_py.sg_plotter_y_axis_automated_set)
+    y_axis_min = _swig_property(inlib_swig_py.sg_plotter_y_axis_min_get, inlib_swig_py.sg_plotter_y_axis_min_set)
+    y_axis_max = _swig_property(inlib_swig_py.sg_plotter_y_axis_max_get, inlib_swig_py.sg_plotter_y_axis_max_set)
+    y_axis_is_log = _swig_property(inlib_swig_py.sg_plotter_y_axis_is_log_get, inlib_swig_py.sg_plotter_y_axis_is_log_set)
+    z_axis_enforced = _swig_property(inlib_swig_py.sg_plotter_z_axis_enforced_get, inlib_swig_py.sg_plotter_z_axis_enforced_set)
+    z_axis_automated = _swig_property(inlib_swig_py.sg_plotter_z_axis_automated_get, inlib_swig_py.sg_plotter_z_axis_automated_set)
+    z_axis_min = _swig_property(inlib_swig_py.sg_plotter_z_axis_min_get, inlib_swig_py.sg_plotter_z_axis_min_set)
+    z_axis_max = _swig_property(inlib_swig_py.sg_plotter_z_axis_max_get, inlib_swig_py.sg_plotter_z_axis_max_set)
+    z_axis_is_log = _swig_property(inlib_swig_py.sg_plotter_z_axis_is_log_get, inlib_swig_py.sg_plotter_z_axis_is_log_set)
+    value_top_margin = _swig_property(inlib_swig_py.sg_plotter_value_top_margin_get, inlib_swig_py.sg_plotter_value_top_margin_set)
+    infos_width = _swig_property(inlib_swig_py.sg_plotter_infos_width_get, inlib_swig_py.sg_plotter_infos_width_set)
     infos_x_margin = _swig_property(inlib_swig_py.sg_plotter_infos_x_margin_get, inlib_swig_py.sg_plotter_infos_x_margin_set)
     infos_y_margin = _swig_property(inlib_swig_py.sg_plotter_infos_y_margin_get, inlib_swig_py.sg_plotter_infos_y_margin_set)
+    infos_what = _swig_property(inlib_swig_py.sg_plotter_infos_what_get, inlib_swig_py.sg_plotter_infos_what_set)
+    func2D_borders_visible = _swig_property(inlib_swig_py.sg_plotter_func2D_borders_visible_get, inlib_swig_py.sg_plotter_func2D_borders_visible_set)
+    theta = _swig_property(inlib_swig_py.sg_plotter_theta_get, inlib_swig_py.sg_plotter_theta_set)
+    phi = _swig_property(inlib_swig_py.sg_plotter_phi_get, inlib_swig_py.sg_plotter_phi_set)
+    legends_automated = _swig_property(inlib_swig_py.sg_plotter_legends_automated_get, inlib_swig_py.sg_plotter_legends_automated_set)
+    legends_origin = _swig_property(inlib_swig_py.sg_plotter_legends_origin_get, inlib_swig_py.sg_plotter_legends_origin_set)
+    unit_percent = inlib_swig_py.sg_plotter_unit_percent
+    unit_axis = inlib_swig_py.sg_plotter_unit_axis
+    legends_origin_unit = _swig_property(inlib_swig_py.sg_plotter_legends_origin_unit_get, inlib_swig_py.sg_plotter_legends_origin_unit_set)
+    legends_size = _swig_property(inlib_swig_py.sg_plotter_legends_size_get, inlib_swig_py.sg_plotter_legends_size_set)
+    legends_string = _swig_property(inlib_swig_py.sg_plotter_legends_string_get, inlib_swig_py.sg_plotter_legends_string_set)
+    shape_automated = _swig_property(inlib_swig_py.sg_plotter_shape_automated_get, inlib_swig_py.sg_plotter_shape_automated_set)
+    xy = inlib_swig_py.sg_plotter_xy
+    xyz = inlib_swig_py.sg_plotter_xyz
+    shape = _swig_property(inlib_swig_py.sg_plotter_shape_get, inlib_swig_py.sg_plotter_shape_set)
+    xy_depth = _swig_property(inlib_swig_py.sg_plotter_xy_depth_get, inlib_swig_py.sg_plotter_xy_depth_set)
+    curve_number_of_points = _swig_property(inlib_swig_py.sg_plotter_curve_number_of_points_get, inlib_swig_py.sg_plotter_curve_number_of_points_set)
+    data_light_on_automated = _swig_property(inlib_swig_py.sg_plotter_data_light_on_automated_get, inlib_swig_py.sg_plotter_data_light_on_automated_set)
+    primitives_enforced = _swig_property(inlib_swig_py.sg_plotter_primitives_enforced_get, inlib_swig_py.sg_plotter_primitives_enforced_set)
+    inner_frame_enforced = _swig_property(inlib_swig_py.sg_plotter_inner_frame_enforced_get, inlib_swig_py.sg_plotter_inner_frame_enforced_set)
+    top_axis_visible = _swig_property(inlib_swig_py.sg_plotter_top_axis_visible_get, inlib_swig_py.sg_plotter_top_axis_visible_set)
+    right_axis_visible = _swig_property(inlib_swig_py.sg_plotter_right_axis_visible_get, inlib_swig_py.sg_plotter_right_axis_visible_set)
+    superpose_bins = _swig_property(inlib_swig_py.sg_plotter_superpose_bins_get, inlib_swig_py.sg_plotter_superpose_bins_set)
+    number_of_levels = _swig_property(inlib_swig_py.sg_plotter_number_of_levels_get, inlib_swig_py.sg_plotter_number_of_levels_set)
+    levels = _swig_property(inlib_swig_py.sg_plotter_levels_get, inlib_swig_py.sg_plotter_levels_set)
     def __init__(self, *args): 
         this = inlib_swig_py.new_sg_plotter(*args)
         try: self.this.append(this)
         except: self.this = this
+    def add_plottable(self, *args): return inlib_swig_py.sg_plotter_add_plottable(self, *args)
     def bins_style(self, *args): return inlib_swig_py.sg_plotter_bins_style(self, *args)
+    def points_style(self, *args): return inlib_swig_py.sg_plotter_points_style(self, *args)
+    def func_style(self, *args): return inlib_swig_py.sg_plotter_func_style(self, *args)
+    def errors_style(self, *args): return inlib_swig_py.sg_plotter_errors_style(self, *args)
+    def left_hatch_style(self, *args): return inlib_swig_py.sg_plotter_left_hatch_style(self, *args)
+    def right_hatch_style(self, *args): return inlib_swig_py.sg_plotter_right_hatch_style(self, *args)
+    def legend_style(self, *args): return inlib_swig_py.sg_plotter_legend_style(self, *args)
     def infos_style(self): return inlib_swig_py.sg_plotter_infos_style(self)
     def clear(self): return inlib_swig_py.sg_plotter_clear(self)
     def plot(self, *args): return inlib_swig_py.sg_plotter_plot(self, *args)
@@ -1922,10 +2454,26 @@ class sg_plotter(object):
 sg_plotter_swigregister = inlib_swig_py.sg_plotter_swigregister
 sg_plotter_swigregister(sg_plotter)
 
-class sg_plots(object):
+class sg_plots(sg_node):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    def copy(self): return inlib_swig_py.sg_plots_copy(self)
+    width = _swig_property(inlib_swig_py.sg_plots_width_get, inlib_swig_py.sg_plots_width_set)
+    height = _swig_property(inlib_swig_py.sg_plots_height_get, inlib_swig_py.sg_plots_height_set)
+    cols = _swig_property(inlib_swig_py.sg_plots_cols_get, inlib_swig_py.sg_plots_cols_set)
+    rows = _swig_property(inlib_swig_py.sg_plots_rows_get, inlib_swig_py.sg_plots_rows_set)
     view_border = _swig_property(inlib_swig_py.sg_plots_view_border_get, inlib_swig_py.sg_plots_view_border_set)
+    plotter_scale = _swig_property(inlib_swig_py.sg_plots_plotter_scale_get, inlib_swig_py.sg_plots_plotter_scale_set)
+    border_visible = _swig_property(inlib_swig_py.sg_plots_border_visible_get, inlib_swig_py.sg_plots_border_visible_set)
+    border_width = _swig_property(inlib_swig_py.sg_plots_border_width_get, inlib_swig_py.sg_plots_border_width_set)
+    border_height = _swig_property(inlib_swig_py.sg_plots_border_height_get, inlib_swig_py.sg_plots_border_height_set)
+    border_color = _swig_property(inlib_swig_py.sg_plots_border_color_get, inlib_swig_py.sg_plots_border_color_set)
+    left_margin = _swig_property(inlib_swig_py.sg_plots_left_margin_get, inlib_swig_py.sg_plots_left_margin_set)
+    right_margin = _swig_property(inlib_swig_py.sg_plots_right_margin_get, inlib_swig_py.sg_plots_right_margin_set)
+    top_margin = _swig_property(inlib_swig_py.sg_plots_top_margin_get, inlib_swig_py.sg_plots_top_margin_set)
+    bottom_margin = _swig_property(inlib_swig_py.sg_plots_bottom_margin_get, inlib_swig_py.sg_plots_bottom_margin_set)
+    horizontal_spacing = _swig_property(inlib_swig_py.sg_plots_horizontal_spacing_get, inlib_swig_py.sg_plots_horizontal_spacing_set)
+    vertical_spacing = _swig_property(inlib_swig_py.sg_plots_vertical_spacing_get, inlib_swig_py.sg_plots_vertical_spacing_set)
     def __init__(self, *args): 
         this = inlib_swig_py.new_sg_plots(*args)
         try: self.this.append(this)
@@ -1936,14 +2484,22 @@ class sg_plots(object):
     def set_regions(self, a_cols=1, a_rows=1, a_transfer=False): return inlib_swig_py.sg_plots_set_regions(self, a_cols, a_rows, a_transfer)
     def next(self): return inlib_swig_py.sg_plots_next(self)
     def set_current_plotter(self, *args): return inlib_swig_py.sg_plots_set_current_plotter(self, *args)
+    def adjust_size(self, *args): return inlib_swig_py.sg_plots_adjust_size(self, *args)
 sg_plots_swigregister = inlib_swig_py.sg_plots_swigregister
 sg_plots_swigregister(sg_plots)
 
+
+def sg_set_plotter_camera(*args):
+  return inlib_swig_py.sg_set_plotter_camera(*args)
+sg_set_plotter_camera = inlib_swig_py.sg_set_plotter_camera
 class viewer(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
     def out(self): return inlib_swig_py.viewer_out(self)
+    def width(self): return inlib_swig_py.viewer_width(self)
+    def height(self): return inlib_swig_py.viewer_height(self)
+    def sg(self, *args): return inlib_swig_py.viewer_sg(self, *args)
 viewer_swigregister = inlib_swig_py.viewer_swigregister
 viewer_swigregister(viewer)
 
@@ -1958,6 +2514,70 @@ class render_manager(object):
 render_manager_swigregister = inlib_swig_py.render_manager_swigregister
 render_manager_swigregister(render_manager)
 
+class wps(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_wps(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = inlib_swig_py.delete_wps
+    __del__ = lambda self : None;
+    def open_file(self, *args): return inlib_swig_py.wps_open_file(self, *args)
+    def close_file(self): return inlib_swig_py.wps_close_file(self)
+    def PS_PAGE_SCALE(self, *args): return inlib_swig_py.wps_PS_PAGE_SCALE(self, *args)
+    def PS_SCALE(self, *args): return inlib_swig_py.wps_PS_SCALE(self, *args)
+    def PS_TRANSLATE(self, *args): return inlib_swig_py.wps_PS_TRANSLATE(self, *args)
+    def PS_ROTATE(self, *args): return inlib_swig_py.wps_PS_ROTATE(self, *args)
+    def PS_SAVE(self): return inlib_swig_py.wps_PS_SAVE(self)
+    def PS_RESTORE(self): return inlib_swig_py.wps_PS_RESTORE(self)
+    def PS_BEGIN_PAGE(self): return inlib_swig_py.wps_PS_BEGIN_PAGE(self)
+    def PS_END_PAGE(self): return inlib_swig_py.wps_PS_END_PAGE(self)
+    def PS_IMAGE(self, *args): return inlib_swig_py.wps_PS_IMAGE(self, *args)
+wps_swigregister = inlib_swig_py.wps_swigregister
+wps_swigregister(wps)
+
+class zb_buffer(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def __init__(self): 
+        this = inlib_swig_py.new_zb_buffer()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = inlib_swig_py.delete_zb_buffer
+    __del__ = lambda self : None;
+    def clear_color_buffer(self, *args): return inlib_swig_py.zb_buffer_clear_color_buffer(self, *args)
+    def clear_depth_buffer(self): return inlib_swig_py.zb_buffer_clear_depth_buffer(self)
+zb_buffer_swigregister = inlib_swig_py.zb_buffer_swigregister
+zb_buffer_swigregister(zb_buffer)
+
+class sg_zb_manager(render_manager):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = inlib_swig_py.delete_sg_zb_manager
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sg_zb_manager(*args)
+        try: self.this.append(this)
+        except: self.this = this
+sg_zb_manager_swigregister = inlib_swig_py.sg_zb_manager_swigregister
+sg_zb_manager_swigregister(sg_zb_manager)
+
+class sg_zb_action(render_action):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = inlib_swig_py.new_sg_zb_action(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = inlib_swig_py.delete_sg_zb_action
+    __del__ = lambda self : None;
+    def reset(self): return inlib_swig_py.sg_zb_action_reset(self)
+    def zbuffer(self, *args): return inlib_swig_py.sg_zb_action_zbuffer(self, *args)
+    def add_color(self, *args): return inlib_swig_py.sg_zb_action_add_color(self, *args)
+sg_zb_action_swigregister = inlib_swig_py.sg_zb_action_swigregister
+sg_zb_action_swigregister(sg_zb_action)
+
 class gui_viewer(viewer):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
@@ -1969,9 +2589,13 @@ class gui_viewer(viewer):
     def set_console_size(self, arg2=0.3, arg3=0.05, arg4=1): return inlib_swig_py.gui_viewer_set_console_size(self, arg2, arg3, arg4)
     def hide_main_menu(self): return inlib_swig_py.gui_viewer_hide_main_menu(self)
     def show_main_menu(self): return inlib_swig_py.gui_viewer_show_main_menu(self)
+    def hide_camera_menu(self): return inlib_swig_py.gui_viewer_hide_camera_menu(self)
+    def show_camera_menu(self): return inlib_swig_py.gui_viewer_show_camera_menu(self)
     def adapt_camera_to_scene(self): return inlib_swig_py.gui_viewer_adapt_camera_to_scene(self)
     def set_scene_light_on(self, *args): return inlib_swig_py.gui_viewer_set_scene_light_on(self, *args)
     def toggle_light(self): return inlib_swig_py.gui_viewer_toggle_light(self)
+    def set_plane_viewer(self, *args): return inlib_swig_py.gui_viewer_set_plane_viewer(self, *args)
+    def hide_meta_zone(self): return inlib_swig_py.gui_viewer_hide_meta_zone(self)
     def styles(self, *args): return inlib_swig_py.gui_viewer_styles(self, *args)
     s_default = staticmethod(inlib_swig_py.gui_viewer_s_default)
     def first_data_dir(self, *args): return inlib_swig_py.gui_viewer_first_data_dir(self, *args)
@@ -2218,5 +2842,13 @@ rroot_tree_swigregister(rroot_tree)
 def rroot_key_to_tree(*args):
   return inlib_swig_py.rroot_key_to_tree(*args)
 rroot_key_to_tree = inlib_swig_py.rroot_key_to_tree
+
+def spark_greet():
+  return inlib_swig_py.spark_greet()
+spark_greet = inlib_swig_py.spark_greet
+
+def spark_get_xyzs(*args):
+  return inlib_swig_py.spark_get_xyzs(*args)
+spark_get_xyzs = inlib_swig_py.spark_get_xyzs
 
 

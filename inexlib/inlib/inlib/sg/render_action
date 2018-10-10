@@ -90,8 +90,9 @@ public:
     load_model_matrix(m_identity);
   }
   void load_matrices_from_state() {
-    load_proj_matrix(m_state.m_proj);
-    load_model_matrix(m_state.m_model);
+    const sg::state& _state = state();
+    load_proj_matrix(_state.m_proj);
+    load_model_matrix(_state.m_model);
   }
 
   void clear_color(const colorf& a_color){

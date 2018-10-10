@@ -25,8 +25,8 @@ public:
   ,m_event_index(0)
   ,m_next_event_sleep(0)
   {
-    m_cmaps[sg::style_default_colormap::s_default()] = sg::style_default_colormap();
-    //m_cmaps.add_colormap("ROOT",sg::style_ROOT_colormap());
+    m_cmaps[style_default_colormap::s_default()] = style_default_colormap();
+    //m_cmaps.add_colormap("ROOT",style_ROOT_colormap());
   }
   virtual ~view_evd(){}
 protected:
@@ -243,22 +243,22 @@ public:
 
     bool args_tsf = false;
     float pos_x_wcam;
-    if(a_args.find(sg::s_pos_x_wcam(),pos_x_wcam)) {
+    if(a_args.find(s_pos_x_wcam(),pos_x_wcam)) {
       _adapt_camera = false;
       args_tsf = true;
     }
     float pos_y_hcam;
-    if(a_args.find(sg::s_pos_y_hcam(),pos_y_hcam)) {
+    if(a_args.find(s_pos_y_hcam(),pos_y_hcam)) {
       _adapt_camera = false;
       args_tsf = true;
     }
     int col;
-    if(a_args.find(sg::s_pos_col(),col,-1)) {
+    if(a_args.find(s_pos_col(),col,-1)) {
       _adapt_camera = false;
       args_tsf = true;
     }
     int row;
-    if(a_args.find(sg::s_pos_row(),row,-1)) {
+    if(a_args.find(s_pos_row(),row,-1)) {
       _adapt_camera = false;
       args_tsf = true;
     }
@@ -271,7 +271,7 @@ public:
     } else if(args_tsf) {
   
       float img_scale;
-      a_args.find(sg::s_scale(),img_scale,1.0f);
+      a_args.find(s_scale(),img_scale,1.0f);
   
       if((row>=0)&&(col>=0)) {
 
@@ -353,7 +353,7 @@ public:
   unsigned int& next_event_sleep() {return m_next_event_sleep;}
   unsigned int next_event_sleep() const {return m_next_event_sleep;}
 
-  sg::cmaps_t& cmaps() {return m_cmaps;}
+  cmaps_t& cmaps() {return m_cmaps;}
 
 public:
   // if wall app :
@@ -492,7 +492,7 @@ private:
   separator m_screen_sg; //if wall app.
   unsigned int m_event_index;
   unsigned int m_next_event_sleep;
-  sg::cmaps_t m_cmaps;
+  cmaps_t m_cmaps;
 };
 
 inline view_evd* cast_view_evd(viewer& a_viewer) {
@@ -536,33 +536,33 @@ inline void set_empty_scene_2D(gui_viewer& a_gv,view_evd& a_evd) {
 /// actions : ///////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-inline sg::return_action action_clear_static_sg(sg::gui_viewer& a_gv) {
-  sg::view_evd* _evd = cast_view_evd(a_gv);
-  if(!_evd) return sg::return_none;
+inline return_action action_clear_static_sg(gui_viewer& a_gv) {
+  view_evd* _evd = cast_view_evd(a_gv);
+  if(!_evd) return return_none;
   _evd->static_sg().clear();
-  return sg::return_to_render;
+  return return_to_render;
 }
 
-inline sg::return_action action_clear_dynamic_sg(sg::gui_viewer& a_gv) {
-  sg::view_evd* _evd = cast_view_evd(a_gv);
-  if(!_evd) return sg::return_none;
+inline return_action action_clear_dynamic_sg(gui_viewer& a_gv) {
+  view_evd* _evd = cast_view_evd(a_gv);
+  if(!_evd) return return_none;
   _evd->dynamic_sg().clear();
-  return sg::return_to_render;
+  return return_to_render;
 }
 
-inline sg::return_action action_clear_static_and_dynamic_sg(sg::gui_viewer& a_gv) {
-  sg::view_evd* _evd = cast_view_evd(a_gv);
-  if(!_evd) return sg::return_none;
+inline return_action action_clear_static_and_dynamic_sg(gui_viewer& a_gv) {
+  view_evd* _evd = cast_view_evd(a_gv);
+  if(!_evd) return return_none;
   _evd->static_sg().clear();
   _evd->dynamic_sg().clear();
-  return sg::return_to_render;
+  return return_to_render;
 }
 
-inline sg::return_action action_clear_screen_sg(sg::gui_viewer& a_gv) {
-  sg::view_evd* _evd = cast_view_evd(a_gv);
-  if(!_evd) return sg::return_none;
+inline return_action action_clear_screen_sg(gui_viewer& a_gv) {
+  view_evd* _evd = cast_view_evd(a_gv);
+  if(!_evd) return return_none;
   _evd->screen_sg().clear();
-  return sg::return_to_render;
+  return return_to_render;
 }
 
 inline return_action action_empty_scene_3D(gui_viewer& a_gv) {
@@ -577,6 +577,33 @@ inline return_action action_empty_scene_2D(gui_viewer& a_gv) {
   if(!_evd) return return_none;
   set_empty_scene_2D(a_gv,*_evd);
   return return_to_render;
+}
+
+inline return_action action_static_to_vertices(gui_viewer& a_gv) {
+  view_evd* _evd = cast_view_evd(a_gv);
+  if(!_evd) return return_none;
+  a_gv.separator_to_vertices(_evd->static_sg());
+  a_gv.hide_main_menu();
+  return return_to_render;
+}
+
+inline return_action action_dynamic_to_vertices(gui_viewer& a_gv) {
+  view_evd* _evd = cast_view_evd(a_gv);
+  if(!_evd) return return_none;
+  a_gv.separator_to_vertices(_evd->dynamic_sg());
+  a_gv.hide_main_menu();
+  return return_to_render;
+}
+
+inline return_action action_view_evd_utils(gui_viewer& a_gv) {
+  action_utils(a_gv);
+  node* _node = a_gv.current_list();
+  if(!_node) return return_none;
+  list* _list = safe_cast<node,list>(*_node);
+  if(!_list) return return_none;
+  add_white_item(a_gv,*_list,"static sg to pts,lns,tris",action_static_to_vertices);
+  add_white_item(a_gv,*_list,"dynamic sg to pts,lns,tris",action_dynamic_to_vertices);
+  return return_to_render;     
 }
 
 /*

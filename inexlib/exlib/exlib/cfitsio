@@ -326,6 +326,7 @@ public:
     int status = 0;
     //::ffopentest(CFITSIO_VERSION,&m_file,a_file.c_str(),READONLY,&status);
     fits_open_file(&m_file,a_file.c_str(),READONLY,&status);
+    if(m_file) m_path = a_file;
     return is_ok(m_out,"open/ffopentest",status);
   }
 
@@ -333,16 +334,19 @@ public:
     if(m_file) return false;
     int status = 0;
     ::ffomem(&m_file,"exlib_cfitsio_buffer",READONLY,a_buffer,a_sz,1000,::realloc,&status);
+    m_path.clear();
     return is_ok(m_out,"open/ffomem",status);
   }
 
   bool is_open() const {return m_file?true:false;}
   fitsfile* ffile() const {return m_file;}
+  const std::string& path() const {return m_path;}
   bool close() {
     if(!m_file) return false;
     int status = 0;
     ::ffclos(m_file,&status);
     m_file = 0;
+    m_path.clear();
     return is_ok(m_out,"close/ffclos",status);
   }
   unsigned int num_HDU() const {
@@ -1041,6 +1045,7 @@ protected:
 
 protected:
   std::ostream& m_out;
+  std::string m_path;
   fitsfile* m_file;
 };
 
@@ -1060,21 +1065,28 @@ inline bool sHDU(int a_hdutyp,std::string& a_s) {
   return false;
 }
 
-inline bool ls(std::ostream& a_out,const std::string& a_file,
+inline bool ls(std::ostream& a_out,cfitsio::file& a_file,
                std::vector< std::pair<unsigned int,std::string> >& a_ids) {
   a_ids.clear();
-  cfitsio::file ffile(a_out);
-  if(!ffile.open(a_file)) return false;
-  unsigned int nbhdu = ffile.num_HDU();
+  if(!a_file.is_open()) return false;
+  unsigned int nbhdu = a_file.num_HDU();
   for(unsigned int index=1;index<=nbhdu;index++) {
-    if(!ffile.to_HDU(index)) return false;
+    if(!a_file.to_HDU(index)) {a_ids.clear();return false;}
     unsigned int id;
     int hdutyp;
-    if(!ffile.cur_HDU(id,hdutyp)) return false;
+    if(!a_file.cur_HDU(id,hdutyp)) {a_ids.clear();return false;}
     std::string shdu;
     sHDU(hdutyp,shdu);
     a_ids.push_back(std::pair<unsigned int,std::string>(id,shdu));
   }
+  return true;
+}    
+
+inline bool ls(std::ostream& a_out,const std::string& a_file,
+               std::vector< std::pair<unsigned int,std::string> >& a_ids) {
+  cfitsio::file ffile(a_out);
+  if(!ffile.open(a_file)) {a_ids.clear();return false;}
+  if(!ls(a_out,ffile,a_ids)) return false;
   return ffile.close();
 }    
 

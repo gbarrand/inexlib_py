@@ -501,7 +501,7 @@ protected:
 
     vec3f bc;
     if(!ba.box().center(bc)) {
-      a_out << "empty bbox." << std::endl;
+      a_out << "empty bbox (2)." << std::endl;
       a_ui.warn("can't get center");
       return false;     
     }
