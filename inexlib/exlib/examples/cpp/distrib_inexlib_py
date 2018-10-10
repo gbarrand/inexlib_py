@@ -8,7 +8,8 @@ pack_name=inexlib_py
 version=1.1.0
 
 /bin/rm -R -f ${build_path}/distrib
-/bin/mkdir -p ${build_path}/distrib/${pack_name}/${version}
+/bin/mkdir -p ${build_path}/distrib/${pack_name}/${version}/bin
+/bin/mkdir -p ${build_path}/distrib/${pack_name}/${version}/modules
 
 to=${build_path}/distrib/${pack_name}/${version}
 
@@ -17,31 +18,33 @@ for item in ${items} ; do
   if [ ! -x ${build_path}/${item} ] ; then
     echo "${build_path}/${item} not found."
   else    
-    /bin/cp ${build_path}/${item} ${to}/.
+    /bin/cp ${build_path}/${item} ${to}/bin/.
   fi
 done
 
 if [ ! -x ../py/${build_dir}/inlib_swig_py.so ] ; then
   echo "../py/${build_dir}/inlib_swig_py.so not found."
 else    
-  /bin/cp ../py/${build_dir}/inlib_swig_py.so ${to}/.
+  /bin/cp ../py/${build_dir}/inlib_swig_py.so ${to}/modules/.
 fi
 
 if [ ! -x ../py/${build_dir}/exlib_offscreen_swig_py.so ] ; then
   echo "../py/${build_dir}/exlib_offscreen_swig_py.so not found."
 else    
-  /bin/cp ../py/${build_dir}/exlib_offscreen_swig_py.so ${to}/.
+  /bin/cp ../py/${build_dir}/exlib_offscreen_swig_py.so ${to}/modules/.
 fi
 
 if [ ! -x ../py/${build_dir}/exlib_window_swig_py.so ] ; then
   echo "../py/${build_dir}/exlib_window_swig_py.so not found."
 else    
-  /bin/cp ../py/${build_dir}/exlib_window_swig_py.so ${to}/.
+  /bin/cp ../py/${build_dir}/exlib_window_swig_py.so ${to}/modules/.
 fi
 
-/bin/cp ../../exlib/spy/inlib.py ${to}/.
-/bin/cp ../../exlib/spy/exlib_offscreen.py ${to}/.
-/bin/cp ../../exlib/spy/exlib_window.py ${to}/.
+if [ ! -x ../py/${build_dir}/which_py ] ; then
+  echo "../py/${build_dir}/which_py not found."
+else    
+  /bin/cp ../py/${build_dir}/which_py ${to}/bin/.
+fi
 
 /bin/cp ../py/run       ${to}/.
 /bin/cp ../py/spark_run ${to}/.
@@ -49,7 +52,7 @@ fi
 /bin/cp -R ./res ${to}/.
 /bin/cp -R ../../data ${to}/.
 
-find ../py -name '*.py' -exec /bin/cp {} ${to}/. \;
+find ../py -maxdepth 1 -name '*.py' -exec /bin/cp {} ${to}/. \;
 
 platform=`${bush_home}/platform "${cpp_compiler}"`
 if [ "${platform}" = "" ] ; then

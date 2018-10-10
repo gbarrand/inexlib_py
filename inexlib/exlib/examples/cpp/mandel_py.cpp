@@ -23,6 +23,7 @@ inline double mandel(double XP,double YP) {
 #include <exlib/Python>
 #include <inlib/system>
 #include <inlib/file>
+#include <inlib/sys/dir>
 
 #include <inlib/S_STRING>
 INLIB_GLOBAL_STRING(PYTHONHOME)
@@ -35,7 +36,12 @@ int main() {
   
 #ifdef ourex_Python_h
   if(!inlib::is_env(s_PYTHONHOME())) {
-    inlib::putenv(s_PYTHONHOME(),"../../../ourex/Python");
+    std::string path = "../../../ourex/Python";
+    if(!inlib::dir::is_a(path)) {
+      std::cout << "can't find directory "<< inlib::sout(path) << " ." << std::endl;
+      return EXIT_FAILURE;
+    }
+    inlib::putenv(s_PYTHONHOME(),path);
   }
 #endif
   //so that python find mandel.py :
@@ -59,7 +65,11 @@ int main() {
     return EXIT_FAILURE;
   }
     
+#if PY_VERSION_HEX >= 0x03000000
+  PyObject* pName = ::PyUnicode_FromString("mandel");
+#else  
   PyObject* pName = ::PyString_FromString("mandel");
+#endif  
   if(!pName) {
     ::PyErr_Print();
     std::cout << "PyString_FromString() failed." << std::endl;

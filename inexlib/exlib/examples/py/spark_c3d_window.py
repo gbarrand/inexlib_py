@@ -100,7 +100,7 @@ if __name__ == "__main__":
 
   c3 = inlib.histo_c3d('xyz')
   for i in range(0,len(x)): c3.fill(x[i],y[i],z[i],1)
-  print(c3.entries());print(c3.mean_y());print(c3.rms_y());print(c3.mean_z());print(c3.rms_z())
+  #print(c3.entries());print(c3.mean_y());print(c3.rms_y());print(c3.mean_z());print(c3.rms_z())
   plot_c3d(c3)
     
   print("end plotting.")

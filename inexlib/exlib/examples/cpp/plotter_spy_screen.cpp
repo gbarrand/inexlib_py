@@ -22,6 +22,8 @@ extern "C" {
 #include <inlib/mem>
 #include <inlib/system>
 #include <inlib/file>
+#include <inlib/sys/dir>
+#include <inlib/app>
 
 #include <inlib/S_STRING>
 INLIB_GLOBAL_STRING(PYTHONHOME)
@@ -30,33 +32,42 @@ INLIB_GLOBAL_STRING(PYTHONPATH)
 #include <string>
 #include <iostream>
 
-int main(int,char**) {
+int main(int,char** argv) {
 #ifdef INLIB_MEM
   inlib::mem::set_check_by_class(true);{
 #endif
 
+  std::string exe_path; //for res_dir
+  if(!inlib::program_path(argv[0],exe_path)) {
+    std::cout << "can't get exe directory." << std::endl;
+    return EXIT_FAILURE;
+  }
+
 #ifdef ourex_Python_h
   if(!inlib::is_env(s_PYTHONHOME())) {
-    inlib::putenv(s_PYTHONHOME(),"../../../ourex/Python");
+    std::string path = "../../../ourex/Python";
+    if(!inlib::dir::is_a(path)) {
+      std::cout << "can't find directory "<< inlib::sout(path) << " ." << std::endl;
+      return EXIT_FAILURE;
+    }
+    inlib::putenv(s_PYTHONHOME(),path);
   }
 #endif
-  //so that python find inlib.py :
+
+  //so that python find inlib.py, exlib.py :
+ {std::string res_dir;
+  inlib::app_res_dir(exe_path,res_dir);
 #if PY_VERSION_HEX >= 0x03000000
   std::string spy("spy3");
 #else
   std::string spy("spy");
-#endif  
-  if(inlib::file::exists("../../exlib/"+spy+"/inlib.py")) { //if run from exlib/examples/cpp.
-    inlib::putenv(s_PYTHONPATH(),"../../exlib/"+spy);
-  } else if(inlib::file::exists("inlib.py")) {
-    inlib::putenv(s_PYTHONPATH(),".");
-  } else {
-    if(!inlib::is_env(s_PYTHONPATH())) {
-      std::cout << "environment variable PYTHONPATH not defined and we can't define it since we don't know where inlib.py is."
-		<< std::endl;
-      return EXIT_FAILURE;
-    }      
+#endif
+  std::string path = res_dir+"/"+spy;
+  if(!inlib::dir::is_a(path)) {
+    std::cout << "can't find directory "<< inlib::sout(path) << " ." << std::endl;
+    return EXIT_FAILURE;
   }
+  inlib::putenv(s_PYTHONPATH(),path);}
 
 #if PY_VERSION_HEX >= 0x03000000
   ::PyImport_AppendInittab("inlib_swig_py", &PyInit_inlib_swig_py);

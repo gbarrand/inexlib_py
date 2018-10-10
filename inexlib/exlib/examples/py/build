@@ -22,8 +22,8 @@ done
 if [ ${build_verbose} = yes ] ; then echo "exlib/examples/py/build : enforce use of sys Python."; fi
 build_args="${build_args} -sys_Python"
 
-group=spy
-if [ ${build_use_py3} = yes ] ; then group=spy3; fi
+spy_dir=spy
+if [ ${build_use_py3} = yes ] ; then spy_dir=spy3; fi
 
 /bin/mkdir -p ${build_path}
 
@@ -32,7 +32,7 @@ exlib_mgr=../../../exlib/mgr
 save_dir=`pwd`
 
 cd ${exlib_mgr}
-./build ${build_args} ../exlib/${group}/inlib_swig_py.cpp
+./build ${build_args} ../exlib/${spy_dir}/inlib_swig_py.cpp
 cd ${save_dir}
 if [ -f ${exlib_mgr}/${build_dir}/inlib_swig_py.${pgpy} ] ; then
   /bin/mv ${exlib_mgr}/${build_dir}/inlib_swig_py.${pgpy} ${build_path}/.
@@ -41,7 +41,7 @@ else
 fi
 
 cd ${exlib_mgr}
-./build ${build_args} ../exlib/${group}/exlib_offscreen_swig_py.cpp
+./build ${build_args} ../exlib/${spy_dir}/exlib_offscreen_swig_py.cpp
 cd ${save_dir}
 if [ -f ${exlib_mgr}/${build_dir}/exlib_offscreen_swig_py.${pgpy} ] ; then
   /bin/mv ${exlib_mgr}/${build_dir}/exlib_offscreen_swig_py.${pgpy} ${build_path}/.
@@ -50,10 +50,27 @@ else
 fi
 
 cd ${exlib_mgr}
-./build ${build_args} ../exlib/${group}/exlib_window_swig_py.cpp
+./build ${build_args} ../exlib/${spy_dir}/exlib_window_swig_py.cpp
 cd ${save_dir}
 if [ -f ${exlib_mgr}/${build_dir}/exlib_window_swig_py.${pgpy} ] ; then
   /bin/mv ${exlib_mgr}/${build_dir}/exlib_window_swig_py.${pgpy} ${build_path}/.
 else
   echo "${exlib_mgr}/${build_dir}/exlib_window_swig_py.${pgpy} not found."
 fi
+
+/bin/mkdir -p ./res/${spy_dir}
+find ../../exlib/${spy_dir} -name '*.py' -exec /bin/cp {} ./res/${spy_dir}/. \;
+
+/bin/rm -f ${build_path}/which_py
+if [ ${build_use_py3} = yes ] ; then
+cat <<EOF3 > ${build_path}/which_py 
+#!/bin/sh -f
+echo Python3
+EOF3
+else
+cat <<EOF > ${build_path}/which_py 
+#!/bin/sh -f
+echo Python
+EOF
+fi
+chmod a+x ${build_path}/which_py

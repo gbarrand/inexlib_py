@@ -6,14 +6,11 @@
 
 run_set_x=no
 run_args=
-run_use_py3=no
 what=
 
 while test $# -ge 1 ; do
   case $1 in
-    -py3) run_use_py3=yes;;
-    -x)   run_set_x=yes;;
-
+    -x) run_set_x=yes;run_args="${run_args} $1";;
     -*) run_args="${run_args} $1";;  
      *) if [ "${what}" = "" ] ; then
           what=$1
@@ -27,21 +24,8 @@ done
 
 if [ ${run_set_x} = "yes" ] ; then set -x; fi
 
-if [ -x inlib_swig_py.so ] ; then
-  # running from an inexlib_py distribution :
-  build_path=.
-else    
-  build_args=
-  bush_home=`dirname $0`/../../../../bush
-  . ${bush_home}/exlib_header  # to get build_path
-fi
-
 if [ "${what}" = "all" ] ; then
-  if [ ${run_use_py3} = yes ] ; then
-    find . -name '*.py' -exec ./run -py3 {} \;
-  else
-    find . -name '*.py' -exec ./run {} \;
-  fi      
+  find . -name '*.py' -exec ./run ${run_args} {} \;
   exit
 fi
 
@@ -64,6 +48,20 @@ fi
 #/////////////////////////////////////////////////////////////////
 #/// where : /////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
+if [ -x ./modules/inlib_swig_py.so ] ; then
+  # running from an inexlib_py distribution :
+  build_path=./bin    
+  modules_path=./modules
+else    
+  build_args=
+  bush_home=`dirname $0`/../../../../bush
+  . ${bush_home}/exlib_header  # to get build_path
+  modules_path=${build_path}
+fi
+
+run_use_py3=no
+if [ "`${build_path}/which_py`" = Python3 ] ; then run_use_py3=yes;fi    
+
 on_lal_spark_cluster=no
 if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
 
@@ -74,11 +72,11 @@ if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
 # WARNING : spark must use the Python used to build
 #           the plugins inlib_swig_py.so, exlib_[offscreen,window]_swig_py.so.
 
-group=spy
+spy_dir=spy
 if [ ${on_lal_spark_cluster} = yes ] ; then
   if [ ${run_use_py3} = yes ] ; then
     py_exe=/opt/anaconda/bin/python3.6
-    group=spy3    
+    spy_dir=spy3    
   else
     py_exe=/usr/bin/python2.7
   fi
@@ -92,7 +90,7 @@ else
       py_exe=/usr/local/Python/3.6.6/bin/python3.6
       ld_path="/usr/local/Python/3.6.6/lib"
     fi      
-    group=spy3    
+    spy_dir=spy3    
   else    
     if [ "`uname | grep CYGWIN`" != "" ] ; then
       py_exe=/cygdrive/c/Python27/pythonw.exe
@@ -116,8 +114,8 @@ fi
 sep=':'
 if [ "`uname | grep CYGWIN`" != "" ] ; then sep=';' ;fi
 
-py_path="../../exlib/${group}"
-py_path="${py_path}${sep}${build_path}"
+py_path="./res/${spy_dir}"
+py_path="${py_path}${sep}${modules_path}"
 
 py_curr=`printenv PYTHONPATH`
 if [ "${py_curr}" = "" ] ; then

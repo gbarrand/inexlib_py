@@ -62,15 +62,9 @@ def mean(partition):
 
   yield (mean, size)
 
-def quiet_logs(sc, log_level="ERROR"):
-  # log_level : INFO, WARN, ERROR, OFF.
-    
-  logger = sc._jvm.org.apache.log4j
-  level = getattr(logger.Level, log_level, "INFO")
-
-  logger.LogManager.getLogger("org"). setLevel(level)
-  logger.LogManager.getLogger("akka").setLevel(level)
-
+#///////////////////////////////////////////////////////////////////////////////////////////////  
+#/// main : ////////////////////////////////////////////////////////////////////////////////////  
+#///////////////////////////////////////////////////////////////////////////////////////////////  
 if __name__ == "__main__":
     
   parser = argparse.ArgumentParser(description="Visualise the elements of a spatial RDD")
@@ -82,8 +76,11 @@ if __name__ == "__main__":
   # Initialize the Spark Session
   spark = SparkSession.builder.getOrCreate()
 
-  # Set logs to be quiet
-  quiet_logs(spark.sparkContext, log_level="OFF")
+  # log_level : INFO, WARN, ERROR, OFF.
+  logger = spark.sparkContext._jvm.org.apache.log4j
+  level = getattr(logger.Level, "OFF", "OFF")
+  logger.LogManager.getLogger("org"). setLevel(level)
+  logger.LogManager.getLogger("akka").setLevel(level)
 
   # Load the data inside a DataFrame
   df = spark.read.format("fits").option("hdu", args.hdu).load(args.file_name)
@@ -107,7 +104,7 @@ if __name__ == "__main__":
 
   c3 = inlib.histo_c3d('xyz')
   for i in range(0,len(x)): c3.fill(x[i],y[i],z[i],1)
-  print(c3.entries());print(c3.mean_y());print(c3.rms_y());print(c3.mean_z());print(c3.rms_z())
+  #print(c3.entries());print(c3.mean_y());print(c3.rms_y());print(c3.mean_z());print(c3.rms_z())
   plot_c3d(c3)
     
   print("end plotting.")
