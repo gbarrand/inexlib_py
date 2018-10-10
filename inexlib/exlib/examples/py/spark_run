@@ -25,7 +25,7 @@ done
 if [ ${run_set_x} = "yes" ] ; then set -x; fi
 
 if [ "${what}" = "all" ] ; then
-  find . -name 'spark_*.py' -exec ./spark_run ${run_args} {} \;
+  find . -maxdepth 1 -name 'spark_*.py' -exec ./spark_run ${run_args} {} \;
   exit
 fi
 
