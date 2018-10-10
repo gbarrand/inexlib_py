@@ -1,0 +1,20 @@
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file bush.license for terms.
+
+if [ "${use_cern_root_arte}" = "yes" ] ; then
+  use_our_cern_root_arte=yes
+fi
+
+if [ "${use_our_cern_root_arte}" = "yes" ] ; then
+  if [ "${ourex_home}" = "" ] ; then
+    echo 'bush/use/cern_root_arte : variable ourex_home not defined.';exit
+  fi
+  cern_root_arte_home=${ourex_home}/cern_root_arte
+
+  cppflags="${cppflags} -I${cern_root_arte_home}"
+  cppflags="${cppflags} -std=c++14"
+
+ #ourex_pack_name=cern_root_arte
+ #. ${bush_home}/use/ourex_use
+
+fi

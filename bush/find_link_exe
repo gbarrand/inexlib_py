@@ -1,0 +1,43 @@
+
+# to be sourced from another build script.
+
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file bush.license for terms.
+
+# NOTE : cygwin adds /usr/bin in front of PATH, and this directory
+#        contains a link.exe which is not the VisualC++ one. Then
+#        we arrange to give the full path toward the VisualC++ one.
+
+visual_link_exe=not_found
+
+if [ "`uname | grep CYGWIN`" != "" ] ; then
+  if [ "${ORIGINAL_PATH}" = "" ] ; then
+    echo 'bush/find_link_exe : env variable ORIGINAL_PATH not defined.'
+    exit
+  fi  
+  old_IFS="${IFS}"
+  IFS=:
+  for item in ${ORIGINAL_PATH} ; do
+    #echo Look ${item}
+    if [ -f "${item}/link.exe" ] ; then
+      if [ "${visual_link_exe}" = "not_found" ] ; then
+        #echo Found in ${item}
+        #vc_linker_path="`cygpath \"${item}\"`"
+        visual_link_exe="\"${item}\"/link.exe"
+      fi      
+    fi
+  done
+  IFS="${old_IFS}"
+  unset old_IFS
+else  
+  echo 'bush/find_link_exe : not on cygwin.'
+  exit
+fi
+
+if [ "${visual_link_exe}" = "not_found" ] ; then
+  echo 'bush/find_link_exe : link.exe not found.'
+  exit
+fi  
+
+#echo "bush/find_link_exe : ${visual_link_exe}"
+

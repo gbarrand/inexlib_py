@@ -1,52 +1,85 @@
 
  Note that the access to Python to build is in the shell script :
     <install_path>/bush/use/Python
- The "-sys_Python" option below tells bush to use the Python found on the system.
+ The upper is for using a Python2.x, which is the default in bush scripts.
+ If using a Python3 :     
+    <install_path>/bush/use/Python3
+ Then, if needed, customize these files according your Python installation.
 
- To build C++ apps activating Python :
+ To build the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so modules
+ wrapping inlib/exlib with swig :
+    UNIX> cd <install_path>/inexlib/exlib/examples/py
+    UNIX> ./build
+ To build with Python3 :
+    UNIX> ./build -py3
+
+ (You can use the "-v" option to have coarse graining verbosity, or "-x" for a full traceback).
+
+ To build some C++ examples activating Python :
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
+    UNIX> ./build -sys_Python
+ or one by one :
     UNIX> ./build -sys_Python hello_py.cpp            # to check Python activation from C++.
     UNIX> ./build -sys_Python h1d_spy.cpp             # inlib histogram wrapped with swig.
     UNIX> ./build -sys_Python plotter_spy_screen.cpp  # exlib plotting wrapped with swig.
     UNIX> ./build -sys_Python mandel_py.cpp           # check calling a C++ function from Python.
-(UNIX is for Linux, macOS or Windows-10/cygwin).
+ To build with Python3 :
+    UNIX> ./build -sys_Python -py3
 
- To build the inlib_swig_py.so, exlib_swig_py.so modules wrapping inlib/exlib with swig.
-    UNIX> cd <install_path>/inexlib/exlib/examples/py
-    UNIX> ./build -sys_Python
+ (UNIX is for Linux, MacOS or Windows-10/cygwin).
+ The "-sys_Python" option in the upper lines tells bush to use the Python found on the system.
+ (It is enforced in the exlib/examples/py/build script).
 
  To build the distribution :
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
     UNIX> ./distrib_inexlib_py
  At end, you should have a :
-    <bin_dir>/distrib/inexlib_py-<version>-<platfrom>.zip
+    <bin_dir>/distrib/inexlib_py-<version>-<platform>.zip
  ready for distribution.
 
  To install and run :
     UNIX> cd <somewhere>
-    UNIX> <get inexlib_py-<version>-<platfrom>.zip>
-    UNIX> unzip -q inexlib_py-<version>-<platfrom>.zip
+    UNIX> <get inexlib_py-<version>-<platform>.zip>
+    UNIX> unzip -q inexlib_py-<version>-<platform>.zip
     UNIX> cd inexlib_py/<version>
  to run C++ python apps :
     UNIX> ./hello_py
-    UNIX> ./h1d_spy
-    UNIX> ./plotter_spy_screen
-    UNIX> ./mandel_py  # this is a unitary test. If passing it says nothing.
+    UNIX> ./mandel_py           # this is a unitary test. If passing it says nothing.
+    UNIX> ./h1d_spy             # example using inlib SWIG wrapping.
+    UNIX> ./plotter_spy_screen  # example using inlib/exlib SWIG wrapping.
  to activate .py examples from the Python prompt :
-    UNIX> <python> ./h1d.py          # inlib histo.
-    UNIX> <python> ./rroot.py        # read an histo in a root file.
-    UNIX> <python> ./plotter.py      # plot an histo by using softinex graphics and plotting.
-    UNIX> <python> ./tree.py         # project a ntuple found in the pawdemo.root file and plot the histo.
-    UNIX> <python> ./waxml.py        # write histos at the AIDA XML file format.
-    UNIX> <python> ./cfitsio_hst.py  # visualise an image in a fits file.
-    UNIX> <python> ./polyhedron.py   # visualise a solid/shape boolean operation.
+    UNIX> <python> ./h1d.py                 # inlib histo.
+    UNIX> <python> ./rroot.py               # read an histo in a root file.
+    UNIX> <python> ./plotter_window.py      # plot an histo by using softinex graphics and plotting.
+    UNIX> <python> ./plotter_offscreen.py   # plot an histo and produce an out.ps Postscript file.
+    UNIX> <python> ./tree.py                # project a ntuple found in the pawdemo.root file
+                                            # and plot the histo.
+    UNIX> <python> ./gui_plotter_windpw.py  # plots in a high level "GUI" viewer.
+    UNIX> <python> ./waxml.py               # write histos at the AIDA XML file format.
+    UNIX> <python> ./cfitsio_hst.py         # visualise an image in a fits file.
+    UNIX> <python> ./polyhedron.py          # visualise a solid/shape boolean operation.
  or :
     UNIX> <python>
     >>> import h1d
-
+    
  IMPORTANT : in the upper, "<python>" means the program corresponding to the Python installation
  used to build. Someone must be aware than multiple Python installations may be present on one
  system, and must be cautious to use the python program corresponding to the one used to link
- the inlib_swig_py.so, exlib_swig_py.so. (On macOS, there is a Python under /System and another
- one may be found under /opt/local/bin coming indirectly from some MacPorts installation).
+ the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so and the example
+ applications. (On MacOS, there is a Python under /System and another one may be found
+ under /opt/local/bin coming indirectly from some Macports installation).
+
+ To run a Spark python examples :
+    <if needed, customize the spark_run script file to find your Spark and Python>
+    UNIX> ./spark_run ./spark_<example>.py
+ To run with Python3 :
+    UNIX> ./spark_run -py3 ./spark_<example>.py
+ for example :     
+    UNIX> ./spark_run ./spark_c3d_gui_window.py
+    UNIX> ./spark_run ./spark_c3d_window_py3d.py
+    UNIX> ./spark_run ./spark_hello.py
+    UNIX> ./spark_run ./spark_c3d_offscreen.py
+    UNIX> ./spark_run ./spark_cfitsio_ntuple.py
+    UNIX> ./spark_run ./spark_c3d_window.py
+    UNIX> ./spark_run ./spark_h1d.py
 

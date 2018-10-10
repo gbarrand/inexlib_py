@@ -1,0 +1,67 @@
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file bush.license for terms.
+
+if [ "${use_Python3}" = "yes" ] ; then
+  use_sys_Python3=yes
+fi
+
+if [ "${use_sys_Python3}" = "yes" ] ; then
+
+  Python3_ld_library_path=
+  py_exe=
+
+  if [ ${build_visual} = "yes" ] ; then
+    Python3_home=/cygdrive/c/Users/barrand/AppData/Local/Programs/Python/Python36
+    if [ ! -d "${Python3_home}" ] ; then
+      echo "bush/use/Python3 : WARNING : not found under ${Python3_home}"
+      exit
+    fi
+    cppflags="${cppflags} -I${Python3_home}/include"
+    libs="${libs} ${Python3_home}/libs/python36.lib"
+    py_exe="${Python3_home}/python.exe"
+  
+  elif [ `uname` = Darwin ] ; then
+
+    # from ~/anaconda3.
+   #Python3_home=/Users/barrand/anaconda3
+    Python3_home=/opt/local/Library/Frameworks/Python.framework/Versions/3.6
+  
+    if [ ! -d "${Python3_home}" ] ; then
+      echo "bush/use/Python3 : WARNING : not found under ${Python3_home}"
+      exit
+    fi
+
+    ccflags="${ccflags}   -I${Python3_home}/include/python3.6m"
+    cppflags="${cppflags} -I${Python3_home}/include/python3.6m"
+    libs="${libs} -L${Python3_home}/lib -lpython3.6m"
+
+    py_exe="${Python3_home}/bin/python3.6"
+
+  else
+
+    if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then
+      Python3_home=/opt/anaconda
+    else
+      Python3_home=/usr/local/Python/3.6.6
+    fi
+    
+    if [ ! -d "${Python3_home}" ] ; then
+      echo "bush/use/Python3 : WARNING : not found under ${Python3_home}"
+      exit
+    fi
+
+    ccflags="${ccflags}   -I${Python3_home}/include/python3.6m"
+    cppflags="${cppflags} -I${Python3_home}/include/python3.6m"
+    libs="${libs} -L${Python3_home}/lib -lpython3.6m"
+
+    py_exe="${Python3_home}/bin/python3.6"
+
+  fi
+
+  cppflags="${cppflags} -DEXLIB_USE_NATIVE_PYTHON"
+
+  if [ "${build_verbose}" = "yes" ] ; then
+    echo "bush/use/Python3 : python exe is ${py_exe}"
+  fi
+
+fi
