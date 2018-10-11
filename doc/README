@@ -1,6 +1,7 @@
 
  Doc build with :
    ../../../bush/doc/doxygen_web
+ ( ../../../bush/doc/doxygen_web -to_github )
 
  The pages are put under :
    ../../../docs/<app>_doc
