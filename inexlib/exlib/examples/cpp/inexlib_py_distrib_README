@@ -3,7 +3,8 @@
     UNIX> <arrange that your X11 environment is ok>
     UNIX> cd <installation_path>/inexlib_py/<version>
 
- For the moment, the examples using the "gui viewer" must be run from this directory so that fonts and icon files be found.
+  For the moment, the examples using the "gui viewer" must be run
+ from this directory so that fonts and icon files be found.
 
  To activate .py examples from the Python program:
     UNIX> <setenv PYTHONPATH ./res/[spy,spy3]:./modules>
