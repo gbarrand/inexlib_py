@@ -1,12 +1,12 @@
 /**
 
-@page inexlib_py_introduction Introduction
+@page inexlib_py_introduction <h1>Introduction</h1>
 
   inexlib_py is the collection of exlib examples related to Python put in a standalone package
  and distribution. The 1.1.x contains also examples coworking with Spark. It can be built
  with Python3.
 
-  There are little applications, written in C++, that activates Python through its library and
+  There are C++ little applications that activate Python through it's library and
  a set of .py scripts that demonstrate how to activate inlib/exlib from a Python prompt by using
  the modules 
 @verbatim
@@ -50,7 +50,7 @@
                               # and plot with the inexlib/plotter.
 @endverbatim
 
-  See the README on github for instructions on how to build, install and run.
+  See the README file on github for instructions on how to build, install and run.
 
 */
 
