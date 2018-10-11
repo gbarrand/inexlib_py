@@ -39,18 +39,18 @@
     <if needed, customize the spark_run script file to find your Spark and Python>
     UNIX> ./spark_run ./spark_<example>.py
  for example:     
-    UNIX> ./spark_run spark_hello.py          # hello from the C++ inlib::spark_greet().
-    UNIX> ./spark_run spark_h1d.py            # inlib histo.
-    UNIX> ./spark_run spark_c3d_window.py     # do a spark action, get (x,y,z) lists,
-                                              # and plot the 3D cloud with a inlib-exlib/plotter.
-    UNIX> ./spark_run spark_c3d_gui_window.py # the same, but by using a "gui viewer" similar
-                                              # to the ioda viewer. See softinex/"Apps general behaviour"
-                                              # for explanations about the button panels.
-    UNIX> ./spark_run spark_c3d_offscreen.py  # do a spark action, get (x,y,z) lists,
-                                              # and plot the 3D cloud "offscreen" by producing an out.ps
-                                              # Postscript file (done with gl2ps).
-    UNIX> ./spark_run spark_cfitsio_ntuple.py # read a TBL in a fits file, do "ntuple projections" with Spark,
-                                              # and plot with the inexlib/plotter.
+    UNIX> ./spark_run ./spark_hello.py          # hello from the C++ inlib::spark_greet().
+    UNIX> ./spark_run ./spark_h1d.py            # inlib histo.
+    UNIX> ./spark_run ./spark_c3d_window.py     # do a spark action, get (x,y,z) lists,
+                                                # and plot the 3D cloud with a inlib-exlib/plotter.
+    UNIX> ./spark_run ./spark_c3d_gui_window.py # the same, but by using a "gui viewer" similar
+                                                # to the ioda viewer. See softinex/"Apps general behaviour"
+                                                # for explanations about the button panels.
+    UNIX> ./spark_run ./spark_c3d_offscreen.py  # do a spark action, get (x,y,z) lists,
+                                                # and plot the 3D cloud "offscreen" by producing an out.ps
+                                                # Postscript file (done with gl2ps).
+    UNIX> ./spark_run ./spark_cfitsio_ntuple.py # read a TBL in a fits file, do "ntuple projections" with Spark,
+                                                # and plot with the inexlib/plotter.
  to execute all examples:
     UNIX> ./spark_run all
 
