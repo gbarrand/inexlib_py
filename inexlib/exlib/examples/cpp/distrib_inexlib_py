@@ -54,6 +54,8 @@ fi
 
 find ../py -maxdepth 1 -name '*.py' -exec /bin/cp {} ${to}/. \;
 
+/bin/cp ./inexlib_py_distrib_README ${to}/README
+
 platform=`${bush_home}/platform "${cpp_compiler}"`
 if [ "${platform}" = "" ] ; then
   echo "bush/app_distrib : can't guess platform for ${cpp_compiler}."
