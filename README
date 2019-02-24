@@ -27,6 +27,13 @@
  To build with Python3:
     UNIX> ./build -py3
 
+ To build pure C++ examples being client to the inexlib_serv application:
+    UNIX> cd <install_path>/inexlib/inlib/examples/cpp
+    UNIX> ./build
+ or one by one:
+    UNIX> ./build cube_to_sg_serv.cpp
+    UNIX> ./build lego_to_sg_serv.cpp
+    
  (UNIX is for Linux, macOS or Windows-10/cygwin).
 
  To build the distribution:
