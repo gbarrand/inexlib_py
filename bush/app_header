@@ -28,7 +28,7 @@ build_webgl=no
 build_wx=no
 build_tntnet=no
 build_no_screen=no
-build_no_wall=no
+build_no_data_client=no
 build_app_dev=no
 build_app_use=
 build_enforce_vbo=no
@@ -55,7 +55,7 @@ for arg in ${build_args} ; do
      -tntnet)         build_tntnet=yes;;
      -no_gl)          build_no_gl=yes;;
      -no_screen)      build_no_screen=yes;;
-     -no_wall)        build_no_wall=yes;;
+     -no_data_client) build_no_data_client=yes;;
      -app_dev)        build_app_dev=yes;;
      -install)        build_install=yes;;
      -vbo)            build_enforce_vbo=yes;;
@@ -161,9 +161,9 @@ if [ ${build_inlib_gl} = "yes" ] ; then
   cppflags="${cppflags} -DEXLIB_INLIB_GL"
 fi
 
-if [ "${build_no_wall}" = "no" ] ; then
-  cppflags="${cppflags} -DAPP_USE_WALL"
-fi
+#if [ "${build_no_data_client}" = "no" ] ; then
+#  cppflags="${cppflags} -DAPP_USE_DATA_CLIENT"
+#fi
 
 if [ "${exlib_home}" = "" ] ; then
   exlib_home=${bush_home}/../inexlib/exlib
@@ -171,5 +171,16 @@ fi
 
 if [ "${inlib_home}" = "" ] ; then
   inlib_home=${bush_home}/../inexlib/inlib
+fi
+
+if [ ${build_visual} = "yes" ] ; then
+  cppflags="${cppflags} -bigobj"
+  app_lower="`echo ${app} | tr '[:upper:]' '[:lower:]'`"
+  if [ ${app} != ${app_lower} ] ; then
+    cppflags="${cppflags} -I../${app}"  # to bypass "../<app>/main" not found on CYGWIN if the app name contains uppercase chars.
+  fi
+  if [ ${build_webgl} = "yes" ] ; then
+    cppflags="${cppflags} -I${inlib_home}/inlib/WebGL"  # to bypass "wrap_main_js" not found in inlib/WebGL/render.
+  fi
 fi
 

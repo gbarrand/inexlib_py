@@ -11,10 +11,15 @@ else
 
   if [ "`uname -n`" = deco.lal.in2p3.fr ] ; then
     wxWidgets_home=/exp/si/barrand/usr/local/wxWidgets/3.1.0
-  else
+  elif [ -d /usr/local/wxWidgets/3.1.1 ] ; then
+    wxWidgets_home=/usr/local/wxWidgets/3.1.1
+  elif [ -d /usr/local/wxWidgets/3.1.0 ] ; then
     wxWidgets_home=/usr/local/wxWidgets/3.1.0
+  else
+    echo 'wxWidgets not found.'
   fi
 
+  if [ "${wxWidgets_home}" != "" ] ; then
   if [ -x ${wxWidgets_home}/bin/wx-config ] ; then
     PATH="${wxWidgets_home}/bin:${PATH}"
     if [ `uname` = "Linux" ] ; then
@@ -32,6 +37,7 @@ else
       fi
       unset lib_path
     fi
+  fi
   fi
 
 fi

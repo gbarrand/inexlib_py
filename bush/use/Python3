@@ -11,7 +11,7 @@ if [ "${use_sys_Python3}" = "yes" ] ; then
   py_exe=
 
   if [ ${build_visual} = "yes" ] ; then
-    Python3_home=/cygdrive/c/Users/barrand/AppData/Local/Programs/Python/Python36
+    Python3_home=${c_drive}/Users/barrand/AppData/Local/Programs/Python/Python36
     if [ ! -d "${Python3_home}" ] ; then
       echo "bush/use/Python3 : WARNING : not found under ${Python3_home}"
       exit
@@ -41,20 +41,50 @@ if [ "${use_sys_Python3}" = "yes" ] ; then
 
     if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then
       Python3_home=/opt/anaconda
-    else
+      Python3_version=python3.6m
+      Python3_lib="-L${Python3_home}/lib -lpython3.6m"
+      py_exe="${Python3_home}/bin/python3.6"
+   #elif [ -f /opt/python/3.6.5.1/include/python3.6m/Python.h ] ; then  #cori.nersc.
+    elif [ -f /usr/common/software/python/3.6-anaconda-4.4/include/python3.6m/Python.h ] ; then  #cori.nersc.
+      Python3_home=/usr/common/software/python/3.6-anaconda-4.4
+      #/usr/common/software/python/3.6-anaconda-4.4/
+      #Python3_home=/opt/python/3.6.5.1
+      Python3_version=python3.6m
+     # NOTE : with NERSC/cori/spark, the below way to link does not permit to find libpython3.so at run time.
+      Python3_lib="-L${Python3_home}/lib -lpython3"
+     # NOTE : the below does not work too :
+     #Python3_lib="-Wl,-rpath,/opt/python/3.6.5.1/lib -L${Python3_home}/lib -lpython3"
+     # NOTE : the below is ok :
+     #Python3_lib="/opt/python/3.6.5.1/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6m.a"
+      py_exe="${Python3_home}/bin/python3.6"
+    elif [ -d /usr/local/Python/3.6.6 ] ; then  #ostackc
       Python3_home=/usr/local/Python/3.6.6
+      Python3_version=python3.6m
+      Python3_lib="-L${Python3_home}/lib -lpython3.6m"
+      py_exe="${Python3_home}/bin/python3.6"
+    elif [ -d /usr/include/python3.4m ] ; then  #ostacku
+      Python3_home=/usr
+      Python3_version=python3.4m
+      Python3_lib="-L${Python3_home}/lib/x86_64-linux-gnu -lpython3.4m"
+      py_exe="${Python3_home}/bin/python3.4m"
+    elif [ -d /usr/include/python3.5m ] ; then  #ostackess
+      Python3_home=/usr
+      Python3_version=python3.5m
+      Python3_lib="-L${Python3_home}/lib/x86_64-linux-gnu -lpython3.5m"
+      py_exe="${Python3_home}/bin/python3.5m"
+    else      
+      echo "bush/use/Python3 : Python3.x not found."
+      exit
     fi
     
     if [ ! -d "${Python3_home}" ] ; then
       echo "bush/use/Python3 : WARNING : not found under ${Python3_home}"
       exit
     fi
-
-    ccflags="${ccflags}   -I${Python3_home}/include/python3.6m"
-    cppflags="${cppflags} -I${Python3_home}/include/python3.6m"
-    libs="${libs} -L${Python3_home}/lib -lpython3.6m"
-
-    py_exe="${Python3_home}/bin/python3.6"
+    
+    ccflags="${ccflags}   -I${Python3_home}/include/${Python3_version}"
+    cppflags="${cppflags} -I${Python3_home}/include/${Python3_version}"
+    libs="${libs} ${Python3_lib}"
 
   fi
 

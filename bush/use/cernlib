@@ -45,6 +45,9 @@ if [ "${use_sys_cernlib}" = "yes" ] ; then
 
     f77_libs="${f77_libs} /libpath:'C:\cern\pro\lib' packlib.lib advapi32.lib ws2_32.lib"
 
+  elif [ "`uname -r | grep Microsoft`" != "" ] ; then
+    f77_libs="${f77_libs} /libpath:'C:\cern\pro\lib' packlib.lib advapi32.lib ws2_32.lib"
+    
   elif [ ${on_maca} = "yes" -o ${on_mac_lal} = yes ] ; then
     no_shift=
     cernlib_home=/cern/pro

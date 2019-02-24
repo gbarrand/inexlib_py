@@ -10,9 +10,11 @@ if [ ${build_compile} = "yes" ] ; then
 
 /bin/rm -f c_tmp
 /bin/rm -f cpp_tmp
+/bin/rm -f f_tmp
 
 # for example to put a file in front :
 #echo './source/SoPlotter.cxx' >> cpp_tmp
+#echo './source/SoGL2PSAction.cxx' >> cpp_tmp
 
 if [ -d ./source ] ; then
   find ./source -maxdepth 1 -name '*.c' -print >> c_tmp

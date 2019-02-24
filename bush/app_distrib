@@ -75,7 +75,7 @@ elif [ ${build_cocoa} = "yes" -o ${build_cocoa_gnu} = "yes" ] ; then
   fi
 
   if [ ! -f "${file_exe}" ] ; then
-    echo "bush/app_distrib : exe not built."
+    echo "bush/app_distrib : cocoa : exe not built."
   else
 
     head_app=${build_path}/distrib/${build_app_distrib_dir}/${version}/${app}.app
@@ -241,7 +241,7 @@ elif [ ${build_ios} = "yes" -o ${build_ios_gnu} = "yes" ] ; then
   fi
 
   if [ ! -f "${file_exe}" ] ; then
-    echo "bush/app_distrib : exe not built."
+    echo "bush/app_distrib : ios : exe not built."
   else
   
     head=${build_path}/distrib/${build_app_distrib_dir}/${version}/${app}.app
@@ -390,7 +390,7 @@ if [ "${target}" != "" ] ; then
   fi
 
   if [ ! -f "${file_exe}" ] ; then
-    echo "bush/app_distrib : exe not built."
+    echo "bush/app_distrib : ${target} : exe not built."
   else
   
     head_app=${build_path}/distrib/${build_app_distrib_dir}
@@ -413,9 +413,7 @@ if [ "${target}" != "" ] ; then
       /bin/cp -R -f ../comres ${head}/res
     fi
     
-    if [ `uname` = Linux ] ; then
-      . ${bush_home}/sys_app
-    fi 
+    . ${bush_home}/sys_app
       
     platform=`${bush_home}/platform "${cpp_compiler}"`
     if [ "${platform}" = "" ] ; then

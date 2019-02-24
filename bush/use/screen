@@ -13,7 +13,7 @@ elif [ ${build_visual} = "yes" ] ; then
 elif [ ${build_cocoa} = "yes" -o ${build_cocoa_gnu} = "yes" ] ; then
   use_Cocoa=yes
 elif [ ${build_ios} = "yes" -o ${build_ios_gnu} = "yes" -o ${build_iossim} = "yes" ] ; then
-  use_ios=yes
+  use_iOS=yes
 elif [ ${build_x11} = "yes" ] ; then
   use_X11=yes
   if [ ${build_no_gl} = "no" ] ; then
@@ -30,7 +30,7 @@ fi
 . ${bush_home}/use/DirectX
 
 . ${bush_home}/use/Cocoa
-. ${bush_home}/use/ios
+. ${bush_home}/use/iOS
 . ${bush_home}/use/Android
 . ${bush_home}/use/wx
 

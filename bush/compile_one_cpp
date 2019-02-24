@@ -8,6 +8,8 @@
 
 oname=`basename ${file}`
 
+oname=`echo ${oname} | sed -e 's:\.h::g'`
+
 oname=`echo ${oname} | sed -e 's:\.cc::g'`
 oname=`echo ${oname} | sed -e 's:\.cxx::g'`
 oname=`echo ${oname} | sed -e 's:\.C::g'`

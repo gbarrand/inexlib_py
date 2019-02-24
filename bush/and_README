@@ -7,6 +7,7 @@
 
   When done, you build the application with :
     UNIX> ../../bush/and_build
+  ( UNIX> ../../bush/and_build -j4 )
 
   NOTE : the jks password asked during the build to sign the .apk is 'android'.
 

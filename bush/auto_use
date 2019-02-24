@@ -40,6 +40,17 @@ if [ "${app_uses}" != "" ] ; then
   fi
 fi
 
+app_cfiles="`grep ${auto_use_pack}_build_cfile ${auto_use_file}`"
+if [ "${app_cfiles}" != "" ] ; then
+  app_cfiles=`echo ${app_cfiles} | sed -e "s:${auto_use_pack}_build_cfile::g"`
+  for item in ${app_cfiles} ; do
+    if [ ${item} != "//" ] ; then
+      #echo "app : cfile ${item}"
+      cfiles="${cfiles} ${item}"
+    fi
+  done
+fi
+
 app_cppfiles="`grep ${auto_use_pack}_build_cppfile ${auto_use_file}`"
 if [ "${app_cppfiles}" != "" ] ; then
   app_cppfiles=`echo ${app_cppfiles} | sed -e "s:${auto_use_pack}_build_cppfile::g"`
@@ -47,6 +58,32 @@ if [ "${app_cppfiles}" != "" ] ; then
     if [ ${item} != "//" ] ; then
       #echo "app : cppfile ${item}"
       cppfiles="${cppfiles} ${item}"
+    fi
+  done
+fi
+
+app_mmfiles="`grep ${auto_use_pack}_build_mmfile ${auto_use_file}`"
+if [ "${app_mmfiles}" != "" ] ; then
+  app_mmfiles=`echo ${app_mmfiles} | sed -e "s:${auto_use_pack}_build_mmfile::g"`
+  for item in ${app_mmfiles} ; do
+    if [ ${item} != "//" ] ; then
+      #echo "app : mmfile ${item}"
+      mmfiles="${mmfiles} ${item}"
+    fi
+  done
+fi
+
+app_scrfiles="`grep ${auto_use_pack}_build_scrfile ${auto_use_file}`"
+if [ "${app_scrfiles}" != "" ] ; then
+  app_scrfiles=`echo ${app_scrfiles} | sed -e "s:${auto_use_pack}_build_scrfile::g"`
+  for item in ${app_scrfiles} ; do
+    if [ ${item} != "//" ] ; then
+      #echo "app : scrfile ${item}"
+      if [ `uname` = "Darwin" ] ; then
+        mmfiles="${mmfiles} ${item}"
+      else
+        cppfiles="${cppfiles} ${item}"
+      fi
     fi
   done
 fi
@@ -81,7 +118,7 @@ fi
 #if [ "${app_visual_cppflags}" != "" ] ; then
 #  app_visual_cppflags=`echo ${app_visual_cppflags} | sed -e "s:${auto_use_pack}_build_visual_cppflags::g"`
 #  for item in ${app_visual_cppflags} ; do
-#    if [ ${item} != "//" ] ; then
+#   if [ ${item} != "//" ] ; then
 #      if [ ${build_visual} = "yes" ] ; then
 #        cppflags="${cppflags} ${item}"
 #      fi

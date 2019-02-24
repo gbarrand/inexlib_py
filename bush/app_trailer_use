@@ -33,9 +33,10 @@ if [ ${build_tntnet} = "yes" ] ; then
   use_dl=yes
   . ${bush_home}/use/tntnet
   . ${bush_home}/use/zip
-  . ${bush_home}/use/thread
   . ${bush_home}/use/dl
 fi
+
+. ${bush_home}/use/thread  # may be for tntnet, APP_USE_DATA_CLIENT, Python.
 
 . ${bush_home}/use/zlib #after zip.
 

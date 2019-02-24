@@ -33,6 +33,10 @@ else
     ${bush_home}/check_app clang++
     build_status=$?;if [ ${build_status} = 0 ] ; then build_clang=yes; else build_gnu=yes; fi
   elif [ `uname` = "Linux" ] ; then
-    build_gnu=yes
+    if [ "`uname -r | grep Microsoft`" != "" ] ; then
+      build_visual=yes
+    else
+      build_gnu=yes
+    fi
   fi
 fi

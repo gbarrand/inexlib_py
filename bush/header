@@ -22,6 +22,7 @@ build_cxx14=no
 build_debug=no
 build_set_x=no
 build_verbose=no
+build_verbose_name=no
 build_mem=no	
 build_mem_atexit=no	
 build_rmo=no
@@ -47,6 +48,7 @@ build_no_distrib=no
 build_shlib=yes
 build_use_shlib=no
 build_inlib_gl=no
+build_keep_symbs=no
 
 build_use_not_our=
 build_D=
@@ -91,6 +93,7 @@ for arg in ${build_args} ; do
     -debug)        build_debug=yes;;
     -x)            build_set_x=yes;;
     -v)            build_verbose=yes;;
+    -verbose_name) build_verbose_name=yes;;
 
     -a_only)       build_shlib=no;;
     -m32)          build_m32=yes;;
@@ -124,6 +127,7 @@ for arg in ${build_args} ; do
     -use_shlib)    build_use_shlib=yes;;
     -inlib_stl)    build_use_our_stl=yes;;
     -inlib_gl)     build_inlib_gl=yes;;
+    -keep_symbs)   build_keep_symbs=yes;;
 
     -*) echo "bush/header : unknown option : $arg for ${package}." ; exit ;;
 
@@ -158,7 +162,7 @@ if [ ${build_set_x} = "yes" ] ; then set -x; fi
 #////////////////////////////////////
 #////////////////////////////////////
 
-/bin/rm -f c_tmp cc_tmp cxx_tmp cpp_tmp C_tmp m_tmp mm_tmp
+/bin/rm -f c_tmp cc_tmp cxx_tmp cpp_tmp C_tmp m_tmp mm_tmp f_tmp
 
 cfiles=
 ccfiles=
@@ -206,7 +210,21 @@ if [ ${build_visual} = "yes" ] ; then
 fi
 fi
 
-build_path="./${build_dir}"
+build_root_path="`printenv BUSH_BUILD_ROOT_PATH`"
+if [ "${build_root_path}" != "" ] ; then
+  echo 'bush/header : experimental : use BUSH_BUILD_ROOT_PATH.'
+  if [ ${build_verbose} = yes ] ; then
+    echo "bush/header : BUSH_BUILD_ROOT_PATH value is \"${build_root_path}\""
+  fi
+  if [ ! -d "${build_root_path}" ] ; then
+    echo 'bush/header : directory of env BUSH_BUILD_ROOT_PATH not found.'
+    echo "bush/header : BUSH_BUILD_ROOT_PATH value is \"${build_root_path}\""
+    exit  
+  fi
+  build_path="${build_root_path}/${build_dir}"
+else
+  build_path="./${build_dir}"
+fi
 
 #//////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////

@@ -1,4 +1,10 @@
 
+on_my_mac_2018="`networksetup -listallhardwareports | grep '86:00'`"
+if [ "${on_my_mac_2018}" != "" ] ; then
+  java_home=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
+  JAVA_HOME=${java_home};export JAVA_HOME
+fi
+
 sdk_home=/usr/local/Android/android-sdk_r16-macosx
 
 ndk_home=/usr/local/Android/android-ndk-r17

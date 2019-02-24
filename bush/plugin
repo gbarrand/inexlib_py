@@ -25,18 +25,18 @@ else
 
     lib.exe /nologo /out:${file_a} ${objs}
 
-    # Build the obuild_windef.exe utility program :
-    /bin/rm -f ./cl_exe_tmp
-    eval cl.exe /nologo /MD /O2 /W3 /wd4996 /Fewindef.exe ${bush_home}/visual/windef.c > ./cl_exe_tmp
-    use_status=$?;if [ ${use_status} != 0 ] ; then cat ./cl_exe_tmp;/bin/rm -f ./cl_exe_tmp;exit ${use_status}; fi
-    /bin/rm -f ./cl_exe_tmp
+    # Build the windef.exe utility program :
+    /bin/cp ${bush_home}/visual/windef.c ./tmp_windef.c
+    ${bush_home}/vc++ -c -o ./windef.o ./tmp_windef.c
+    ${bush_home}/vc++ -o ./windef.exe ./windef.o
+    /bin/rm -f ./windef.o ./tmp_windef.c
 
     # Building the .def file :
     /bin/rm -f ./dumpbin_exe_tmp
     eval dumpbin.exe /symbols /out:${file_symbs} ${file_a} > ./dumpbin_exe_tmp
     use_status=$?;if [ ${use_status} != 0 ] ; then cat ./dumpbin_exe_tmp;/bin/rm -f ./dumpbin_exe_tmp;exit ${use_status}; fi
 
-    ./windef.exe ${plugin} < ${file_symbs} > ${file_def}
+    ./windef.exe ${plugin} ${file_symbs} > ${file_def}
 
     # It produces a .exp file.
     /bin/rm -f ./lib_exe_tmp
@@ -46,8 +46,12 @@ else
     # Building the dynamically loadable library (dll) :
     eval ${cpp_linker} ${cpp_linker_flags} -dll -o ${file_plugin} ${file_exp} ${file_a} ${libs}
 
-    /bin/rm -f ${file_a} ${file_o} ${file_symbs} ${file_def} ${file_lib} ${file_exp} windef.exe
-    /bin/rm -f windef.obj windef.exe.manifest
+    if [ ${build_keep_symbs} = no ] ; then
+      /bin/rm -f ${file_symbs} ${file_def} ${file_exp}
+      /bin/rm -f ${file_a} ${file_lib}
+    fi	
+    /bin/rm -f ${file_o}
+    /bin/rm -f windef.exe windef.obj windef.exe.manifest
 
   else
 

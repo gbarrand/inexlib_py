@@ -135,27 +135,6 @@ elif [ ${build_sdk_ios} = "yes" -o ${build_sdk_ios_gnu} = "yes" ] ; then
     cc_linker=${cc_compiler}
   fi
 
-  # see also use_cpp :
-  #sdk_dirs="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs /Developer/SDKs"
-  #sdk_verss="10.0 9.3 9.0 8.1 7.1 5.0"
-  #found=no
-  #for sdk_dir in ${sdk_dirs} ; do
-  #  for sdk_vers in ${sdk_verss} ; do
-  #    if [ ${found} = no ] ; then
-  #      ios_sdk="${sdk_dir}/iPhoneOS${sdk_vers}.sdk"
-  #      ios_vers=${sdk_vers}
-  #     if [ -d "${ios_sdk}" ] ; then found=yes;fi
-  #   fi
-  # done
-  #done
-  #if [ ${found} = no ] ; then
-  #  echo "bush/use_cc : iOS sdk not found."
-  #  exit
-  #fi
-  #echo "${ios_sdk}"
-  #echo "${ios_vers}"
-  #exit
-
   ios_sdk="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
   if [ ! -d "${ios_sdk}" ] ; then
     echo "bush/use_cc : iPhoneOS.sdk not found at ${ios_sdk}."
@@ -268,6 +247,10 @@ fi
 
 # NOTE : if not using plugin at all -fPIC is not needed,
 #        but we have some in osc software.
-if [ `uname` = "Linux" ] ; then ccflags="${ccflags} -fPIC";fi
+if [ `uname` = "Linux" ] ; then
+  if [ ${build_visual} = "no" ] ; then
+    ccflags="${ccflags} -fPIC"
+  fi
+fi
 
 ccflags0="${ccflags}"

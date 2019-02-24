@@ -40,14 +40,23 @@ if [ "${use_wx}" = "yes" ] ; then
     fi
 
     if [ `uname` = Darwin ] ; then    
-      # Darwin : it is assumed that wxWidgets is built with :
-      #    ./configure CC=clang CXX=clang++ CXXFLAGS="-stdlib=libstdc++" CPPFLAGS="-stdlib=libstdc++"
-      # All other c++ lib (geant4, pythia8) must be compiled with -stdlib=libstdc++.
-      # Else, simple app as exlib/examples/cpp/wx_hello_world.cpp crashes for us with 3.1.0.
+      if [ -d /usr/local/wxWidgets/3.1.1 ] ; then
+        # Darwin : it is assumed that wxWidgets is built with :
+        #   ./configure --prefix=/usr/local/wxWidgets/3.1.1 CC=clang CXX=clang++ CXXFLAGS="-stdlib=libc++" CPPFLAGS="-stdlib=libc++" LDFLAGS="-stdlib=libc++"
 
-      # to compile include/wx-3.1/wx/strvararg.h :
-      cppflags="${cppflags} -stdlib=libstdc++"
-      linker_flags="${linker_flags} -stdlib=libstdc++"
+        cppflags="${cppflags} -stdlib=libc++"
+        linker_flags="${linker_flags} -stdlib=libc++"
+
+      elif [ -d /usr/local/wxWidgets/3.1.0 ] ; then
+        # Darwin : it is assumed that wxWidgets is built with :
+        #   ./configure CC=clang CXX=clang++ CXXFLAGS="-stdlib=libstdc++" CPPFLAGS="-stdlib=libstdc++"
+        # All other c++ lib (geant4, pythia8) must be compiled with -stdlib=libstdc++.
+        # Else, simple app as exlib/examples/cpp/wx_hello_world.cpp crashes for us with 3.1.0.
+
+        # to compile include/wx-3.1/wx/strvararg.h :
+        cppflags="${cppflags} -stdlib=libstdc++"
+        linker_flags="${linker_flags} -stdlib=libstdc++"
+      fi
     fi
 
     cppflags="${cppflags} `wx-config --cppflags`"

@@ -119,8 +119,10 @@ if [ `uname` = "Linux" ] ; then
   if [ ${is_ubuntu} = yes ] ; then
     # if "--as-needed" (now the default on ubuntu), an app linking shared libs doing OpenGL
     # but doing no GL in its main will not link.
-    linker_flags="${linker_flags} -Wl,--no-as-needed"
-    pgflags="${pgflags} -Wl,--no-as-needed"  # for exa for OnXXt.so plugin.
+    if [ ${build_visual} = "no" ] ; then
+      linker_flags="${linker_flags} -Wl,--no-as-needed"
+      pgflags="${pgflags} -Wl,--no-as-needed"  # for exa for OnXXt.so plugin.
+    fi      
   fi
 fi
 
@@ -133,11 +135,19 @@ if [ `uname` = Darwin ] ; then
     parallel_exe=/opt/local/bin/parallel
   fi    
 elif [ `uname` = Linux ] ; then
-  if [ "`uname -n`" = barrand-centos7.lal.in2p3.fr ]; then
-    if [ -x /usr/local/parallel/20120122/bin/parallel ] ; then #ostacku
+  if [ -x /usr/bin/parallel ] ; then #ostacku
+    parallel_exe=/usr/bin/parallel
+  elif [ "`uname -n`" = barrand-centos7.lal.in2p3.fr -o "`uname -n`" = barrand-centos7 ] ; then
+    if [ -x /usr/local/parallel/20120122/bin/parallel ] ; then
       LC_ALL=en_US.UTF-8;export LC_ALL
       parallel_exe=/usr/local/parallel/20120122/bin/parallel
     fi
   fi    
 fi
 
+#////////////////////////////////////////////////////////////////
+#/// CYGWIN, WSL : //////////////////////////////////////////////
+#////////////////////////////////////////////////////////////////
+c_drive=
+if [ "`uname | grep CYGWIN`" != "" ] ;       then c_drive=/cygdrive/c; fi
+if [ "`uname -r | grep Microsoft`" != "" ] ; then c_drive=/mnt/c; fi
