@@ -4,7 +4,8 @@
  The upper is for using a Python2.x, which is the default in bush scripts.
  If using a Python3, it is in:     
     <install_path>/bush/use/Python3
- Then, if needed, customize these files according your Python installation.
+ Then, if needed, customize these files according your Python installation. When running, see
+ the "IMPORTANT" notice below.
 
  To build the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so modules
  wrapping inlib/exlib with swig:
@@ -26,7 +27,7 @@
  To build with Python3:
     UNIX> ./build -py3
 
- (UNIX is for Linux, MacOS or Windows-10/cygwin).
+ (UNIX is for Linux, macOS or Windows-10/cygwin).
 
  To build the distribution:
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
@@ -46,17 +47,10 @@
     UNIX> ./bin/h1d_spy             # example using inlib SWIG wrapping.
     UNIX> ./bin/plotter_spy_screen  # example using inlib/exlib SWIG wrapping.
  to activate .py examples from the Python program:
-    UNIX> <setenv PYTHONPATH ./res/[spy,spy3]:./modules>
+     csh> source ./setup.csh  # to setup PYTHONPATH
+    ( sh> . ./setup.sh )
     UNIX> <python> ./h1d.py                 # inlib histo.
-    UNIX> <python> ./rroot.py               # read an histo in a root file.
-    UNIX> <python> ./plotter_window.py      # plot an histo by using softinex graphics and plotting.
-    UNIX> <python> ./plotter_offscreen.py   # plot an histo and produce an out.ps Postscript file.
-    UNIX> <python> ./tree.py                # project a ntuple found in the pawdemo.root file
-                                            # and plot the histo.
-    UNIX> <python> ./gui_plotter_windpw.py  # plots in a high level "GUI" viewer.
-    UNIX> <python> ./waxml.py               # write histos at the AIDA XML file format.
-    UNIX> <python> ./cfitsio_hst.py         # visualise an image in a fits file.
-    UNIX> <python> ./polyhedron.py          # visualise a solid/shape boolean operation.
+    UNIX> <see README for more examples>
  or:
     UNIX> <python>
     >>> import h1d
@@ -71,25 +65,16 @@
  used to build. Someone must be aware than multiple Python installations may be present on one
  system, and must be cautious to use the python program corresponding to the one used to link
  the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so and the example
- applications. (On MacOS, there is a Python under /System and another one may be found
+ applications. (On macOS, there is a Python under /System and another one may be found
  under /opt/local/bin coming indirectly from some Macports installation).
 
- To run a Spark python examples:
+ To run a Spark python example:
     <if needed, customize the spark_run script file to find your Spark and Python>
     UNIX> ./spark_run ./spark_<example>.py
  for example:     
-    UNIX> ./spark_run ./spark_hello.py          # hello from the C++ inlib::spark_greet().
-    UNIX> ./spark_run ./spark_h1d.py            # inlib histo.
-    UNIX> ./spark_run ./spark_c3d_window.py     # do a spark action, get (x,y,z) lists,
-                                                # and plot the 3D cloud with a inlib-exlib/plotter.
-    UNIX> ./spark_run ./spark_c3d_gui_window.py # the same, but by using a "gui viewer" similar
-                                                # to the ioda viewer. See softinex/"Apps general behaviour"
-                                                # for explanations about the button panels.
-    UNIX> ./spark_run ./spark_c3d_offscreen.py  # do a spark action, get (x,y,z) lists,
-                                                # and plot the 3D cloud "offscreen" by producing an out.ps
-                                                # Postscript file (done with gl2ps).
-    UNIX> ./spark_run ./spark_cfitsio_ntuple.py # read a TBL in a fits file, do "ntuple projections" with Spark,
-                                                # and plot with the inexlib/plotter.
-  To execute all examples:
+    UNIX> ./spark_run ./spark_inlib_h1d_vis.py  # inlib histo and plotting.
+    UNIX> ./spark_run ./spark_fits_vis.py        # open spark_test_data.fits, do a simple collect, fill and plot an histo.
+
+ To execute all examples:
     UNIX> ./spark_run all
 
