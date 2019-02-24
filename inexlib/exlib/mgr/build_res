@@ -1,0 +1,33 @@
+#!/bin/sh -f
+
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file exlib.license for terms.
+
+bush_home=`dirname $0`/../../../bush
+
+exlib_home=${bush_home}/../inexlib/exlib
+
+#set -x
+
+build_verbose=no
+
+args=""
+while test $# -ge 1 ; do
+  case $1 in
+    -v) build_verbose=yes;args="${args} $1";;  # we need it here for build_res.
+  esac
+  shift
+done
+
+dirs="${exlib_home}/examples/cpp ${exlib_home}/examples/py"
+for dir in ${dirs} ; do
+  spy_dir=spy
+  if [ ${build_verbose} = yes ] ; then echo "exlib/mgr/build_res : build ${dir}/res/${spy_dir} directory ...";fi
+  /bin/mkdir -p ${dir}/res/${spy_dir}
+  find ${exlib_home}/exlib/${spy_dir} -name '*.py' -exec /bin/cp {} ${dir}/res/${spy_dir}/. \;
+  
+  spy_dir=spy3
+  if [ ${build_verbose} = yes ] ; then echo "exlib/mgr/build_res : build ${dir}/res/${spy_dir} directory ...";fi
+  /bin/mkdir -p ${dir}/res/${spy_dir}
+  find ${exlib_home}/exlib/${spy_dir} -name '*.py' -exec /bin/cp {} ${dir}/res/${spy_dir}/. \;
+done
