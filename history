@@ -1,0 +1,4 @@
+
+24/Feb/2019:
+- have py examples as client to inexlib_serv. (-client, -vis_host, -vis_port options to run, spark_run startup scripts).
+
