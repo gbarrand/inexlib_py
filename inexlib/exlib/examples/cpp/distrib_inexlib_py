@@ -22,6 +22,16 @@ for item in ${items} ; do
   fi
 done
 
+items="cube_to_sg_serv lego_to_sg_serv"
+for item in ${items} ; do
+  exe_path="../../../inlib/examples/cpp/${build_dir}/${item}"
+  if [ ! -x ${exe_path} ] ; then
+    echo "${exe_path} not found."
+  else    
+    /bin/cp ${exe_path} ${to}/bin/.
+  fi
+done
+
 if [ ! -x ../py/${build_dir}/inlib_swig_py.so ] ; then
   echo "../py/${build_dir}/inlib_swig_py.so not found."
 else    

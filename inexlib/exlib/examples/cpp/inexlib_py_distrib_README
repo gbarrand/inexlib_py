@@ -70,6 +70,10 @@
     UNIX> ./bin/h1d_spy             # example using inlib SWIG wrapping.
     UNIX> ./bin/plotter_spy_screen  # example using inlib/exlib SWIG wrapping.
 
+ To run pure C++ examples being client to the inexlib_serv application:
+    UNIX> ./bin/cube_to_sg_serv -host=<ip_of_inexlib_serv_host> -port=<port_of_inexlib_serv>
+    UNIX> ./bin/lego_to_sg_serv -host=<ip_of_inexlib_serv_host> -port=<port_of_inexlib_serv>
+    
  Options :
  -------
   By default, the *_vis.py examples open and draw in a local window. The viewer used is in general a "gui viewer" and the
