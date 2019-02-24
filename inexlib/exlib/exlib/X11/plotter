@@ -4,16 +4,10 @@
 #ifndef exlib_X11_plotter
 #define exlib_X11_plotter
 
-// no pure X11 version (yet). The class inherits exlib::sg::viewer that uses GL.
+#include "sg_viewer"
 
-#include "session"
-
-#include "../sg/viewer"
 #include "../sg/text_freetype"
 
-#include "simple_dispatcher"
-
-#include <inlib/sg/noderef>
 #include <inlib/sg/ortho>
 #include <inlib/sg/plots>
 
@@ -28,143 +22,43 @@
 namespace exlib {
 namespace X11 {
 
-class plotter : public sg::viewer {
-  typedef sg::viewer parent;
-private:
-  class dispatcher : public simple_dispatcher {
-    typedef simple_dispatcher parent;
-  public:
-    virtual void win_render() {m_plotter.win_render();}
-    virtual void set_size(unsigned int a_width,unsigned int a_height) {
-      m_plotter.set_size(a_width,a_height);
-      m_plotter.m_plots.adjust_size(a_width,a_height);
-    }
-    virtual dispatcher* copy() const {return new dispatcher(*this);}
-  public:
-    dispatcher(plotter& a_plotter)
-    :parent(a_plotter.m_session,a_plotter.m_win)
-    ,m_plotter(a_plotter){}
-    virtual ~dispatcher(){}
-  protected:
-    dispatcher(const dispatcher& a_from)
-    :parent(a_from)
-    ,m_plotter(a_from.m_plotter)
-    {}
-    dispatcher& operator=(const dispatcher& a_from) {
-      parent::operator=(a_from);
-      return *this;
-    }
-  protected:
-    plotter& m_plotter;
-  };
-
+class plotter : public sg_viewer {
+  typedef sg_viewer parent;
+protected:
+  virtual void set_size(unsigned int a_width,unsigned int a_height) {
+    parent::set_size(a_width,a_height);
+    m_plots.adjust_size(a_width,a_height);
+  }
 public:
   plotter(session& a_session,
           unsigned int a_cols = 1,unsigned int a_rows = 1,
           int a_x = 0,int a_y = 0,
           unsigned int a_width = 500,unsigned int a_height = 500,
           const std::string& a_win_title = "")
-  :parent(a_session.out(),a_width,a_height)
-  ,m_session(a_session)
-  ,m_win(0)
+  :parent(a_session,a_x,a_y,a_width,a_height,a_win_title)
   ,m_ttf() //before m_plots.
   ,m_plots(m_ttf)
   {
-    //////////////////////////////////////////////////////////
-    /// windowing ////////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-    if(!m_session.display()) return; //throw
-    m_win = m_session.create_window(a_win_title.c_str(),a_x,a_y,a_width,a_height);
-    if(!m_win) return; //throw
-    m_session.add_dispatcher(new dispatcher(*this));
-
-    //////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-   {std::string path = "."+inlib::sep()+"res";
-    if(inlib::dir::is_a(path)) inlib::env_append_path("EXLIB_FONT_PATH",path);}
-   {std::string path = ".."+inlib::sep()+"res";
-    if(inlib::dir::is_a(path)) inlib::env_append_path("EXLIB_FONT_PATH",path);}
-    
-    //////////////////////////////////////////////////////////
-    /// scene graph //////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-    m_camera.height = 1;
-    float z = 10*1;
-    m_camera.znear = 0.1f*z;
-    m_camera.zfar = 10*z; //100*z induces problems with lego rendering.
-    m_camera.position = inlib::vec3f(0,0,z);
-    m_camera.orientation = inlib::rotf(inlib::vec3f(0,0,1),0);
-    m_camera.focal = z;
-    m_sg.add(new inlib::sg::noderef(m_camera));
-
-    m_plots.cols = a_cols;
-    m_plots.rows = a_rows;
-    m_plots.adjust_size(a_width,a_height);
-
-    m_sg.add(new inlib::sg::noderef(m_plots));
-
+#include "../plotter_sg_common.icc"
   }
-  virtual ~plotter() {
-    //std::cout << "debug : ~plotter" << std::endl;
-    if(m_win) {
-      m_session.remove_dispatchers_with_window(m_win);
-      m_session.delete_window(m_win);
-      m_session.sync();
-    }
-  }
+  virtual ~plotter() {}
 public:
   plotter(const plotter& a_from)
   :parent(a_from)
-  ,m_session(a_from.m_session)
-  ,m_win(a_from.m_win)
   ,m_camera(a_from.m_camera)
   ,m_plots(a_from.m_plots)  
   {}
   plotter& operator=(const plotter& a_from){
     parent::operator=(a_from);
-    m_win = a_from.m_win;
     m_camera = a_from.m_camera;
     m_plots = a_from.m_plots;
     return *this;
   }
 public:
-  bool has_window() const {return m_win?true:false;} //for SWIG
-
-  Window window() const {return m_win;}
-
-  bool show() {
-    if(!m_win) return false;
-    m_session.show_window(m_win);
-    return true;
-  }
-
   bool steer() {return m_session.steer();}
-
-  void win_render() {
-    if(!m_win) return;
-    if(::glXMakeCurrent(m_session.display(),m_win,m_session.context())==False){
-      m_session.out() << "X11::plotter::win_render :"
-                      << " glXMakeCurrent failed."
-                      << std::endl;
-      return;
-    }
-    render(); //viewer::render()
-    ::glXSwapBuffers(m_session.display(),m_win);
-    if(::glXMakeCurrent(m_session.display(),None,NULL)==False){
-      m_session.out() << "X11::plotter::win_render :"
-                      << " glXMakeCurrent(None,NULL) failed."
-                      << std::endl;
-    }
-  }
-
 public:
-
 #include "../plotter_common.icc"
-
 protected:
-  session& m_session;
-  Window m_win;
   inlib::sg::ortho m_camera;
   sg::text_freetype m_ttf;
   inlib::sg::plots m_plots;

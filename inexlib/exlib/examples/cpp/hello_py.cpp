@@ -12,7 +12,7 @@ int main(int,char**) {
   if(!::Py_IsInitialized()) ::Py_Initialize();
   ::PyEval_InitThreads();
 
-  std::string s("print 'hello python from C'\nprint 'end'");
+  std::string s("print('hello python from C')\nprint('end')");
   ::PyRun_SimpleString((char*)s.c_str());
 
   if(::Py_IsInitialized()) ::Py_Finalize();

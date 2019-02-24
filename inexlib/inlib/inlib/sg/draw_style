@@ -16,20 +16,12 @@ namespace sg {
 class draw_style : public node {
   INLIB_NODE(draw_style,inlib::sg::draw_style,node)
 public:
-  enum e_style {
-    filled,
-    lines,
-    points,
-    invisible
-  };
-
-  sf_enum<e_style> style;
+  sf_enum<draw_type> style;
   sf<float> line_width;
   sf<lpat> line_pattern;
   sf<float> point_size;
   sf<bool> cull_face;
   sf<bool> winding_ccw;
-
 public:
   virtual const desc_fields& node_desc_fields() const {
     INLIB_FIELD_DESC_NODE_CLASS(inlib::sg::draw_style)
@@ -55,20 +47,21 @@ private:
 public:
   virtual void render(render_action& a_action) {
     state& state = a_action.state();
+    state.m_draw_type = style;
     state.m_line_width = line_width;
     state.m_line_pattern = line_pattern;
     state.m_point_size = point_size;
     state.m_GL_CULL_FACE = cull_face;
     state.m_winding = winding_ccw.value()?sg::winding_ccw:sg::winding_cw;
 
-    if(style.value()==lines) {
+    if(style.value()==draw_lines) {
       //no LINE_STIPPLE in GLES.
       //::glEnable(GL_LINE_STIPPLE); //done in viewer::render()
       //::glLineStipple(1,line_pattern.value());
       a_action.line_width(state.m_line_width);
-    } else if(style.value()==points) {
+    } else if(style.value()==draw_points) {
       a_action.point_size(state.m_point_size);
-    } else if(style.value()==filled) {
+    } else if(style.value()==draw_filled) {
       a_action.set_cull_face(state.m_GL_CULL_FACE);
       a_action.set_winding(state.m_winding);
     }
@@ -76,7 +69,7 @@ public:
 public:
   draw_style()
   :parent()
-  ,style(filled)
+  ,style(draw_filled)
   ,line_width(1) //NOTE : 0 induces a 501 gl error.
   ,line_pattern(line_solid)
   ,point_size(1)

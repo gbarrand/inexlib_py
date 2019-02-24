@@ -6,16 +6,18 @@
 
 #include "gl2ps_manager"
 
-#ifdef EXLIB_USE_NATIVE_GL2PS
-#include <gl2ps/gl2ps.h>
-#define gl2ps_GLfloat  GLfloat
-#define gl2ps_GLint    GLint
-#define gl2ps_GLshort  GLshort
-#define gl2ps_GLushort GLushort
-#define GL2PS_GL_RGBA  GL_RGBA
-#else
+//NOTE : we use ourex/gl2ps, since we need a public gl2psAddPolyPrimitive() which is "static" in the "official" gl2ps distrib.
+
+//#ifdef EXLIB_USE_NATIVE_GL2PS
+//#include <gl2ps/gl2ps.h>
+//#define gl2ps_GLfloat  GLfloat
+//#define gl2ps_GLint    GLint
+//#define gl2ps_GLshort  GLshort
+//#define gl2ps_GLushort GLushort
+//#define GL2PS_GL_RGBA  GL_RGBA
+//#else
 #include <gl2ps/ourex_gl2ps.h>
-#endif
+//#endif
 
 typedef gl2ps_GLfloat GL2PSrgba[4];
 typedef gl2ps_GLfloat GL2PSxyz[3];
@@ -102,6 +104,11 @@ public:
     m_ccw = (a_v==inlib::sg::winding_ccw?true:false);
   }
 
+  virtual void set_shade_model(inlib::sg::shade_type a_v) {
+    if(a_v==inlib::sg::shade_smooth) {}
+    else {}
+  }
+  
   virtual void set_depth_test(bool a_on) {m_DEPTH_TEST = a_on;}
 
   virtual void set_cull_face(bool a_on) {m_CULL_FACE = a_on;}
@@ -122,6 +129,7 @@ public:
   }
 
   virtual void set_lighting(bool a_on) {m_light_on = a_on;}
+  virtual void set_blend(bool) {}
 
   virtual void restore_state(unsigned int /*a_ret_num_light*/) {
     const inlib::sg::state& _state = state();

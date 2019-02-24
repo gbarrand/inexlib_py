@@ -4,22 +4,10 @@
 #ifndef exlib_Windows_gui_plotter
 #define exlib_Windows_gui_plotter
 
-#include "session"
-#include "window"
-#include "glarea"
-
-#include "../sg/pv_holder"
-#include "../sg/GL_action"
-
-#include "../sg/GL_VIEWER" //for after_render()
-#include "../jpeg"
-#include "../png"
-
-#include <inlib/sg/gui_viewer>
+#include "gui_viewer"
 
 #include <inlib/sg/noderef>
 #include <inlib/sg/ortho>
-#include <inlib/sg/head_light>
 #include <inlib/sg/plots>
 
 #include <inlib/sg/h2plot_cp>
@@ -27,10 +15,6 @@
 #include <inlib/sg/xy2plot>
 #include <inlib/sg/fit2plot>
 #include <inlib/sg/cloud2plot_cp>
-#include <inlib/sg/plots>
-
-#include <inlib/cbk/background_popup>
-#include <inlib/cbk/image_popup>
 
 // disable the warning about the usage of "this" in the constructor.
 #pragma warning(disable:4355)
@@ -40,208 +24,39 @@ namespace Windows {
 
 //IMPORTANT : pv_holder must come before gui_viewer.
 
-class gui_plotter : public window, public exlib::Windows::glarea, protected sg::pv_holder, public inlib::sg::gui_viewer  {
-  typedef window parent_window;
-  typedef glarea parent_glarea;
-  typedef sg::pv_holder parent_pv_holder;
-  typedef inlib::sg::gui_viewer parent;
-public: //inlib::sg::gui_viewer
-  virtual bool set_cursor_shape(inlib::sg::cursor_shape a_shape) {
-    if(!parent::set_cursor_shape(a_shape)) return false;
-    if(a_shape==inlib::sg::cursor_default) {
-      HCURSOR r = ::LoadCursor(NULL,IDC_ARROW);   
-      if(r==NULL) return false;
-      ::SetCursor(r);
-      ::SetClassLongPtr(glarea::m_hwnd,GCLP_HCURSOR,(LONG_PTR)r);
-      return true;
-    } else if(a_shape==inlib::sg::cursor_target) {
-      HCURSOR r = ::LoadCursor(NULL,IDC_CROSS);   
-      if(r==NULL) return false;
-      ::SetCursor(r);
-      ::SetClassLongPtr(glarea::m_hwnd,GCLP_HCURSOR,(LONG_PTR)r);
-      return true;
-    } else {
-      return false;
-    }
-  }
-public: //APP_MAIN
-  virtual void win_render() {
-    //send_paint();
-    wm_paint(); //glarea
-  }
-public: //exlib::Windows::window
-  virtual void key_up(){
-    if(do_key(inlib::sg::key_up,m_key_shift,m_key_ctrl)) win_render();
-  }
-  virtual void key_down(){
-    if(do_key(inlib::sg::key_down,m_key_shift,m_key_ctrl)) win_render();
-  }
-  virtual void key_left(){
-    if(do_key(inlib::sg::key_left,m_key_shift,m_key_ctrl)) win_render();
-  }
-  virtual void key_right(){
-    if(do_key(inlib::sg::key_right,m_key_shift,m_key_ctrl)) win_render();
-  }
-  virtual void key_escape(){
-    if(m_key_shift) {
-      toggle_param_viewing();
-    } else {
-      do_escape();
-    }
-    win_render();
-  }
-  virtual void close() {set_to_exit();}
+class gui_plotter : public gui_viewer {
+  typedef gui_viewer parent;
 public: //exlib::Windows::glarea
   virtual void resize(unsigned int a_w,unsigned int a_h){
-    //std::cout << "glarea::resize " << a_w << " " << a_h << std::endl;
-    //NOTE : this is not called at startup.
     m_plots.adjust_size(a_w,a_h);
     set_size(a_w,a_h);
-  }
-  EXLIB_GL_VIEWER_AFTER_RENDER
-  virtual void paint(unsigned int a_w,unsigned int a_h) {
-    //std::cout << "glarea::paint" << std::endl;
-    if(!width() && !height()) {
-      m_plots.adjust_size(a_w,a_h);
-      set_size(a_w,a_h);
-    }      
-    check_gui_cursor(); //IMPORTANT.
-    if(m_mgr_gra.begin_render(0,0,m_ww,m_wh,
-                             m_clear_color.r(),
-                             m_clear_color.g(),
-                             m_clear_color.b(),
-                             m_clear_color.a())) {
-      sg::GL_action action(m_mgr_gra,m_out,m_ww,m_wh);
-      action.state().m_use_gsto = m_use_gsto;
-      m_sg.render(action);
-      if(!action.end()) { //check that matrices stack are ok.
-        m_out << "exib::Windows::gui_plotter :" 
-              << " bad gl_action end."
-              << std::endl;
-      }
-      after_render();
-      m_mgr_gra.end_render();
-    }
-  }
-  virtual void left_button_down(unsigned int a_x,unsigned int a_y) {
-    touch_down(a_x,a_y);
-  }
-  virtual void left_button_up(unsigned int a_x,unsigned int a_y) {
-    add_work_check_arm_buttons();
-    touch_up(a_x,a_y);
-  }
-  virtual void mouse_move(unsigned int a_x,unsigned int a_y,bool a_ldown) {
-    if(a_ldown) {
-      // part of the touch gesture :
-      if(touch_move(a_x,a_y)) win_render();
-    } else {
-      /* deprecated (moreover it slows down interactivity) :
-      // notify the viewer. Needed in case of wall cursor remote control.
-      if(mouse_motion(a_x,a_y)) win_render();
-      */
-    }
-  }
-protected:
-  virtual inlib::sg::node* create_main_menu() {
-    //m_out << "exlib::Windows::gui_plotter : " << std::endl;
-
-    inlib::sg::list* list = new inlib::sg::list(parent::ttf());
-    set_style(*list);
-    
-    if(!inlib::device::stop_app_button()){
-      inlib::sg::add_image_item(*this,*list,"exit","application_exit.jpg",inlib::sg::action_set_to_exit);
-    }
-
-    return list;
   }
 public:
   gui_plotter(session& a_session,
               unsigned int a_cols = 1,unsigned int a_rows = 1,
               int a_x = 0,int a_y = 0,
               unsigned int a_width = 500,unsigned int a_height = 500,
-              const std::string& /*a_win_title*/ = "")
-  :parent_window(a_width,a_height)
-  ,parent_glarea(parent_window::m_hwnd)
-  ,parent_pv_holder(a_session.out())
-  ,parent(a_session.out(),
-          parent_pv_holder::gra_mgr(),parent_pv_holder::ttf(),parent_pv_holder::selection(),
-          a_width,a_height)
-  ,m_session(a_session)
-  ,m_plots(parent_pv_holder::ttf())
+              const std::string& a_win_title = "")
+  :parent(a_session,a_x,a_y,a_width,a_height,a_win_title)
+  ,m_plots(parent::pv_holder::ttf())
   {
-    //////////////////////////////////////////////////////////
-    /// windowing ////////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-    if(!parent_window::m_hwnd) return; //throw
-    parent_window::set_client_area_size(a_width,a_height);
-
 #include "../sg_common.icc"    
-
 #include "../style_common.icc"    
-    
-    push_home();
   }
   virtual ~gui_plotter() {}
 protected:
   gui_plotter(const gui_plotter& a_from)
-  :parent_window(a_from)
-  ,parent_glarea(a_from)
-  ,parent_pv_holder(a_from)
-  ,parent(a_from)
-  ,m_session(a_from.m_session)
-  ,m_selection(a_from.m_selection)
+  :parent(a_from)
   ,m_plots(a_from.m_plots)
   {}
   gui_plotter& operator=(const gui_plotter& a_from){
-    window::operator=(a_from);
+    parent::operator=(a_from);
     m_plots = a_from.m_plots;
     return *this;
   }
 public:
-  bool has_window() const {return parent_window::m_hwnd?true:false;} //for SWIG
-
-  HWND window() const {return parent_window::m_hwnd;}
-
-  bool show() {
-    if(!parent_window::m_hwnd) return false;
-    m_session.show_window(parent_window::m_hwnd);
-    return true;
-  }
-
-  bool steer() {
-    while(!to_exit()) {
-      if(num_cbks()) {
-        do_works();
-        MSG event;
-        if(::PeekMessage(&event,NULL,0,0,PM_REMOVE)) {
-          ::TranslateMessage(&event);
-          ::DispatchMessage(&event);
-        }
-      } else {
-        MSG event;
-        BOOL status = ::GetMessage(&event,NULL,0,0);
-        if(status == -1) { // This may happen (dixit Microsoft doc).
-          m_session.out() << "exlib/Windows/gui_plotter : GetMessage returned -1." << std::endl;
-          return false;
-        } else if(status == 0) { //WM_QUIT
-          //m_session.out() << "exlib/Windows/gui_plotter : WM_QUIT." << std::endl;
-          break;
-        } else {
-          ::TranslateMessage(&event);
-          ::DispatchMessage(&event);
-        }
-      }
-    }
-    return true;
-  }
-
-public:
-
 #include "../plotter_common.icc"
-
 protected:
-  session& m_session;
-  inlib::sg::selection m_selection;
   inlib::sg::plots m_plots;
 };
 

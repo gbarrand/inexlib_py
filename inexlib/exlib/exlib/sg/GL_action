@@ -377,6 +377,13 @@ public:
     else
       ::glFrontFace(GL_CW);
   }
+  
+  virtual void set_shade_model(inlib::sg::shade_type a_v) {
+    if(a_v==inlib::sg::shade_smooth)
+      ::glShadeModel(GL_SMOOTH);
+    else
+      ::glShadeModel(GL_FLAT);
+  }
 
   virtual void set_cull_face(bool a_on) {
     if(a_on) ::glEnable(GL_CULL_FACE);
@@ -458,6 +465,10 @@ public:
     if(a_on) ::glEnable(GL_LIGHTING);
     else     ::glDisable(GL_LIGHTING);
   }
+  virtual void set_blend(bool a_on) {
+    if(a_on) ::glEnable(GL_BLEND);
+    else     ::glDisable(GL_BLEND);
+  }
 
   virtual void restore_state(unsigned int a_ret_num_light) {
     const inlib::sg::state& _state = state();
@@ -488,12 +499,20 @@ public:
     if(_state.m_GL_TEXTURE_2D) ::glEnable(GL_TEXTURE_2D);
     else                       ::glDisable(GL_TEXTURE_2D);
 
+    if(_state.m_GL_BLEND) ::glEnable(GL_BLEND);
+    else                  ::glDisable(GL_BLEND);
+
     if(_state.m_winding==inlib::sg::winding_ccw) {
       ::glFrontFace(GL_CCW);
     } else {
       ::glFrontFace(GL_CW);
     }
 
+    if(_state.m_shade_model==inlib::sg::shade_smooth)
+      ::glShadeModel(GL_SMOOTH);
+    else
+      ::glShadeModel(GL_FLAT);
+      
     ::glColor4f(_state.m_color.r(),
                 _state.m_color.g(),
                 _state.m_color.b(),

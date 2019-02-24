@@ -32,6 +32,6 @@
 
 #include "inlib_swig_py.icc"
 
-//exlib_build_use inlib csz kernel
+//exlib_build_use inlib csz kernel socket
 //exlib_build_use Python
 

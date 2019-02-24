@@ -24,7 +24,7 @@ namespace inlib {
 namespace sg {
 
 class entries : public base_list {
-  INLIB_CLASS_STRING(User)
+  INLIB_CLASS_STRING_VALUE(enter,)
 public:
   INLIB_NODE(entries,inlib::sg::entries,base_list)
 public:
@@ -480,6 +480,13 @@ public:
     opts.add(std::vector<std::string>());
     m_valops.push_back(valop::def());
   }
+  void add_ip(const std::string& a_label,const std::string& a_default){
+    labels.add(a_label);
+    types.add(entry_ip);
+    values.add(a_default);
+    opts.add(std::vector<std::string>());
+    m_valops.push_back(valop::def());
+  }
 
   template <class T>
   bool get_color(unsigned int a_index,T& a_r,T& a_g,T& a_b,T& a_a) {
@@ -493,6 +500,7 @@ public:
 public:
   sg::edvalop& edvalop() {return m_edvalop;}
   sg::file_chooser& file_chooser() {return m_file_chooser;}
+  const sg::numeric& numeric() const {return m_numeric;}
 protected:
   typedef std::vector<std::string> opts_t;
 
@@ -553,7 +561,7 @@ protected:
 
   static return_action action_hide_combo(entries& a_this,std::ostream& a_out,unsigned int a_index,
                                                const bcbk& a_cbk,list& a_list,const opts_t& a_opts) {
-    if(a_opts.size()&&(a_opts[0]==s_User())) {
+    if(a_opts.size()&&(a_opts[0]==s_enter())) {
       std::vector<std::string> opts;
       return action_show_numeric(a_this,a_out,a_index,a_cbk,a_this.m_numeric,opts);
     } else {
@@ -563,7 +571,7 @@ protected:
 
   static return_action action_hide_combo_string(entries& a_this,std::ostream& a_out,unsigned int a_index,
                                                       const bcbk& a_cbk,list& a_list,const opts_t& a_opts) {
-    if(a_opts.size()&&(a_opts[0]==s_User())) {
+    if(a_opts.size()&&(a_opts[0]==s_enter())) {
       std::vector<std::string> opts;
       return action_show_keyboard(a_this,a_out,a_index,a_cbk,a_this.m_keyboard,opts);
     } else {
@@ -572,7 +580,7 @@ protected:
   }
 
   static return_action action_show_numeric(entries& a_this,std::ostream& a_out,unsigned int a_index,
-                                           const bcbk&,numeric& a_widget,const opts_t&) {
+                                           const bcbk&,sg::numeric& a_widget,const opts_t&) {
     a_this.label_back_color = a_this.shown_label_color;
     entry_type type;
     if(!a_this.types.get_value(a_index,type)) type = entry_real;
@@ -611,7 +619,7 @@ protected:
 
     a_widget.value = "";
     a_widget.clear_cbks();
-    a_widget.add_callback(new __cbk<numeric>(a_this,a_out,a_index,a_widget,action_hide_widget<numeric>));
+    a_widget.add_callback(new __cbk<sg::numeric>(a_this,a_out,a_index,a_widget,action_hide_widget<sg::numeric>));
     a_this.m_switch.which = WHICH_NUMERIC();
     a_this.m_active_index = a_index;
     return return_to_render;
@@ -984,7 +992,7 @@ protected:
       }
       m_numeric.value = old_numeric_value;
       m_numeric.clear_cbks();
-      m_numeric.add_callback(new __cbk<numeric>(*this,a_out,m_active_index,m_numeric,action_hide_widget<numeric>));
+      m_numeric.add_callback(new __cbk<sg::numeric>(*this,a_out,m_active_index,m_numeric,action_hide_widget<sg::numeric>));
 
     } else if(m_switch.which==WHICH_KEYBOARD()) { //keyboard is shown.
       m_keyboard.value = old_keyboard_value;
@@ -1036,7 +1044,7 @@ protected:
         (type==entry_range)  ||
         (type==entry_ip)     ||
         (type==entry_radec)  ){
-      entry->add_callback(new __cbk<numeric>(*this,a_out,a_index,m_numeric,action_show_numeric));
+      entry->add_callback(new __cbk<sg::numeric>(*this,a_out,a_index,m_numeric,action_show_numeric));
 
     } else if(type==entry_string) {
       entry->add_callback(new __cbk<keyboard>(*this,a_out,a_index,m_keyboard,action_show_keyboard));
@@ -1064,13 +1072,13 @@ protected:
     } else if(type==entry_combo) {
       std::vector<std::string> _opts;
       if(a_index<opts.size()) _opts = opts.values()[a_index];
-      _opts.insert(_opts.begin(),s_User());
+      _opts.insert(_opts.begin(),s_enter());
       entry->add_callback(new __cbk<sg::entry>(*this,a_out,a_index,*entry,action_show_combo,_opts));
 
     } else if(type==entry_combo_string) {
       std::vector<std::string> _opts;
       if(a_index<opts.size()) _opts = opts.values()[a_index];
-      _opts.insert(_opts.begin(),s_User());
+      _opts.insert(_opts.begin(),s_enter());
       entry->add_callback(new __cbk<sg::entry>(*this,a_out,a_index,*entry,action_show_combo_string,_opts));
 
     } else { //not_editable
@@ -1117,7 +1125,7 @@ protected:
   sg::cbks m_cbks;
   _switch m_switch;
 
-  numeric m_numeric;
+  sg::numeric m_numeric;
   keyboard m_keyboard;
   colors m_colors;
   sg::edvalop m_edvalop;

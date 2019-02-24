@@ -330,7 +330,7 @@ public:
       m_line_sep.add(mat);
 
       draw_style* ds = new draw_style;
-      ds->style = draw_style::lines;
+      ds->style = draw_lines;
       ds->line_pattern = m_line_style.pattern;
       ds->line_width = m_line_style.width;
       m_line_sep.add(ds);
@@ -391,7 +391,7 @@ public:
         m_ticks_sep.add(mat);
 
         draw_style* ds = new draw_style;
-        ds->style = draw_style::lines;
+        ds->style = draw_lines;
         ds->line_pattern = m_ticks_style.pattern;
         ds->line_width = m_ticks_style.width;
         m_ticks_sep.add(ds);
@@ -429,7 +429,7 @@ public:
 
       if(font==font_hershey()) {
         draw_style* ds = new draw_style;
-        ds->style = draw_style::lines;
+        ds->style = draw_lines;
         ds->line_pattern = m_labels_style.line_pattern;
         ds->line_width = m_labels_style.line_width;
         m_labels_sep.add(ds);
@@ -503,7 +503,7 @@ public:
 
       if(font==font_hershey()) {
         draw_style* ds = new draw_style;
-        ds->style = draw_style::lines;
+        ds->style = draw_lines;
         ds->line_pattern = m_mag_style.line_pattern;
         ds->line_width = m_mag_style.line_width;
         m_mag_sep.add(ds);
@@ -536,7 +536,7 @@ public:
 
       if(font==font_hershey()) {
         draw_style* ds = new draw_style;
-        ds->style = draw_style::lines;
+        ds->style = draw_lines;
         ds->line_pattern = m_title_style.line_pattern;
         ds->line_width = m_title_style.line_width;
         m_title_sep.add(ds);

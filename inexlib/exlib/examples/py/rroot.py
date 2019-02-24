@@ -5,12 +5,14 @@ import os.path
 
 file = '../../data/wroot.root'
 if os.path.isfile(file) == False :
-  file = './data/wroot.root'
+  file = '../data/wroot.root'
   if os.path.isfile(file) == False :
-    file = './wroot.root'
+    file = './data/wroot.root'
     if os.path.isfile(file) == False :
-      print('file wroot.root not found.')
-      exit()
+      file = './wroot.root'
+      if os.path.isfile(file) == False :
+        print('file wroot.root not found.')
+        exit()
     
 import inlib
 
@@ -24,7 +26,9 @@ def main():
     return EXIT_FAILURE
 
   keys = rfile.dir().keys()
-  print('number of keys = ');print(keys.size())
+  if keys.size() != 4 :
+    print('expected 4 keys in file. Found '+str(keys.size()))
+    return EXIT_FAILURE
 
 #  ls = True
 #  dump = True
@@ -46,7 +50,18 @@ def main():
     print('key rg is not a h1d.')
     return EXIT_FAILURE
 
-  print(h.mean());print(h.rms())
+  prec = 1e-10
+  import math
+  
+  h_mean_ref = 0.8893330840610005
+  if math.fabs(h.mean()-h_mean_ref) > prec :
+    print("h.mean "+str(h.mean())+", expected "+str(h_mean_ref))
+    return EXIT_FAILURE
+  
+  h_rms_ref = 1.8674268448349378
+  if math.fabs(h.rms()-h_rms_ref) > prec :
+    print("h.rms "+str(h.rms())+", expected "+str(h_rms_ref))
+    return EXIT_FAILURE
   
   rfile.close()
   return EXIT_SUCCESS

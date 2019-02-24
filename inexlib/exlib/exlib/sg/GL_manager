@@ -93,7 +93,12 @@ public:
     ::glEnable(GL_COLOR_MATERIAL);
   
     // to handle transparency (same as SoGLRenderAction::SCREEN_DOOR ?) :
-    ::glEnable(GL_BLEND);
+    //::glEnable(GL_BLEND);
+    // NOTE : with Cocoa+AppleGL on macOS-10.14 (Mojave), it appears that points are blended ! (Even if alpha color is 1).
+    //        Seen with some simulated catalog of galaxies done for LSST/DC2.
+    //        To master this, we disable GL_BLEND by default. Then people wanting some transparency have to
+    //        use the inlib::sg::blend node in their scene graph.
+    ::glDisable(GL_BLEND); //must be in sync with inlib::sg::state.m_GL_BLEND and sg::blend node default.
     ::glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
     //WARNING : the below glEnable/glDisable corresponds

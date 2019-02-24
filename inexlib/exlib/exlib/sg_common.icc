@@ -3,9 +3,6 @@
 
 // common code to exlib/[X11,Windows]/[gui_plotter].
 
-    inlib::cbk::move_manip::add_cbks(scene(),*this,a_session.out(),scene(),false);
-    scene().up_cbks().add(new inlib::cbk::viewer_popup(*this));
-    
     inlib::sg::ortho* camera = new inlib::sg::ortho;
     camera->height = 1;
     float z = 10*1;

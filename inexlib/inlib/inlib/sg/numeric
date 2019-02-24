@@ -273,6 +273,9 @@ protected:
   INLIB_CLASS_STRING(C)
   INLIB_CLASS_STRING(Ok)
   INLIB_CLASS_STRING(Cancel)
+  
+  INLIB_CLASS_STRING(del)
+  INLIB_CLASS_STRING_VALUE(empty,)
 
   class button_cbk : public bcbk {
     typedef bcbk parent;
@@ -379,9 +382,9 @@ protected:
             }
           }
         } else if(m_action==numeric::s_sign()) {
-          //do nothing.
         } else if(m_action==numeric::s_pow()) {
-          //do nothing.
+        } else if(m_action==numeric::s_del()) {
+          if(s.size()) s = s.substr(0,s.size()-1);
         } else {
           s += m_action;
         }
@@ -477,8 +480,12 @@ protected:
 
     update_button(m_mtx_0,m_0,"0",3,0);
     update_button(m_mtx_dot,m_dot,s_dot(),3,1);
-    update_button(m_mtx_sign,m_sign,s_sign(),3,2);
-
+    if(number_type==number_ip) {
+      update_button(m_mtx_sign,m_sign,s_del(),3,2);
+    } else {
+      update_button(m_mtx_sign,m_sign,s_sign(),3,2);
+    }
+    
     update_result();
     update_clear();
     update_pow();
@@ -632,6 +639,8 @@ protected:
     if(number_type.value()==number_radec) {
       m_pow.set_label(s_double_dot());
       m_pow.add_callback(new button_cbk(*this,s_double_dot()));
+    } else if(number_type.value()==number_ip) {
+      m_pow.set_label(s_empty());
     } else {
       m_pow.set_label(s_pow());
       m_pow.add_callback(new button_cbk(*this,s_pow()));

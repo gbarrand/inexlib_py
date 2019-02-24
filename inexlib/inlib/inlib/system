@@ -41,10 +41,10 @@ inline bool get_env(const std::string& a_string,std::string& a_value){
 inline bool getenv(const std::string& a_string,std::string& a_value){return get_env(a_string,a_value);} //deprecated.
 
 template <class T>
-inline bool get_env(const std::string& a_string,T& a_v){
+inline bool get_env(const std::string& a_string,T& a_v,const T& a_def = T()){
   std::string s;
-  if(!getenv(a_string,s)) return false;
-  return to<T>(s,a_v);
+  if(!getenv(a_string,s)) {a_v = a_def;return false;}
+  return to<T>(s,a_v,a_def);
 }
 
 inline bool get_env_bool(const std::string& a_string,bool& a_v){

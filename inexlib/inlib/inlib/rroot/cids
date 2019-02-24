@@ -47,6 +47,7 @@ inline cid base_leaf_cid()         {return base_cid()+20;} //+12=32
 inline cid stl_vector_cid()        {return base_cid()+33;} //+12=45
 inline cid stl_vector_vector_cid() {return base_cid()+46;} //+12=58
 
+inline cid clones_array_cid()   {return base_cid()+60;}
 }}
 
 #endif

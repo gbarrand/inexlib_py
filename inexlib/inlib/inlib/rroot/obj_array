@@ -129,11 +129,13 @@ public:
   bool stream(buffer& a_buffer,const ifac::args& a_args,bool a_accept_null = false) {
     _clear();
 
+    //::printf("debug : obj_array::stream : %lu : begin\n",(unsigned long)this);
+
     short v;
     unsigned int sp, bc;
     if(!a_buffer.read_version(v,sp,bc)) return false;
 
-    //::printf("debug : obj_array::stream : version %d, byte count %d\n",v,c);
+    //::printf("debug : obj_array::stream : version %d, byte count %d\n",v,bc);
 
    {uint32 id,bits;
     if(!Object_stream(a_buffer,id,bits)) return false;}
@@ -144,19 +146,21 @@ public:
     int lowerBound;
     if(!a_buffer.read(lowerBound)) return false;
 
-    //::printf("debug : obj_array : name \"%s\", nobject %d, lowerBound %d\n",
-    //  name.c_str(),nobjects,lowerBound);
+    //::printf("debug : obj_array : name \"%s\", nobject %d, lowerBound %d\n",name.c_str(),nobjects,lowerBound);
 
     for (int i=0;i<nobjects;i++) {
-      //::printf("debug : obj_array :    n=%d i=%d ...\n",nobjects,i);
+      //::printf("debug : obj_array::stream : %lu : n=%d i=%d ...\n",(unsigned long)this,nobjects,i);
 
       iro* obj;
       bool created;
       if(!a_buffer.read_object(m_fac,a_args,obj,created)){
-        a_buffer.out() << "inlib::rroot::obj_array::stream : can't read object." << std::endl;
+        a_buffer.out() << "inlib::rroot::obj_array::stream : can't read object"
+                       << " in obj_array : name " << sout(name)
+                       << ", nobjects " << nobjects << ", iobject " << i << std::endl;
         return false;
       }
-      //::printf("debug : obj_array :    n=%d i=%d : ok\n",nobjects,i);
+      //::printf("debug : obj_array::stream : %lu : n=%d i=%d : ok, obj %lu\n",(unsigned long)this,
+      //    nobjects,i,(unsigned long)obj);
       if(obj) {
         T* to = safe_cast<iro,T>(*obj);
         if(!to) {

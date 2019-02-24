@@ -5,6 +5,8 @@
 #define inlib_rroot_branch_element
 
 #include "branch"
+#include "stl_vector"
+//#include "clones_array"
 
 namespace inlib {
 namespace rroot {
@@ -33,7 +35,13 @@ public:
     short v;
     unsigned int s, c;
     if(!a_buffer.read_version(v,s,c)) return false;
-    if(!parent::stream(a_buffer)) return false;
+
+    //::printf("debug : inlib::branch_element::stream : version %d, count %d\n",v,c);
+
+    if(!parent::stream(a_buffer)) {
+      m_out << "inlib::rroot::branch_element::stream : parent::stream() failed." << std::endl;
+      return false;
+    }
 
     if(v<=7) {
       if(!a_buffer.read(fClassName)) return false;
@@ -43,31 +51,47 @@ public:
       if(!a_buffer.read(fStreamerType)) return false;
     } else { //v>=8
       if(!a_buffer.read(fClassName)) return false;
+      //::printf("debug : inlib::branch_element::stream : fClassName \"%s\"\n",fClassName.c_str());
       std::string fParentName;
       if(!a_buffer.read(fParentName)) return false;
+      //::printf("debug : inlib::branch_element::stream : fParentName \"%s\"\n",fParentName.c_str());
       std::string fCloneName;
       if(!a_buffer.read(fCloneName)) return false;
+      //::printf("debug : inlib::branch_element::stream : fCloneName \"%s\"\n",fCloneName.c_str());
       int dummy_int;
       if(!a_buffer.read(dummy_int)) return false; //fCheckSum
-      if(!a_buffer.read(dummy_int)) return false; //fClassVersion
+      //::printf("debug : inlib::branch_element::stream : fCheckSum %d\n",dummy_int);
+
+      if(v>=10) {
+        short dummy_short;
+        if(!a_buffer.read(dummy_short)) return false; //fClassVersion
+        //::printf("debug : inlib::branch_element::stream : fClassVersion %d\n",dummy_short);
+      } else {
+        if(!a_buffer.read(dummy_int)) return false; //fClassVersion
+      }
 
       if(!a_buffer.read(fID)) return false;
+      //::printf("debug : inlib::branch_element::stream : fID %d\n",fID);
       if(!a_buffer.read(fType)) return false;
+      //::printf("debug : inlib::branch_element::stream : fType %d\n",fType);
       if(!a_buffer.read(fStreamerType)) return false;
+      //::printf("debug : inlib::branch_element::stream : fStreamerType %d\n",fStreamerType);
 
       if(!a_buffer.read(dummy_int)) return false; //fMaximum
+      //::printf("debug : inlib::branch_element::stream : fMaximum %d\n",dummy_int);
 
       //TBranchElement* fBranchCount;
-      if(!dummy_TXxx_pointer_stream(a_buffer,m_fac)) {
-        m_out << "inlib::rroot::base_element::stream : "
+      ifac::args args;
+      if(!pointer_stream(a_buffer,m_fac,args,fBranchCount)) {
+        m_out << "inlib::rroot::branch_element::stream : "
               << "can't read fBranchCount."
               << std::endl;
         return false;
       }
 
       //TBranchElement* fBranchCount2;
-      if(!dummy_TXxx_pointer_stream(a_buffer,m_fac)) {
-        m_out << "inlib::rroot::base_element::stream : "
+      if(!pointer_stream(a_buffer,m_fac,args,fBranchCount2)) {
+        m_out << "inlib::rroot::branch_element::stream : "
               << "can't read fBranchCount2."
               << std::endl;
         return false;
@@ -82,7 +106,122 @@ public: //branch
 
   virtual bool read_leaves(buffer& a_buffer){
 
-    // read object ?
+    // For k<type> value, see the below commented enum EReadWrite from ROOT-6.12.06 code.
+    static int kInt      = 3;
+    static int kDouble32 = 9;
+    static int kUInt     = 13;
+    static int kBits     = 15;  // In v4-00-01 version 8, it is Long64_t.
+    static int kObjectP  = 64;
+
+    if(fType==3) { // TClonesArray master branch (has only the number of elements).
+      //from v4-00-01
+      int n;
+      if(!a_buffer.read(n)) return false;
+      /* ROOT-6.12.06 code :
+      if ((n < 0) || (n > fMaximum)) {
+         if (IsMissingCollection()) {
+            n = 0;
+            b.SetBufferOffset(b.Length() - sizeof(n));
+         } else {
+            Error("ReadLeaves", "Incorrect size read for the container in %s\nThe size read is %d when the maximum is %d\nThe size is reset to 0 for this entry (%lld)", GetName(), n, fMaximum, GetReadEntry());
+            n = 0;
+         }
+      }*/
+      ::printf("debug : uuuu : ndata %d\n",n);
+      fNdata = n;
+      
+      //TClonesArray *clones = (TClonesArray*)fObject;
+      //if (!clones) return;
+      //if (clones->IsZombie()) return;
+      //clones->Clear();
+      //clones->ExpandCreateFast(fNdata);
+
+      m_out << "debug : inlib::rroot::branch_element::read_leaves :"
+            << " name " << m_name << " ref_cls " << fClassName
+            << " : type " << fType << ", fNdata " << n
+            << std::endl;
+      return true;	    
+	    
+    } else if(fType==31) { // TClonesArray sub-branch (contains the elements).
+      if(fStreamerType==kObjectP) return true;
+      //from v4-00-01
+      if(fStreamerType==kDouble32) {
+        int ndata = fBranchCount->get_ndata();
+        ::printf("debug : double32 : ndata %d\n",ndata);
+        stl_vector<double>* vec = new stl_vector<double>;
+        float afloat;
+        for(int ii=0;ii<ndata;ii++) {
+          if(!a_buffer.read(afloat)) {
+            m_out << "inlib::rroot::branch_element::read_leaves : " << sout(m_name) << " :"
+                  << " read(float) failed."
+                  << std::endl;
+          }
+          //::printf("debug : zzzz %g\n",afloat);
+          vec->push_back(afloat);
+        }
+        if(!m_obj) delete m_obj;
+        m_obj = vec;
+        return true;
+	
+      } else if(fStreamerType==kInt) {
+        int ndata = fBranchCount->get_ndata();
+        ::printf("debug : int : ndata %d\n",ndata);
+        stl_vector<int>* vec = new stl_vector<int>;
+        vec->resize(ndata);
+        int* _value = vec_data(*vec);
+        if(!a_buffer.read_fast_array(_value,ndata)) {
+          m_out << "inlib::rroot::branch_element::read_leaves : " << sout(m_name) << " :"
+                << " read_fast_array(int) failed."
+                << std::endl;
+          return false;
+        }
+        if(!m_obj) delete m_obj;
+        m_obj = vec;
+        return true;
+
+     } else if((fStreamerType==kUInt)||(fStreamerType==kBits)) {
+        int ndata = fBranchCount->get_ndata();
+        if(fStreamerType==kUInt) ::printf("debug : uint : ndata %d\n",ndata);
+        else                     ::printf("debug : bits : ndata %d\n",ndata);
+        stl_vector<uint32>* vec = new stl_vector<uint32>;
+        vec->resize(ndata);
+        uint32* _value = vec_data(*vec);
+        if(!a_buffer.read_fast_array(_value,ndata)) {
+          m_out << "inlib::rroot::branch_element::read_leaves : " << sout(m_name) << " :"
+                << " read_fast_array(uint) failed."
+                << std::endl;
+          return false;
+        }
+        if(!m_obj) delete m_obj;
+        m_obj = vec;
+        return true;
+	
+      } else {
+        m_out << "inlib::rroot::branch_element::read_leaves :"
+              << " name " << m_name << " ref_cls " << fClassName
+              << " : for type " << fType << ", stream_type " << fStreamerType << " not treated."
+              << std::endl;
+        //return false;
+      } 
+	/*
+        //m_obj = clones_array<float>(m_fac,true,false);  //true = owner of objects.
+        uint32 ndata = 1;
+        float* _value = new float[ndata];
+        if(!a_buffer.read_fast_array(_value,ndata)) {
+          m_out << "inlib::rroot::branch_element::read_leaves : \"" << name() << "\" :"
+                << " read_fast_array failed."
+                << std::endl;
+          return false;
+        }
+	*/
+    } else {
+      m_out << "debug : inlib::rroot::branch_element::read_leaves :"
+            << " name " << m_name << " ref_cls " << fClassName
+            << " : type " << fType << " not treated, stream_type is " << fStreamerType << "."
+            << std::endl;
+    }
+
+    // read object ?    
     if(!m_obj) {
       ifac::args args;
       m_obj = m_fac.create(fClassName,args);
@@ -91,7 +230,7 @@ public: //branch
 
     if(!m_obj->stream(a_buffer)){
       m_out << "inlib::rroot::branch_element::read_leaves :"
-            << " name " << m_name << " ref_cls " << fClassName << " :"
+            << " name " << sout(m_name) << ", ref_cls " << sout(fClassName) << " :"
             << " obj stream failed."
             << std::endl;          
       return false;
@@ -307,12 +446,14 @@ public:
   ,fID(0)
   ,fType(0)
   ,fStreamerType(-1)
+  ,fBranchCount(0)   //not owner
+  ,fBranchCount2(0)  //not owner
+  ,fNdata(1)
   {}
 
-  virtual ~branch_element(){delete m_obj;}
+  virtual ~branch_element() {delete m_obj;}
 protected:
-  branch_element(const branch_element& a_from)
-  :iro(a_from),parent(a_from){}
+  branch_element(const branch_element& a_from):iro(a_from),parent(a_from){}
   branch_element& operator=(const branch_element&){return *this;}
 public:
   const std::string& class_name() const {return fClassName;}
@@ -320,6 +461,7 @@ public:
   int streamer_type() const {return fStreamerType;}
   int id() const {return fID;}
   iro* object() {return m_obj;}
+  int get_ndata() const {return fNdata;}
 protected:
   iro* m_obj;
 protected:
@@ -328,8 +470,79 @@ protected:
   int fID;            //element serial number in fInfo
   int fType;          //branch type
   int fStreamerType;  //branch streamer type
+  branch_element* fBranchCount;  // pointer to primary branchcount branch
+  branch_element* fBranchCount2; // pointer to secondary branchcount branch
+  int fNdata;         // Number of data in this branch
 };
 
 }}
 
 #endif
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+/* In v4-00-01 version 8 :
+          case  1:  {b.ReadFastArray((Char_t*)  fAddress, n); break;}
+          case  2:  {b.ReadFastArray((Short_t*) fAddress, n); break;}
+          case  3:  {b.ReadFastArray((Int_t*)   fAddress, n); break;}
+          case  4:  {b.ReadFastArray((Long_t*)  fAddress, n); break;}
+          case  5:  {b.ReadFastArray((Float_t*) fAddress, n); break;}
+          case  6:  {b.ReadFastArray((Int_t*)   fAddress, n); break;}
+          case  8:  {b.ReadFastArray((Double_t*)fAddress, n); break;}
+          case 11:  {b.ReadFastArray((UChar_t*) fAddress, n); break;}
+          case 12:  {b.ReadFastArray((UShort_t*)fAddress, n); break;}
+          case 13:  {b.ReadFastArray((UInt_t*)  fAddress, n); break;}
+          case 14:  {b.ReadFastArray((ULong_t*) fAddress, n); break;}
+          case 15:  {b.ReadFastArray((Long64_t*)fAddress, n); break;}
+          case 16:  {b.ReadFastArray((ULong64_t*)fAddress, n); break;}
+		  case  9:  {Double_t *xx = (Double_t*)fAddress;
+			            Float_t afloat;
+						for (Int_t ii=0;ii<n;ii++) {
+				            b>> afloat; xx[ii] = Double_t(afloat);
+						} break;}
+*/
+/* 6.12.06 version 10 : fStreamerType : from meta/inc/TVirtualStreamerInfo.h :
+	  
+   enum EReadWrite {
+      kBase        =  0,  kOffsetL = 20,  kOffsetP = 40,  kCounter =  6,  kCharStar = 7,
+      kChar        =  1,  kShort   =  2,  kInt     =  3,  kLong    =  4,  kFloat    = 5,
+      kDouble      =  8,  kDouble32=  9,
+      kUChar       = 11,  kUShort  = 12,  kUInt    = 13,  kULong   = 14,  kBits     = 15,
+      kLong64      = 16,  kULong64 = 17,  kBool    = 18,  kFloat16 = 19,
+      kObject      = 61,  kAny     = 62,  kObjectp = 63,  kObjectP = 64,  kTString  = 65,
+      kTObject     = 66,  kTNamed  = 67,  kAnyp    = 68,  kAnyP    = 69,  kAnyPnoVT = 70,
+      kSTLp        = 71,
+      kSkip        = 100, kSkipL = 120, kSkipP   = 140,
+      kConv        = 200, kConvL = 220, kConvP   = 240,
+      kSTL         = ROOT::kSTLany, // 300
+      kSTLstring   = ROOT::kSTLstring, // 365
+      kStreamer    = 500, kStreamLoop = 501,
+      kCache       = 600,  // Cache the value in memory than is not part of the object but is accessible via a SchemaRule
+      kArtificial  = 1000,
+      kCacheNew    = 1001,
+      kCacheDelete = 1002,
+      kNeedObjectForVirtualBaseClass = 99997,
+      kMissing     = 99999
+   };
+
+// Some comments about EReadWrite
+// kBase    : base class element
+// kOffsetL : fixed size array
+// kOffsetP : pointer to object
+// kCounter : counter for array size
+// kCharStar: pointer to array of char
+// kBits    : TObject::fBits in case of a referenced object
+// kObject  : Class  derived from TObject
+// kObjectp : Class* derived from TObject and with    comment field //->Class
+// kObjectP : Class* derived from TObject and with NO comment field //->Class
+// kAny     : Class  not derived from TObject
+// kAnyp    : Class* not derived from TObject with    comment field //->Class
+// kAnyP    : Class* not derived from TObject with NO comment field //->Class
+// kAnyPnoVT: Class* not derived from TObject with NO comment field //->Class and Class has NO virtual table
+// kSTLp    : Pointer to STL container.
+// kTString : TString, special case
+// kTObject : TObject, special case
+// kTNamed  : TNamed , special case
+
+*/

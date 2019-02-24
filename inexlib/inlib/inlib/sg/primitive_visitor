@@ -1045,6 +1045,9 @@ public:
     return add_triangle_strip(a_floatn,a_xyzs,false);
   }
 
+  bool add_triangle_strip_as_triangles(size_t a_floatn,const float* a_xyzs,const float* /*a_nms*/) { //used in sg::sphere, icosahedron_sphere.
+    return add_triangle_strip(a_floatn,a_xyzs,false); //already do a per triangle treatement.
+  }
 public:
   void add_texture(std::ostream& a_out,size_t a_xyzn,const float* a_xyzs,const img_byte& a_img,const float* a_tcs) {
     if(a_img.is_empty()) return;

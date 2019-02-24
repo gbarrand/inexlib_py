@@ -918,6 +918,97 @@ inline sg::return_action viewer_popup_action_infos(sg::gui_viewer& a_gv,const po
   return sg::return_to_render;     
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline sg::return_action viewer_popup_action_draw_style_points(sg::gui_viewer& a_gv,const popup_data& a_data) {
+  a_gv.hide_popup();
+  a_data.m_draw_style->style = sg::draw_points;
+  return sg::return_to_render;     
+}
+inline sg::return_action viewer_popup_action_draw_style_lines(sg::gui_viewer& a_gv,const popup_data& a_data) {
+  a_gv.hide_popup();
+  a_data.m_draw_style->style = sg::draw_lines;
+  return sg::return_to_render;     
+}
+inline sg::return_action viewer_popup_action_draw_style_filled(sg::gui_viewer& a_gv,const popup_data& a_data) {
+  a_gv.hide_popup();
+  a_data.m_draw_style->style = sg::draw_filled;
+  return sg::return_to_render;     
+}
+
+inline sg::return_action viewer_popup_action_draw_style(sg::gui_viewer& a_gv,const popup_data& a_data) {
+  a_gv.hide_popup();
+
+  sg::draw_style* _draw_style;
+
+ {sg::search_action sa(a_gv.out());
+  const sg::path_t& _path = find_path(sa,a_gv.scene(),a_data.m_node,a_gv.verbose());
+  sg::group* grp;
+  int gidx;
+  if(!sg::rfind<sg::draw_style,sg::group>(_path,a_data.m_node,grp,_draw_style,gidx)) {
+    a_gv.popup_warn(a_data.m_ex,a_data.m_ey,"draw_style node not found");
+    return sg::return_to_render;     
+  }}
+
+  sg::list* list = new sg::list(a_gv.ttf());
+  a_gv.set_style(*list);
+  
+  popup_data _data(a_data);
+  _data.m_draw_style = _draw_style;
+  sg::add_item(a_gv,*list,"draw_points" ,viewer_popup_action_draw_style_points,_data);
+  sg::add_item(a_gv,*list,"draw_lines"  ,viewer_popup_action_draw_style_lines,_data);
+  sg::add_item(a_gv,*list,"draw_filled" ,viewer_popup_action_draw_style_filled,_data);
+
+  a_gv.show_widget(sg::pos_data(true,a_data.m_ex,a_data.m_ey),list);
+
+  return sg::return_to_render;     
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline sg::return_action viewer_popup_action_shade_model_flat(sg::gui_viewer& a_gv,const popup_data& a_data) {
+  a_gv.hide_popup();
+  a_data.m_shade_model->model = sg::shade_flat;
+  return sg::return_to_render;     
+}
+inline sg::return_action viewer_popup_action_shade_model_smooth(sg::gui_viewer& a_gv,const popup_data& a_data) {
+  a_gv.hide_popup();
+  a_data.m_shade_model->model= sg::shade_smooth;
+  return sg::return_to_render;     
+}
+
+inline sg::return_action viewer_popup_action_shade_model(sg::gui_viewer& a_gv,const popup_data& a_data) {
+  a_gv.hide_popup();
+
+  sg::shade_model* _shade_model;
+
+ {sg::search_action sa(a_gv.out());
+  const sg::path_t& _path = find_path(sa,a_gv.scene(),a_data.m_node,a_gv.verbose());
+  sg::group* grp;
+  int gidx;
+  if(!sg::rfind<sg::shade_model,sg::group>(_path,a_data.m_node,grp,_shade_model,gidx)) {
+    a_gv.popup_warn(a_data.m_ex,a_data.m_ey,"shade_model node not found");
+    return sg::return_to_render;     
+  }}
+
+  sg::list* list = new sg::list(a_gv.ttf());
+  a_gv.set_style(*list);
+  
+  popup_data _data(a_data);
+  _data.m_shade_model = _shade_model;
+  sg::add_item(a_gv,*list,"shade_flat"   ,viewer_popup_action_shade_model_flat,_data);
+  sg::add_item(a_gv,*list,"shade_smooth" ,viewer_popup_action_shade_model_smooth,_data);
+
+  a_gv.show_widget(sg::pos_data(true,a_data.m_ex,a_data.m_ey),list);
+
+  return sg::return_to_render;     
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline sg::return_action viewer_popup_action_ok_color(sg::gui_viewer& a_gv,sg::colors& a_node,const popup_data& a_data) {
   a_gv.hide_popup();
   float r,g,b,a;
@@ -952,6 +1043,9 @@ inline sg::return_action viewer_popup_action_color(sg::gui_viewer& a_gv,const po
   return sg::return_to_render;     
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline sg::return_action viewer_popup_action_show(sg::gui_viewer& a_gv,sg::node& a_node,
                                                   const sg::event& a_event,sg::event_action& a_event_action,
                                                   float a_z,float a_w) {
@@ -979,6 +1073,8 @@ inline sg::return_action viewer_popup_action_show(sg::gui_viewer& a_gv,sg::node&
 
   sg::add_item(a_gv,*list,"infos",viewer_popup_action_infos,popup_data(a_node,ex,ey));
   sg::add_item(a_gv,*list,"color",viewer_popup_action_color,popup_data(a_node,ex,ey));
+  sg::add_item(a_gv,*list,"draw style",viewer_popup_action_draw_style,popup_data(a_node,ex,ey));
+  sg::add_item(a_gv,*list,"shade model",viewer_popup_action_shade_model,popup_data(a_node,ex,ey));
   sg::add_item(a_gv,*list,"axes",viewer_popup_action_add_axes,pointer_data(&a_node));
   sg::add_item(a_gv,*list,"anim",viewer_popup_action_anim,popup_data(a_node,ex,ey));
   sg::add_item(a_gv,*list,"cam curve",viewer_popup_action_cam_curve,popup_data(a_node,ex,ey));

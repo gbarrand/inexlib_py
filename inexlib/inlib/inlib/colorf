@@ -10,7 +10,7 @@ namespace inlib {
 
 class colorf : public vec4f {  
   typedef vec4f parent;
-public: //for swig
+public: //for SWIG
   typedef unsigned char uchar;
 public:
   INLIB_SCLASS(inlib::colorf) //for stype()

@@ -4,7 +4,7 @@
 #ifndef exlib_X11_sg_viewer
 #define exlib_X11_sg_viewer
 
-// no pure X11 version (yet). The class inherits exlib::sg::viewer that uses GL.
+// not pure X11 version. The class inherits exlib::sg::viewer that uses GL.
 
 #include "session"
 

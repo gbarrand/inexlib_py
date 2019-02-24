@@ -87,6 +87,7 @@ public:
   INLIB_CLASS_STRING(ortho)
   INLIB_CLASS_STRING(perspective)
 
+  INLIB_CLASS_STRING(anim_on)
 public:
   gui_params()
   :m_vr_mode(false)
@@ -116,6 +117,7 @@ public:
   ,m_max_depth(9999)
   ,m_use_gsto(false)
   ,m_gsto_mode(s_gsto_memory())
+  ,m_anim_on(false)
   ,m_image_expand(true)
   ,m_node_height(0)
   ,m_node_color() //empty string.
@@ -190,6 +192,7 @@ public:
   ,m_max_depth(a_from.m_max_depth)
   ,m_use_gsto(a_from.m_use_gsto)
   ,m_gsto_mode(a_from.m_gsto_mode)
+  ,m_anim_on(a_from.m_anim_on)
   ,m_image_expand(a_from.m_image_expand)
   ,m_node_height(a_from.m_node_height)
   ,m_node_color(a_from.m_node_color)
@@ -260,6 +263,7 @@ public:
     m_reduced_wire_frame = a_from.m_reduced_wire_frame;
     m_max_depth = a_from.m_max_depth;
     m_gsto_mode = a_from.m_gsto_mode;
+    m_anim_on = a_from.m_anim_on;
     m_image_expand = a_from.m_image_expand;
     m_node_height = a_from.m_node_height;
     m_node_color = a_from.m_node_color;
@@ -420,6 +424,7 @@ public:
     a_args.push_back(arg(s_plot_row(),tos(m_plot_row)));
 
     a_args.push_back(arg(s_gsto_mode(),m_gsto_mode));
+    a_args.push_back(arg(s_anim_on(),tos(m_anim_on)));
   }
 
   bool set_from_args(const std::vector<arg>& a_args){
@@ -500,6 +505,10 @@ public:
       } else if(rcmp(lab,s_light_on())) {
         bool changed;
         if(!to<bool>(m_light_on,val,changed)) status = false;     
+
+      } else if(rcmp(lab,s_anim_on())) {
+        bool changed;
+        if(!to<bool>(m_anim_on,val,changed)) status = false;     
 
       } else if(rcmp(lab,s_solid())) {
         bool changed;
@@ -752,6 +761,7 @@ public:
   bool m_use_gsto;
 
   std::string m_gsto_mode;
+  bool m_anim_on;
 
   bool m_image_expand;
   float m_node_height;

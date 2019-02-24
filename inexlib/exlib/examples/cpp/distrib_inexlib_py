@@ -5,7 +5,7 @@ bush_home=`dirname $0`/../../../../bush
 . ${bush_home}/exlib_header
 
 pack_name=inexlib_py   
-version=1.1.0
+version=1.2.0
 
 /bin/rm -R -f ${build_path}/distrib
 /bin/mkdir -p ${build_path}/distrib/${pack_name}/${version}/bin
@@ -49,12 +49,18 @@ fi
 /bin/cp ../py/run       ${to}/.
 /bin/cp ../py/spark_run ${to}/.
 
-/bin/cp -R ./res ${to}/.
+/bin/cp -R ../py/res ${to}/.
 /bin/cp -R ../../data ${to}/.
 
 find ../py -maxdepth 1 -name '*.py' -exec /bin/cp {} ${to}/. \;
 
+#/bin/rm -f ${to}/cfitsio_hst_mt.py
+#/bin/rm -f ${to}/cfitsio_hst_mp.py
+#/bin/rm -f ${to}/plotter_mt.py
+
 /bin/cp ./inexlib_py_distrib_README ${to}/README
+/bin/cp ./inexlib_py_distrib_setup.sh ${to}/setup.sh
+/bin/cp ./inexlib_py_distrib_setup.csh ${to}/setup.csh
 
 platform=`${bush_home}/platform "${cpp_compiler}"`
 if [ "${platform}" = "" ] ; then

@@ -18,6 +18,7 @@
 
 // font_pixmap :
 #include <inlib/sg/group>
+#include <inlib/sg/blend>
 #include <inlib/sg/tex_quadrilateral>
 #include <inlib/platform> //for APPLE TargetConditionals.h
 
@@ -628,6 +629,9 @@ protected:
 
     if(modeling==inlib::sg::font_pixmap) {    
       if(m_char_height<=0) return;
+      inlib::sg::blend* blend = new inlib::sg::blend;
+      blend->on = true; //to handle background transparency.
+      m_bitmaps.add(blend);
       if(!bitmap_2_gl(a_out)) {m_bitmaps.clear();m_tqs.clear();return;}
     } else {
       update_what _what = lines;

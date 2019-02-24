@@ -65,14 +65,7 @@ protected:
   bool initialize() {
     if(m_display) return true; //done.
 
-//#ifdef EXLIB_HAS_THREAD
-//    if(XInitThreads()==False) {
-//      m_out << "exlib::X11::base_session::initialize : XInitThreads failed." << std::endl;
-//      return false;
-//    }
-//#endif
-
-    //NOTE : MacOSX : XOpenDisplay leaks 128 bytes.
+    //NOTE : macOS : XOpenDisplay leaks 128 bytes.
     m_display = ::XOpenDisplay(NULL);
     if(!m_display) {
       m_out << "exlib::X11::base_session::initialize : can't open display." << std::endl;

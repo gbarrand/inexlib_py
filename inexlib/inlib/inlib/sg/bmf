@@ -81,6 +81,13 @@ public:
     }
     m_touched = true;
   }
+  void add_allocated(size_t& a_pos,const T& a_1,const T& a_2,const T& a_3) { //used in sg::plotter.
+    std::vector<T>& v = m_values;
+    v[a_pos] = a_1;a_pos++;
+    v[a_pos] = a_2;a_pos++;
+    v[a_pos] = a_3;a_pos++;
+    m_touched = true;
+  }
   typedef typename std::vector<T>::iterator it_t;
   void insert(const it_t& a_it,const T& a_value) {
     m_values.insert(a_it,a_value);

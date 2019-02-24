@@ -5,13 +5,11 @@
 #define inlib_sg_atb_vertices
 
 #include "vertices"
-#include "gstos"
-#include "../vmanip"
 
 namespace inlib {
 namespace sg {
 
-class atb_vertices : public vertices, public gstos {
+class atb_vertices : public vertices {
   INLIB_NODE(atb_vertices,inlib::sg::atb_vertices,vertices)
 public:
   mf<float> rgbas;
@@ -179,7 +177,7 @@ public:
               }
               if(do_back.value()) a_action.draw_gsto_vcn(mode.value(),npt,pos_back_xyzs,pos_rgbas,pos_back_nms);
               a_action.draw_gsto_vcn(mode.value(),npt,pos_xyzs,pos_rgbas,pos_nms);
-              a_action.set_polygon_offset(state.m_GL_POLYGON_OFFSET_FILL);
+              if(draw_edges.value()) a_action.set_polygon_offset(state.m_GL_POLYGON_OFFSET_FILL);
             } else {
               if(do_back.value()) a_action.draw_gsto_vcn(mode.value(),npt,pos_back_xyzs,pos_rgbas,pos_back_nms);
               a_action.draw_gsto_vcn(mode.value(),npt,pos_xyzs,pos_rgbas,pos_nms);
@@ -256,7 +254,7 @@ public:
             }
             if(do_back.value()) a_action.draw_vertex_color_normal_array(mode.value(),m_back_xyzs,rgbas.values(),m_back_nms);
             a_action.draw_vertex_color_normal_array(mode.value(),xyzs.values(),rgbas.values(),nms.values());
-            a_action.set_polygon_offset(state.m_GL_POLYGON_OFFSET_FILL);
+            if(draw_edges.value()) a_action.set_polygon_offset(state.m_GL_POLYGON_OFFSET_FILL);
           } else {
             if(do_back.value()) a_action.draw_vertex_color_normal_array(mode.value(),m_back_xyzs,rgbas.values(),m_back_nms);
             a_action.draw_vertex_color_normal_array(mode.value(),xyzs.values(),rgbas.values(),nms.values());
@@ -321,7 +319,6 @@ public:
 public:
   atb_vertices(const atb_vertices& a_from)
   :parent(a_from)
-  ,gstos(a_from)
   ,rgbas(a_from.rgbas)
   ,nms(a_from.nms)
   ,do_back(a_from.do_back)
@@ -338,7 +335,6 @@ public:
   }
   atb_vertices& operator=(const atb_vertices& a_from){
     parent::operator=(a_from);
-    gstos::operator=(a_from);
     rgbas = a_from.rgbas;
     nms = a_from.nms;
     do_back = a_from.do_back;

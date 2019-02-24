@@ -1,16 +1,63 @@
 #!/bin/bash
 
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file exlib.license for terms.
+
 #/////////////////////////////////////////////////////////////////
 #/// arguments : /////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
+run_verbose=no
 run_set_x=no
+
+run_vis_mode=gui_window
+run_vis_host=
+run_vis_port=
+run_vis_format=
+run_file=
+
 run_args=
+
+py_args=
 what=
 
 while test $# -ge 1 ; do
   case $1 in
-    -x) run_set_x=yes;run_args="${run_args} $1";;
+    -x)       run_set_x=yes;   run_args="${run_args} $1";;
+    -verbose) run_verbose=yes; run_args="${run_args} $1";;
+    -v)       run_verbose=yes; run_args="${run_args} $1";;
+
+    -offscreen)  run_vis_mode=offscreen;  run_args="${run_args} $1";;
+    -gui_window) run_vis_mode=gui_window; run_args="${run_args} $1";;
+    -window)     run_vis_mode=window;     run_args="${run_args} $1";;
+    -client)     run_vis_mode=client;     run_args="${run_args} $1";;
+
+    -vis_host)   run_args="${run_args} $1"
+                 if [ $# -ge 2 ] ; then
+                   run_vis_host=$2
+                   run_args="${run_args} $2"
+                   shift
+                 fi
+                 ;;
+    -vis_port)   run_args="${run_args} $1"
+                 if [ $# -ge 2 ] ; then
+                   run_vis_port=$2
+                   run_args="${run_args} $2"
+                   shift
+                 fi
+                 ;;
+    -vis_format) run_args="${run_args} $1"
+                 if [ $# -ge 2 ] ; then
+                   run_vis_format=$2
+                   run_args="${run_args} $2"
+                   shift
+                 fi
+                 ;;
+
+    -file) if [ $# -ge 2 ] ; then run_file=$2;shift; fi;;
+
+    -number_of_points) if [ $# -ge 2 ] ; then py_args="${py_args} -number_of_points $2";shift; fi;;
+    
     -*) run_args="${run_args} $1";;  
      *) if [ "${what}" = "" ] ; then
           what=$1
@@ -25,24 +72,119 @@ done
 if [ ${run_set_x} = "yes" ] ; then set -x; fi
 
 if [ "${what}" = "all" ] ; then
-  find . -maxdepth 1 -name '*.py' -exec ./run ${run_args} {} \;
+  find . -maxdepth 1 -name '*.py' -not -name 'spark*.py' -print -exec ./run ${run_args} {} \;
   exit
 fi
 
 if [ "${what}" = "" ] ; then
-  echo 'give a python script.'
+  echo 'run : give a python script.'
   exit
 fi
 
 if [ "`echo ${what} | sed -e 's:spark_::g'`" != "${what}" ] ; then
-  echo "skip ${what}. Execute it with ./spark_run_[local,cluster]."
+  echo "run : skip ${what}. Execute it with ./spark_run_[local,cluster]."
   exit
 fi
 
 script="${what}"
 if [ ! -f ${script} ] ; then
-  echo "${script} not found."
+  echo "run : ${script} not found."
   exit
+fi
+
+base_name="`basename ${script}`"
+suffix=`echo ${base_name} | sed 's:.*\.::'`
+if [ "${suffix}" != "${base_name}" ] ; then
+  name=`echo ${base_name} | sed -e "s:\.${suffix}::g"`
+else
+  name="${base_name}"
+fi
+
+if [ `uname` = "Darwin" ] ; then
+  items="cfitsio_hst_mt.py cfitsio_hst_mp.py plotter_mt.py"
+  for item in ${items} ; do
+    if [ "${base_name}" = ${item} ] ; then
+      echo 'run : it does not work (yet) on macOS/Cocoa.'
+      exit
+    fi       
+  done
+fi
+
+items="polyhedron_vis.py c3d_vis.py two_cubes_vis.py cfitsio_hst_vis.py tree.py"
+items="${items} plotter_vis.py csv_c3d_vis.py csv_h1d_vis.py csv_vertices_vis.py csv_vertices_gui_viewer_vis.py"
+items="${items} rdirs_vis.py"
+for item in ${items} ; do
+  #echo ${item}
+  if [ "${base_name}" = ${item} ] ; then
+    py_args="${py_args} -vis_mode ${run_vis_mode}"
+    if [ "${run_vis_mode}" = "client" ] ; then
+      if [ "${run_vis_host}" = "" ] ; then
+        echo 'run : you have to pass a -vis_host argument.'
+        exit      
+      fi
+      py_args="${py_args} -vis_host ${run_vis_host}"
+      if [ "${run_vis_port}" = "" ] ; then
+        echo 'run : you have to pass a -vis_port argument.'
+        exit      
+      fi
+      py_args="${py_args} -vis_port ${run_vis_port}"
+    fi
+  fi    
+done
+
+items="csv_c3d_vis.py csv_h1d_vis.py csv_vertices_vis.py csv_vertices_gui_viewer_vis.py"
+for item in ${items} ; do
+  if [ "${run_file}" = "" ] ; then
+    run_file_name=cosmo_dc2_rdz_cut.csv
+    run_file="../../data/${run_file_name}"
+    if [ ! -f ${run_file} ] ; then
+      run_file="./data/${run_file_name}"  # if running from inexlib_py distribution.
+      if [ ! -f ${run_file} ] ; then
+        echo "run : data file ${run_file_name} not found."
+        exit      
+      fi
+    fi
+  fi
+  if [ "${base_name}" = ${item} ] ; then
+    py_args="${py_args} -file ${run_file}"
+  fi
+done
+
+items="c3d_vis.py tree.py"
+for item in ${items} ; do
+  if [ "${base_name}" = ${item} ] ; then
+    if [ "${run_vis_mode}" = "offscreen" -a "${run_vis_format}" != "" ] ; then
+      py_args="${py_args} -vis_format ${run_vis_format}"
+    fi
+  fi
+done
+
+if [ "${base_name}" = "plotter_window.py" ] ; then
+  if [ "${run_vis_mode}" = "offscreen" ] ; then
+    echo "run : -offscreen not relevant for ${base_name}."
+    exit      
+  fi
+  if [ "${run_vis_mode}" = "client" ] ; then
+    echo "run : -client not relevant for ${base_name}."
+    exit      
+  fi
+fi
+
+if [ "${base_name}" = cube_client.py ] ; then
+  if [ "${run_vis_mode}" != "client" ] ; then
+    echo "run : ${run_vis_mode} not relevant for ${base_name}."
+    exit      
+  fi
+  if [ "${run_vis_host}" = "" ] ; then
+    echo 'run : you have to pass a -vis_host argument.'
+    exit      
+  fi
+  py_args="${py_args} -vis_host ${run_vis_host}"
+  if [ "${run_vis_port}" = "" ] ; then
+    echo 'run : you have to pass a -vis_port argument.'
+    exit      
+  fi
+  py_args="${py_args} -vis_port ${run_vis_port}"
 fi
 
 #/////////////////////////////////////////////////////////////////
@@ -69,9 +211,10 @@ if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
 #/// Python : ////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
-# WARNING : spark must use the Python used to build
+# WARNING : the Python program must be the one of the Python used to build
 #           the plugins inlib_swig_py.so, exlib_[offscreen,window]_swig_py.so.
 
+py_exe=
 spy_dir=spy
 if [ ${on_lal_spark_cluster} = yes ] ; then
   if [ ${run_use_py3} = yes ] ; then
@@ -86,24 +229,35 @@ else
       py_exe=/cygdrive/c/Users/barrand/AppData/Local/Programs/Python/Python36/python.exe
     elif [ `uname` = "Darwin" ] ; then
       py_exe=/opt/local/bin/python3.6
-    else	
+    elif [ -e /opt/python/3.6.5.1/bin/python3.6 ] ; then  #cori.nersc.
+      py_exe=/opt/python/3.6.5.1/bin/python3.6
+      ld_path=/opt/python/3.6.5.1/lib
+    elif [ -e /usr/local/Python/3.6.6/bin/python3.6 ] ; then  #ostackc.
       py_exe=/usr/local/Python/3.6.6/bin/python3.6
-      ld_path="/usr/local/Python/3.6.6/lib"
+      ld_path=/usr/local/Python/3.6.6/lib
+    elif [ -e /usr/bin/python3.4m ] ; then  #ostacku.
+      py_exe=/usr/bin/python3.4m
+      #ld_path=/usr/lib/x86_64-linux-gnu
     fi      
     spy_dir=spy3    
-  else    
-    if [ "`uname | grep CYGWIN`" != "" ] ; then
-      py_exe=/cygdrive/c/Python27/pythonw.exe
+  else
+    c_drive=/cygdrive/c
+    if [ -d "${c_drive}/usr/local/Python27" ] ; then
+      py_exe="${c_drive}/usr/local/Python27/python.exe"
+    elif [ -d "${c_drive}/Python27" ] ; then
+      py_exe="${c_drive}/Python27/python.exe"
     elif [ `uname` = Darwin ] ; then
       py_exe=/opt/local/bin/pythonw2.7
-    else
+    elif [ -f /usr/bin/python2.7 ] ; then
       py_exe=/usr/bin/python2.7
+    elif [ -f /usr/bin/python2.6 ] ; then #lal/lx
+      py_exe=/usr/bin/python2.6
     fi      
   fi
 fi    
 
 if [ ! -e ${py_exe} ] ; then
-  echo "Python program ${py_exe} not found."
+  echo "run : python program ${py_exe} not found."
   exit    
 fi    
 
@@ -114,7 +268,8 @@ fi
 sep=':'
 if [ "`uname | grep CYGWIN`" != "" ] ; then sep=';' ;fi
 
-py_path="./res/${spy_dir}"
+py_path="./res/py"
+py_path="${py_path}${sep}./res/${spy_dir}"
 py_path="${py_path}${sep}${modules_path}"
 
 py_curr=`printenv PYTHONPATH`
@@ -131,8 +286,11 @@ fi
 unset py_curr
 unset py_path
 
-#printenv PYTHONPATH
-
+if [ ${run_verbose} = yes ] ; then
+  echo 'PYTHONPATH :'
+  printenv PYTHONPATH
+fi
+  
 #/////////////////////////////////////////////////////////////////
 #/// LD_LIBRARY_PATH : ///////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
@@ -153,6 +311,11 @@ if [ "`uname | grep CYGWIN`" != "" ] ; then
   unset ld_curr
   unset ld_path
 
+  if [ ${run_verbose} = yes ] ; then
+    echo 'PATH :'
+    printenv PATH
+  fi
+  
 elif [ `uname` = "Linux" ] ; then
   ld_curr=`printenv LD_LIBRARY_PATH`
   if [ "${ld_curr}" = "" ] ; then
@@ -167,12 +330,25 @@ elif [ `uname` = "Linux" ] ; then
   fi
   unset ld_curr
   unset ld_path
+  if [ ${run_verbose} = yes ] ; then
+    echo 'LD_LIBRARY_PATH :'
+    printenv LD_LIBRARY_PATH
+  fi
 fi
 
 fi #ld_path
+
+if [ ${run_verbose} = yes ] ; then
+  py_args="${py_args} -verbose True"
+fi
 
 #/////////////////////////////////////////////////////////////////
 #/// run : ///////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
-${py_exe} ${script}
+if [ "${name}" = plotter_mt -o "${name}" = cfitsio_hst_mt -o "${name}" = cfitsio_hst_mp ] ; then
+  echo "run : within the Python prompt, do 'import ${name}'"
+  ${py_exe}
+else
+  ${py_exe} ${script} ${py_args}
+fi

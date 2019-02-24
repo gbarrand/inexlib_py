@@ -14,9 +14,10 @@
 
 #include "../sg/gl2ps_action"
 #include "../sg/text_freetype"
+#include "../sg/write_paper"
 #include "../fits_image"
-
-#include <inlib/sg/infos>
+#include "../xml/xml_style"
+#include "../zlib"
 
 #if defined(__linux)
 // Clash between os_defines.h (coming from <string>) and pyconfig.h
@@ -28,12 +29,23 @@
 #endif
 #endif
 
+// to remove warnings coming from jpeg/jconfig.h (from exlib/<screen>/gui_plotter) and existing also in Python.h :
+#ifdef HAVE_PROTOTYPES
+#undef HAVE_PROTOTYPES
+#endif
+#ifdef HAVE_STDLIB_H
+#undef HAVE_STDLIB_H
+#endif
+
 #include <Python.h>
 
 #include "exlib_offscreen_swig_py.icc"
 
 //exlib_build_use inlib freetype gl2ps GL
-//exlib_build_use csz kernel cfitsio
+//exlib_build_use csz kernel cfitsio socket
+//exlib_build_use zlib expat
+
+//exlib_build_use png jpeg
 
 //exlib_build_use Python
 

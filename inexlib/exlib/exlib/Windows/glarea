@@ -8,10 +8,25 @@
 #include <windowsx.h>
 #include <wingdi.h>
 
+#if defined(_MSC_VER) && _MSC_VER < 1900
+#else
+#define EXLIB_WINDOWS_TOUCH
+#endif
+
 #include <string>
 
 namespace exlib {
 namespace Windows {
+
+#ifdef EXLIB_WINDOWS_TOUCH
+inline bool is_message_touch_event() {
+  // from https://stackoverflow.com/questions/29857587/detect-if-wm-mousemove-is-caused-by-touch-pen.
+  static const LONG_PTR c_SIGNATURE_MASK = 0xFFFFFF00;
+  static const LONG_PTR c_MOUSEEVENTF_FROMTOUCH = 0xFF515700;
+  LONG_PTR extraInfo = ::GetMessageExtraInfo();
+  return ( ( extraInfo & c_SIGNATURE_MASK ) == c_MOUSEEVENTF_FROMTOUCH );
+}
+#endif
 
 class glarea {
   static const std::string& s_class() {
@@ -48,6 +63,7 @@ public:
   ,m_hwnd(0)
   ,m_context(0)
   ,m_HDC(0)
+  ,m_touch_available(false)
   {
     register_class();
     // The WS_BORDER is needed. Else probleme of size at startup.
@@ -70,6 +86,18 @@ public:
     if(m_HDC && SetWindowPixelFormat(m_HDC) ) {
       m_context = ::wglCreateContext(m_HDC);
     }
+    
+#ifdef EXLIB_WINDOWS_TOUCH
+   {BYTE digitizer_status = (BYTE)::GetSystemMetrics(SM_DIGITIZER);
+    if((digitizer_status & (0x80 + 0x40)) == 0) {
+      m_touch_available = false;
+    } else {
+      //BYTE nInputs = (BYTE)::GetSystemMetrics(SM_MAXIMUMTOUCHES);
+      m_touch_available = true;
+      if(!::RegisterTouchWindow(m_hwnd,0)) m_touch_available = false;
+    }}
+#endif    
+
   }
   virtual ~glarea(){
     if(::wglGetCurrentContext()!=NULL) ::wglMakeCurrent(NULL,NULL);
@@ -90,6 +118,7 @@ public:
   ,m_hwnd(0)
   ,m_context(0)
   ,m_HDC(0)
+  ,m_touch_available(a_from.m_touch_available)
   {
     if(!m_parent) return;
     register_class();
@@ -112,6 +141,12 @@ public:
     if(m_HDC && SetWindowPixelFormat(m_HDC) ) {
       m_context = ::wglCreateContext(m_HDC);
     }
+    
+#ifdef EXLIB_WINDOWS_TOUCH
+    if(a_from.m_touch_available) {
+      if(!::RegisterTouchWindow(m_hwnd,0)) m_touch_available = false;
+    }
+#endif    
   }
 protected:
   glarea& operator=(const glarea&){return *this;}
@@ -143,6 +178,15 @@ public:
     EndPaint(m_hwnd,&ps);
   }
 protected:
+  bool is_touch_event() {
+#ifdef EXLIB_WINDOWS_TOUCH
+    if(!m_touch_available) return false;
+    return is_message_touch_event();
+#else	
+    return false;
+#endif
+  }
+protected:
   static LRESULT CALLBACK proc(HWND a_hwnd,UINT a_msg,WPARAM a_wparam,LPARAM a_lparam) {
     switch (a_msg) { 
     case WM_SIZE:{
@@ -168,7 +212,8 @@ protected:
         //::GetWindowRect(hwnd,&rect); ???
         ::GetClientRect(a_hwnd,&rect);
         unsigned int h = rect.bottom-rect.top;
-        _this->left_button_down(LOWORD(a_lparam),h-HIWORD(a_lparam));
+        //::printf("debug : WM_LBUTTONDOWN : %d %d\n",LOWORD(a_lparam),h-HIWORD(a_lparam));
+        if(!_this->is_touch_event()) _this->left_button_down(LOWORD(a_lparam),h-HIWORD(a_lparam));
       }
     }return 0;
     case WM_LBUTTONUP:{
@@ -177,7 +222,8 @@ protected:
         RECT rect;
         ::GetClientRect(a_hwnd,&rect);
         unsigned int h = rect.bottom-rect.top;
-        _this->left_button_up(LOWORD(a_lparam),h-HIWORD(a_lparam));
+        //::printf("debug : WM_LBUTTONUP : %d %d\n",LOWORD(a_lparam),h-HIWORD(a_lparam));
+	if(!_this->is_touch_event()) _this->left_button_up(LOWORD(a_lparam),h-HIWORD(a_lparam));
       }
     } return 0;
     case WM_MOUSEMOVE:{
@@ -189,10 +235,47 @@ protected:
         RECT rect;
         ::GetClientRect(a_hwnd,&rect);
         unsigned int h = rect.bottom-rect.top;
-        _this->mouse_move(LOWORD(a_lparam),h-HIWORD(a_lparam),ldown);
+        //::printf("debug : WM_MOUSEMOVE : %d %d\n",LOWORD(a_lparam),h-HIWORD(a_lparam));
+        if(!_this->is_touch_event()) _this->mouse_move(LOWORD(a_lparam),h-HIWORD(a_lparam),ldown);
       }
 
     }return 0;
+#ifdef EXLIB_WINDOWS_TOUCH
+    case WM_TOUCH:{
+      glarea* _this = (glarea*)::GetWindowLongPtr(a_hwnd,GWLP_USERDATA);
+      if(_this && _this->m_touch_available) {
+        RECT rect;
+        //::GetWindowRect(hwnd,&rect); ???
+        ::GetClientRect(a_hwnd,&rect);
+        unsigned int h = rect.bottom-rect.top;
+	
+        unsigned int num_inputs = (int)a_wparam;
+        //::printf("debug : WM_TOUCH : 001 : %d\n",num_inputs);
+        TOUCHINPUT* ti = new TOUCHINPUT[num_inputs];
+        POINT p;  
+        if(::GetTouchInputInfo((HTOUCHINPUT)a_lparam,num_inputs,ti,sizeof(TOUCHINPUT))) {
+          for(unsigned int i=0;i<num_inputs; ++i) {
+            p.x = TOUCH_COORD_TO_PIXEL(ti[i].x);
+            p.y = TOUCH_COORD_TO_PIXEL(ti[i].y);
+            if(!::ScreenToClient(a_hwnd,&p)) {}
+            if(ti[i].dwFlags & TOUCHEVENTF_DOWN) {
+              //::printf("debug : TOUCHEVENTF_DOWN %lu %lu\n",p.x,p.y);
+              _this->left_button_down(p.x,h-p.y);
+            } else if (ti[i].dwFlags & TOUCHEVENTF_UP) {
+              //::printf("debug : TOUCHEVENTF_UP %lu %lu\n",p.x,p.y);
+              _this->left_button_up(p.x,h-p.y);
+            } else if (ti[i].dwFlags & TOUCHEVENTF_MOVE) {
+              bool ldown = true; //we assume that a TOUCHEVENT_DOWN had been done.
+              //::printf("debug : TOUCHEVENTF_MOVE %lu %lu\n",p.x,p.y);
+              _this->mouse_move(p.x,h-p.y,ldown);
+            }
+          }
+        }
+        ::CloseTouchInputHandle((HTOUCHINPUT)a_lparam);
+        delete [] ti;
+      }
+    }return 0;
+#endif //EXLIB_WINDOWS_TOUCH
     case WM_DESTROY:wm__destroy(a_hwnd);return 0;
     }
     return (DefWindowProc(a_hwnd,a_msg,a_wparam,a_lparam));
@@ -261,6 +344,7 @@ protected:
   HWND m_hwnd;
   HGLRC m_context;
   HDC m_HDC;
+  bool m_touch_available;
 };
 
 }}

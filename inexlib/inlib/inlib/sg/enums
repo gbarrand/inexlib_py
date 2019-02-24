@@ -170,6 +170,18 @@ enum auto_lut_policy {
   auto_lut_mean_rms = 2
 };
 
+enum draw_type {
+  draw_points = 0,
+  draw_lines,
+  draw_filled
+//  draw_invisible
+};
+  
+enum shade_type { //shade_model is a node.
+  shade_flat = 0,
+  shade_smooth //Gouraud
+};
+  
 }}
 
 #endif

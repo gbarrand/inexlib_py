@@ -86,7 +86,7 @@ protected:
       GLX_DEPTH_SIZE, 1,
       None};
 
-    //NOTE : MacOSX : glXChooseVisual leaks 640 bytes.
+    //NOTE : macOS : glXChooseVisual leaks 640 bytes.
     m_vinfo = ::glXChooseVisual(m_display,DefaultScreen(m_display),(int*)atbs_alpha);
     if(!m_vinfo) {
       m_out << "exlib::X11::session::initialize :"

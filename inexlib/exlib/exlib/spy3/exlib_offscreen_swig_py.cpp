@@ -4,7 +4,8 @@
 #include "../spy/exlib_offscreen_swig_py.cpp"
 
 //exlib_build_use inlib freetype gl2ps GL
-//exlib_build_use csz kernel cfitsio
+//exlib_build_use csz kernel cfitsio socket zlib expat
+//exlib_build_use png jpeg
 
 //exlib_build_use Python3
 

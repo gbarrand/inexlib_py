@@ -1,5 +1,8 @@
 #!/bin/sh -f
 
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file exlib.license for terms.
+
 bush_home=../../../../bush
 
 . ${bush_home}/args
@@ -32,6 +35,14 @@ exlib_mgr=../../../exlib/mgr
 save_dir=`pwd`
 
 cd ${exlib_mgr}
+if [ ${build_verbose} = yes ] ; then
+  ./build_res -v
+else
+  ./build_res
+fi      
+cd ${save_dir}
+
+cd ${exlib_mgr}
 ./build ${build_args} ../exlib/${spy_dir}/inlib_swig_py.cpp
 cd ${save_dir}
 if [ -f ${exlib_mgr}/${build_dir}/inlib_swig_py.${pgpy} ] ; then
@@ -57,9 +68,6 @@ if [ -f ${exlib_mgr}/${build_dir}/exlib_window_swig_py.${pgpy} ] ; then
 else
   echo "${exlib_mgr}/${build_dir}/exlib_window_swig_py.${pgpy} not found."
 fi
-
-/bin/mkdir -p ./res/${spy_dir}
-find ../../exlib/${spy_dir} -name '*.py' -exec /bin/cp {} ./res/${spy_dir}/. \;
 
 /bin/rm -f ${build_path}/which_py
 if [ ${build_use_py3} = yes ] ; then

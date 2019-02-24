@@ -45,6 +45,8 @@ public:
     size_t num = xyzs.size()/3;
     if(!num) return;
 
+    //NOTE : gstos would not work because of project_point() that must be done at each render().
+
     const state& state = a_action.state();
 
     const std::vector<float>& _xyzs = xyzs.values();

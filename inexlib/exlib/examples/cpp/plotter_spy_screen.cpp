@@ -2,10 +2,14 @@
 // See the file exlib.license for terms.
 
 //exlib_build_use inlib inlib_glutess freetype GL gl2ps thread exlib
-//exlib_build_use png jpeg zlib
-//exlib_build_use cfitsio
-//exlib_build_use screen
+//exlib_build_use png jpeg zlib expat
+//exlib_build_use cfitsio socket
 //exlib_build_use Python
+
+//exlib_build_cppfile ../../exlib/spy/inlib_swig_py.cpp
+
+//exlib_build_use screen
+//exlib_build_scrfile ../../exlib/spy/exlib_window_swig_py.cpp
 
 #include <exlib/Python>
 

@@ -82,15 +82,8 @@
 #endif
 
 /*G.Barrand : begin :*/
-#include "gldum_gldef.h"
-#include "rename_gl.ic"
-
-#define GLint    int
-#define GLfloat  float
-#define GLenum   gl2ps_uint
-#define GLshort  short
-#define GLushort gl2ps_ushort
-#define GLsizei  int
+#include "gldef.h"
+#include "set_gl.ic"
 /*G.Barrand : end*/
 
 /********************************************************************* 
@@ -6044,6 +6037,3 @@ GL2PSDLL_API const char *gl2psGetFormatDescription(GLint format)
   else
     return "Unknown format";
 }
-
-#include "renamed_gl.ic" /*G.Barrand*/
-

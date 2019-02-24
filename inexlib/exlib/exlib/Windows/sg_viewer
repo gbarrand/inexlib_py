@@ -38,7 +38,7 @@ protected:
   ,m_glarea(a_from.m_glarea)
   {}
   sg_viewer& operator=(const sg_viewer& a_from){
-    window::operator=(a_from);
+    parent_window::operator=(a_from);
     return *this;
   }
 public:

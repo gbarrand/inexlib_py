@@ -105,6 +105,138 @@ class SwigPyIterator(object):
 SwigPyIterator_swigregister = exlib_offscreen_swig_py.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
 
+class std_vector_uint(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def iterator(self) -> "swig::SwigPyIterator *" : return exlib_offscreen_swig_py.std_vector_uint_iterator(self)
+    def __iter__(self): return self.iterator()
+    def __nonzero__(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_uint___nonzero__(self)
+    def __bool__(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_uint___bool__(self)
+    def __len__(self) -> "std::vector< unsigned int >::size_type" : return exlib_offscreen_swig_py.std_vector_uint___len__(self)
+    def pop(self) -> "std::vector< unsigned int >::value_type" : return exlib_offscreen_swig_py.std_vector_uint_pop(self)
+    def __getslice__(self, *args) -> "std::vector< unsigned int,std::allocator< unsigned int > > *" : return exlib_offscreen_swig_py.std_vector_uint___getslice__(self, *args)
+    def __setslice__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint___setslice__(self, *args)
+    def __delslice__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint___delslice__(self, *args)
+    def __delitem__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint___delitem__(self, *args)
+    def __getitem__(self, *args) -> "std::vector< unsigned int >::value_type const &" : return exlib_offscreen_swig_py.std_vector_uint___getitem__(self, *args)
+    def __setitem__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint___setitem__(self, *args)
+    def append(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_append(self, *args)
+    def empty(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_uint_empty(self)
+    def size(self) -> "std::vector< unsigned int >::size_type" : return exlib_offscreen_swig_py.std_vector_uint_size(self)
+    def clear(self) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_clear(self)
+    def swap(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_swap(self, *args)
+    def get_allocator(self) -> "std::vector< unsigned int >::allocator_type" : return exlib_offscreen_swig_py.std_vector_uint_get_allocator(self)
+    def begin(self) -> "std::vector< unsigned int >::iterator" : return exlib_offscreen_swig_py.std_vector_uint_begin(self)
+    def end(self) -> "std::vector< unsigned int >::iterator" : return exlib_offscreen_swig_py.std_vector_uint_end(self)
+    def rbegin(self) -> "std::vector< unsigned int >::reverse_iterator" : return exlib_offscreen_swig_py.std_vector_uint_rbegin(self)
+    def rend(self) -> "std::vector< unsigned int >::reverse_iterator" : return exlib_offscreen_swig_py.std_vector_uint_rend(self)
+    def pop_back(self) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_pop_back(self)
+    def erase(self, *args) -> "std::vector< unsigned int >::iterator" : return exlib_offscreen_swig_py.std_vector_uint_erase(self, *args)
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_std_vector_uint(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def push_back(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_push_back(self, *args)
+    def front(self) -> "std::vector< unsigned int >::value_type const &" : return exlib_offscreen_swig_py.std_vector_uint_front(self)
+    def back(self) -> "std::vector< unsigned int >::value_type const &" : return exlib_offscreen_swig_py.std_vector_uint_back(self)
+    def assign(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_assign(self, *args)
+    def resize(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_resize(self, *args)
+    def insert(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_insert(self, *args)
+    def reserve(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_uint_reserve(self, *args)
+    def capacity(self) -> "std::vector< unsigned int >::size_type" : return exlib_offscreen_swig_py.std_vector_uint_capacity(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_std_vector_uint
+    __del__ = lambda self : None;
+std_vector_uint_swigregister = exlib_offscreen_swig_py.std_vector_uint_swigregister
+std_vector_uint_swigregister(std_vector_uint)
+
+class std_vector_int(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def iterator(self) -> "swig::SwigPyIterator *" : return exlib_offscreen_swig_py.std_vector_int_iterator(self)
+    def __iter__(self): return self.iterator()
+    def __nonzero__(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_int___nonzero__(self)
+    def __bool__(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_int___bool__(self)
+    def __len__(self) -> "std::vector< int >::size_type" : return exlib_offscreen_swig_py.std_vector_int___len__(self)
+    def pop(self) -> "std::vector< int >::value_type" : return exlib_offscreen_swig_py.std_vector_int_pop(self)
+    def __getslice__(self, *args) -> "std::vector< int,std::allocator< int > > *" : return exlib_offscreen_swig_py.std_vector_int___getslice__(self, *args)
+    def __setslice__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int___setslice__(self, *args)
+    def __delslice__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int___delslice__(self, *args)
+    def __delitem__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int___delitem__(self, *args)
+    def __getitem__(self, *args) -> "std::vector< int >::value_type const &" : return exlib_offscreen_swig_py.std_vector_int___getitem__(self, *args)
+    def __setitem__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int___setitem__(self, *args)
+    def append(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int_append(self, *args)
+    def empty(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_int_empty(self)
+    def size(self) -> "std::vector< int >::size_type" : return exlib_offscreen_swig_py.std_vector_int_size(self)
+    def clear(self) -> "void" : return exlib_offscreen_swig_py.std_vector_int_clear(self)
+    def swap(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int_swap(self, *args)
+    def get_allocator(self) -> "std::vector< int >::allocator_type" : return exlib_offscreen_swig_py.std_vector_int_get_allocator(self)
+    def begin(self) -> "std::vector< int >::iterator" : return exlib_offscreen_swig_py.std_vector_int_begin(self)
+    def end(self) -> "std::vector< int >::iterator" : return exlib_offscreen_swig_py.std_vector_int_end(self)
+    def rbegin(self) -> "std::vector< int >::reverse_iterator" : return exlib_offscreen_swig_py.std_vector_int_rbegin(self)
+    def rend(self) -> "std::vector< int >::reverse_iterator" : return exlib_offscreen_swig_py.std_vector_int_rend(self)
+    def pop_back(self) -> "void" : return exlib_offscreen_swig_py.std_vector_int_pop_back(self)
+    def erase(self, *args) -> "std::vector< int >::iterator" : return exlib_offscreen_swig_py.std_vector_int_erase(self, *args)
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_std_vector_int(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def push_back(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int_push_back(self, *args)
+    def front(self) -> "std::vector< int >::value_type const &" : return exlib_offscreen_swig_py.std_vector_int_front(self)
+    def back(self) -> "std::vector< int >::value_type const &" : return exlib_offscreen_swig_py.std_vector_int_back(self)
+    def assign(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int_assign(self, *args)
+    def resize(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int_resize(self, *args)
+    def insert(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int_insert(self, *args)
+    def reserve(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_int_reserve(self, *args)
+    def capacity(self) -> "std::vector< int >::size_type" : return exlib_offscreen_swig_py.std_vector_int_capacity(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_std_vector_int
+    __del__ = lambda self : None;
+std_vector_int_swigregister = exlib_offscreen_swig_py.std_vector_int_swigregister
+std_vector_int_swigregister(std_vector_int)
+
+class std_vector_float(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def iterator(self) -> "swig::SwigPyIterator *" : return exlib_offscreen_swig_py.std_vector_float_iterator(self)
+    def __iter__(self): return self.iterator()
+    def __nonzero__(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_float___nonzero__(self)
+    def __bool__(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_float___bool__(self)
+    def __len__(self) -> "std::vector< float >::size_type" : return exlib_offscreen_swig_py.std_vector_float___len__(self)
+    def pop(self) -> "std::vector< float >::value_type" : return exlib_offscreen_swig_py.std_vector_float_pop(self)
+    def __getslice__(self, *args) -> "std::vector< float,std::allocator< float > > *" : return exlib_offscreen_swig_py.std_vector_float___getslice__(self, *args)
+    def __setslice__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float___setslice__(self, *args)
+    def __delslice__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float___delslice__(self, *args)
+    def __delitem__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float___delitem__(self, *args)
+    def __getitem__(self, *args) -> "std::vector< float >::value_type const &" : return exlib_offscreen_swig_py.std_vector_float___getitem__(self, *args)
+    def __setitem__(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float___setitem__(self, *args)
+    def append(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float_append(self, *args)
+    def empty(self) -> "bool" : return exlib_offscreen_swig_py.std_vector_float_empty(self)
+    def size(self) -> "std::vector< float >::size_type" : return exlib_offscreen_swig_py.std_vector_float_size(self)
+    def clear(self) -> "void" : return exlib_offscreen_swig_py.std_vector_float_clear(self)
+    def swap(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float_swap(self, *args)
+    def get_allocator(self) -> "std::vector< float >::allocator_type" : return exlib_offscreen_swig_py.std_vector_float_get_allocator(self)
+    def begin(self) -> "std::vector< float >::iterator" : return exlib_offscreen_swig_py.std_vector_float_begin(self)
+    def end(self) -> "std::vector< float >::iterator" : return exlib_offscreen_swig_py.std_vector_float_end(self)
+    def rbegin(self) -> "std::vector< float >::reverse_iterator" : return exlib_offscreen_swig_py.std_vector_float_rbegin(self)
+    def rend(self) -> "std::vector< float >::reverse_iterator" : return exlib_offscreen_swig_py.std_vector_float_rend(self)
+    def pop_back(self) -> "void" : return exlib_offscreen_swig_py.std_vector_float_pop_back(self)
+    def erase(self, *args) -> "std::vector< float >::iterator" : return exlib_offscreen_swig_py.std_vector_float_erase(self, *args)
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_std_vector_float(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def push_back(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float_push_back(self, *args)
+    def front(self) -> "std::vector< float >::value_type const &" : return exlib_offscreen_swig_py.std_vector_float_front(self)
+    def back(self) -> "std::vector< float >::value_type const &" : return exlib_offscreen_swig_py.std_vector_float_back(self)
+    def assign(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float_assign(self, *args)
+    def resize(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float_resize(self, *args)
+    def insert(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float_insert(self, *args)
+    def reserve(self, *args) -> "void" : return exlib_offscreen_swig_py.std_vector_float_reserve(self, *args)
+    def capacity(self) -> "std::vector< float >::size_type" : return exlib_offscreen_swig_py.std_vector_float_capacity(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_std_vector_float
+    __del__ = lambda self : None;
+std_vector_float_swigregister = exlib_offscreen_swig_py.std_vector_float_swigregister
+std_vector_float_swigregister(std_vector_float)
+
 class std_vector_double(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -153,171 +285,6 @@ std_vector_double_swigregister(std_vector_double)
 def get_cout() -> "std::ostream &" :
   return exlib_offscreen_swig_py.get_cout()
 get_cout = exlib_offscreen_swig_py.get_cout
-class ios_base(object):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
-    __repr__ = _swig_repr
-    erase_event = exlib_offscreen_swig_py.ios_base_erase_event
-    imbue_event = exlib_offscreen_swig_py.ios_base_imbue_event
-    copyfmt_event = exlib_offscreen_swig_py.ios_base_copyfmt_event
-    def register_callback(self, *args) -> "void" : return exlib_offscreen_swig_py.ios_base_register_callback(self, *args)
-    def flags(self, *args) -> "std::ios_base::fmtflags" : return exlib_offscreen_swig_py.ios_base_flags(self, *args)
-    def setf(self, *args) -> "std::ios_base::fmtflags" : return exlib_offscreen_swig_py.ios_base_setf(self, *args)
-    def unsetf(self, *args) -> "void" : return exlib_offscreen_swig_py.ios_base_unsetf(self, *args)
-    def precision(self, *args) -> "std::streamsize" : return exlib_offscreen_swig_py.ios_base_precision(self, *args)
-    def width(self, *args) -> "std::streamsize" : return exlib_offscreen_swig_py.ios_base_width(self, *args)
-    sync_with_stdio = staticmethod(exlib_offscreen_swig_py.ios_base_sync_with_stdio)
-    def imbue(self, *args) -> "std::locale" : return exlib_offscreen_swig_py.ios_base_imbue(self, *args)
-    def getloc(self) -> "std::locale" : return exlib_offscreen_swig_py.ios_base_getloc(self)
-    xalloc = staticmethod(exlib_offscreen_swig_py.ios_base_xalloc)
-    def iword(self, *args) -> "long &" : return exlib_offscreen_swig_py.ios_base_iword(self, *args)
-    def pword(self, *args) -> "void *&" : return exlib_offscreen_swig_py.ios_base_pword(self, *args)
-    __swig_destroy__ = exlib_offscreen_swig_py.delete_ios_base
-    __del__ = lambda self : None;
-ios_base_swigregister = exlib_offscreen_swig_py.ios_base_swigregister
-ios_base_swigregister(ios_base)
-cvar = exlib_offscreen_swig_py.cvar
-ios_base.boolalpha = exlib_offscreen_swig_py.cvar.ios_base_boolalpha
-ios_base.dec = exlib_offscreen_swig_py.cvar.ios_base_dec
-ios_base.fixed = exlib_offscreen_swig_py.cvar.ios_base_fixed
-ios_base.hex = exlib_offscreen_swig_py.cvar.ios_base_hex
-ios_base.internal = exlib_offscreen_swig_py.cvar.ios_base_internal
-ios_base.left = exlib_offscreen_swig_py.cvar.ios_base_left
-ios_base.oct = exlib_offscreen_swig_py.cvar.ios_base_oct
-ios_base.right = exlib_offscreen_swig_py.cvar.ios_base_right
-ios_base.scientific = exlib_offscreen_swig_py.cvar.ios_base_scientific
-ios_base.showbase = exlib_offscreen_swig_py.cvar.ios_base_showbase
-ios_base.showpoint = exlib_offscreen_swig_py.cvar.ios_base_showpoint
-ios_base.showpos = exlib_offscreen_swig_py.cvar.ios_base_showpos
-ios_base.skipws = exlib_offscreen_swig_py.cvar.ios_base_skipws
-ios_base.unitbuf = exlib_offscreen_swig_py.cvar.ios_base_unitbuf
-ios_base.uppercase = exlib_offscreen_swig_py.cvar.ios_base_uppercase
-ios_base.adjustfield = exlib_offscreen_swig_py.cvar.ios_base_adjustfield
-ios_base.basefield = exlib_offscreen_swig_py.cvar.ios_base_basefield
-ios_base.floatfield = exlib_offscreen_swig_py.cvar.ios_base_floatfield
-ios_base.badbit = exlib_offscreen_swig_py.cvar.ios_base_badbit
-ios_base.eofbit = exlib_offscreen_swig_py.cvar.ios_base_eofbit
-ios_base.failbit = exlib_offscreen_swig_py.cvar.ios_base_failbit
-ios_base.goodbit = exlib_offscreen_swig_py.cvar.ios_base_goodbit
-ios_base.app = exlib_offscreen_swig_py.cvar.ios_base_app
-ios_base.ate = exlib_offscreen_swig_py.cvar.ios_base_ate
-ios_base.binary = exlib_offscreen_swig_py.cvar.ios_base_binary
-ios_base.ios_base_in = exlib_offscreen_swig_py.cvar.ios_base_ios_base_in
-ios_base.out = exlib_offscreen_swig_py.cvar.ios_base_out
-ios_base.trunc = exlib_offscreen_swig_py.cvar.ios_base_trunc
-ios_base.beg = exlib_offscreen_swig_py.cvar.ios_base_beg
-ios_base.cur = exlib_offscreen_swig_py.cvar.ios_base_cur
-ios_base.end = exlib_offscreen_swig_py.cvar.ios_base_end
-
-def ios_base_sync_with_stdio(__sync : 'bool'=True) -> "bool" :
-  return exlib_offscreen_swig_py.ios_base_sync_with_stdio(__sync)
-ios_base_sync_with_stdio = exlib_offscreen_swig_py.ios_base_sync_with_stdio
-
-def ios_base_xalloc() -> "int" :
-  return exlib_offscreen_swig_py.ios_base_xalloc()
-ios_base_xalloc = exlib_offscreen_swig_py.ios_base_xalloc
-
-class ios(ios_base):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    __repr__ = _swig_repr
-    def rdstate(self) -> "std::ios_base::iostate" : return exlib_offscreen_swig_py.ios_rdstate(self)
-    def clear(self, *args) -> "void" : return exlib_offscreen_swig_py.ios_clear(self, *args)
-    def setstate(self, *args) -> "void" : return exlib_offscreen_swig_py.ios_setstate(self, *args)
-    def good(self) -> "bool" : return exlib_offscreen_swig_py.ios_good(self)
-    def eof(self) -> "bool" : return exlib_offscreen_swig_py.ios_eof(self)
-    def fail(self) -> "bool" : return exlib_offscreen_swig_py.ios_fail(self)
-    def bad(self) -> "bool" : return exlib_offscreen_swig_py.ios_bad(self)
-    def exceptions(self, *args) -> "void" : return exlib_offscreen_swig_py.ios_exceptions(self, *args)
-    def __init__(self, *args): 
-        this = exlib_offscreen_swig_py.new_ios(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = exlib_offscreen_swig_py.delete_ios
-    __del__ = lambda self : None;
-    def tie(self, *args) -> "std::basic_ostream< char,std::char_traits< char > > *" : return exlib_offscreen_swig_py.ios_tie(self, *args)
-    def rdbuf(self, *args) -> "std::basic_streambuf< char,std::char_traits< char > > *" : return exlib_offscreen_swig_py.ios_rdbuf(self, *args)
-    def copyfmt(self, *args) -> "std::basic_ios< char > &" : return exlib_offscreen_swig_py.ios_copyfmt(self, *args)
-    def fill(self, *args) -> "std::basic_ios< char >::char_type" : return exlib_offscreen_swig_py.ios_fill(self, *args)
-    def imbue(self, *args) -> "std::locale" : return exlib_offscreen_swig_py.ios_imbue(self, *args)
-    def narrow(self, *args) -> "char" : return exlib_offscreen_swig_py.ios_narrow(self, *args)
-    def widen(self, *args) -> "std::basic_ios< char >::char_type" : return exlib_offscreen_swig_py.ios_widen(self, *args)
-ios_swigregister = exlib_offscreen_swig_py.ios_swigregister
-ios_swigregister(ios)
-
-class ostream(ios):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    __repr__ = _swig_repr
-    def __init__(self, *args): 
-        this = exlib_offscreen_swig_py.new_ostream(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = exlib_offscreen_swig_py.delete_ostream
-    __del__ = lambda self : None;
-    def __lshift__(self, *args) -> "std::basic_ostream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.ostream___lshift__(self, *args)
-    def put(self, *args) -> "std::basic_ostream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.ostream_put(self, *args)
-    def write(self, *args) -> "std::basic_ostream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.ostream_write(self, *args)
-    def flush(self) -> "std::basic_ostream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.ostream_flush(self)
-    def tellp(self) -> "std::basic_ostream< char >::pos_type" : return exlib_offscreen_swig_py.ostream_tellp(self)
-    def seekp(self, *args) -> "std::basic_ostream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.ostream_seekp(self, *args)
-ostream_swigregister = exlib_offscreen_swig_py.ostream_swigregister
-ostream_swigregister(ostream)
-cin = cvar.cin
-cout = cvar.cout
-cerr = cvar.cerr
-clog = cvar.clog
-
-class istream(ios):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    __repr__ = _swig_repr
-    def __init__(self, *args): 
-        this = exlib_offscreen_swig_py.new_istream(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = exlib_offscreen_swig_py.delete_istream
-    __del__ = lambda self : None;
-    def __rshift__(self, *args) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream___rshift__(self, *args)
-    def gcount(self) -> "std::streamsize" : return exlib_offscreen_swig_py.istream_gcount(self)
-    def get(self, *args) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream_get(self, *args)
-    def getline(self, *args) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream_getline(self, *args)
-    def ignore(self, *args) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream_ignore(self, *args)
-    def peek(self) -> "std::basic_istream< char >::int_type" : return exlib_offscreen_swig_py.istream_peek(self)
-    def read(self, *args) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream_read(self, *args)
-    def readsome(self, *args) -> "std::streamsize" : return exlib_offscreen_swig_py.istream_readsome(self, *args)
-    def putback(self, *args) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream_putback(self, *args)
-    def unget(self) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream_unget(self)
-    def sync(self) -> "int" : return exlib_offscreen_swig_py.istream_sync(self)
-    def tellg(self) -> "std::basic_istream< char >::pos_type" : return exlib_offscreen_swig_py.istream_tellg(self)
-    def seekg(self, *args) -> "std::basic_istream< char,std::char_traits< char > > &" : return exlib_offscreen_swig_py.istream_seekg(self, *args)
-istream_swigregister = exlib_offscreen_swig_py.istream_swigregister
-istream_swigregister(istream)
-
-class iostream(istream,ostream):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    __repr__ = _swig_repr
-    def __init__(self, *args): 
-        this = exlib_offscreen_swig_py.new_iostream(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = exlib_offscreen_swig_py.delete_iostream
-    __del__ = lambda self : None;
-iostream_swigregister = exlib_offscreen_swig_py.iostream_swigregister
-iostream_swigregister(iostream)
-
-endl_cb_ptr = exlib_offscreen_swig_py.endl_cb_ptr
-
-def endl(*args) -> "std::basic_ostream< char,std::char_traits< char > > &" :
-  return exlib_offscreen_swig_py.endl(*args)
-endl = exlib_offscreen_swig_py.endl
-ends_cb_ptr = exlib_offscreen_swig_py.ends_cb_ptr
-
-def ends(*args) -> "std::basic_ostream< char,std::char_traits< char > > &" :
-  return exlib_offscreen_swig_py.ends(*args)
-ends = exlib_offscreen_swig_py.ends
-flush_cb_ptr = exlib_offscreen_swig_py.flush_cb_ptr
-
-def flush(*args) -> "std::basic_ostream< char,std::char_traits< char > > &" :
-  return exlib_offscreen_swig_py.flush(*args)
-flush = exlib_offscreen_swig_py.flush
 
 def env_append_path(*args) -> "bool" :
   return exlib_offscreen_swig_py.env_append_path(*args)
@@ -361,17 +328,44 @@ class args(object):
         this = exlib_offscreen_swig_py.new_args(*args)
         try: self.this.append(this)
         except: self.this = this
+    def add(self, *args) -> "bool" : return exlib_offscreen_swig_py.args_add(self, *args)
+    def remove(self, *args) -> "int" : return exlib_offscreen_swig_py.args_remove(self, *args)
+    def remove_first(self) -> "void" : return exlib_offscreen_swig_py.args_remove_first(self)
 args_swigregister = exlib_offscreen_swig_py.args_swigregister
 args_swigregister(args)
 
-class opener(object):
+class guiv(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+guiv_swigregister = exlib_offscreen_swig_py.guiv_swigregister
+guiv_swigregister(guiv)
+
+class opener(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_opener
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_opener(*args)
+        try: self.this.append(this)
+        except: self.this = this
     def open(self, *args) -> "bool" : return exlib_offscreen_swig_py.opener_open(self, *args)
 opener_swigregister = exlib_offscreen_swig_py.opener_swigregister
 opener_swigregister(opener)
 
+
+def file_exists(*args) -> "bool" :
+  return exlib_offscreen_swig_py.file_exists(*args)
+file_exists = exlib_offscreen_swig_py.file_exists
+
+def file_write(*args) -> "bool" :
+  return exlib_offscreen_swig_py.file_write(*args)
+file_write = exlib_offscreen_swig_py.file_write
+
+def file_paper_format_extension(*args) -> "bool" :
+  return exlib_offscreen_swig_py.file_paper_format_extension(*args)
+file_paper_format_extension = exlib_offscreen_swig_py.file_paper_format_extension
 class histo_h1d(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -451,6 +445,10 @@ class histo_c2d(object):
         except: self.this = this
     def fill(self, *args) -> "bool" : return exlib_offscreen_swig_py.histo_c2d_fill(self, *args)
     def entries(self) -> "unsigned int" : return exlib_offscreen_swig_py.histo_c2d_entries(self)
+    def lower_edge_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c2d_lower_edge_x(self)
+    def upper_edge_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c2d_upper_edge_x(self)
+    def lower_edge_y(self) -> "double" : return exlib_offscreen_swig_py.histo_c2d_lower_edge_y(self)
+    def upper_edge_y(self) -> "double" : return exlib_offscreen_swig_py.histo_c2d_upper_edge_y(self)
     def mean_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c2d_mean_x(self)
     def rms_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c2d_rms_x(self)
     def mean_y(self) -> "double" : return exlib_offscreen_swig_py.histo_c2d_mean_y(self)
@@ -469,6 +467,12 @@ class histo_c3d(object):
         except: self.this = this
     def fill(self, *args) -> "bool" : return exlib_offscreen_swig_py.histo_c3d_fill(self, *args)
     def entries(self) -> "unsigned int" : return exlib_offscreen_swig_py.histo_c3d_entries(self)
+    def lower_edge_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_lower_edge_x(self)
+    def upper_edge_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_upper_edge_x(self)
+    def lower_edge_y(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_lower_edge_y(self)
+    def upper_edge_y(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_upper_edge_y(self)
+    def lower_edge_z(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_lower_edge_z(self)
+    def upper_edge_z(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_upper_edge_z(self)
     def mean_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_mean_x(self)
     def rms_x(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_rms_x(self)
     def mean_y(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_mean_y(self)
@@ -477,6 +481,36 @@ class histo_c3d(object):
     def rms_z(self) -> "double" : return exlib_offscreen_swig_py.histo_c3d_rms_z(self)
 histo_c3d_swigregister = exlib_offscreen_swig_py.histo_c3d_swigregister
 histo_c3d_swigregister(histo_c3d)
+
+class rtausmeui(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rtausmeui
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_rtausmeui(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def set_seed(self, *args) -> "void" : return exlib_offscreen_swig_py.rtausmeui_set_seed(self, *args)
+    def seed(self) -> "unsigned int" : return exlib_offscreen_swig_py.rtausmeui_seed(self)
+    def shoot(self) -> "unsigned int" : return exlib_offscreen_swig_py.rtausmeui_shoot(self)
+rtausmeui_swigregister = exlib_offscreen_swig_py.rtausmeui_swigregister
+rtausmeui_swigregister(rtausmeui)
+
+class rtausmed(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rtausmed
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_rtausmed(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def set_seed(self, *args) -> "void" : return exlib_offscreen_swig_py.rtausmed_set_seed(self, *args)
+    def seed(self) -> "unsigned int" : return exlib_offscreen_swig_py.rtausmed_seed(self)
+    def shoot(self) -> "double" : return exlib_offscreen_swig_py.rtausmed_shoot(self)
+rtausmed_swigregister = exlib_offscreen_swig_py.rtausmed_swigregister
+rtausmed_swigregister(rtausmed)
 
 class rgaussd(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -517,17 +551,81 @@ class rexpd(object):
 rexpd_swigregister = exlib_offscreen_swig_py.rexpd_swigregister
 rexpd_swigregister(rexpd)
 
-class styles(object):
+class rdir2d(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
-    __swig_destroy__ = exlib_offscreen_swig_py.delete_styles
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rdir2d
     __del__ = lambda self : None;
     def __init__(self, *args): 
-        this = exlib_offscreen_swig_py.new_styles(*args)
+        this = exlib_offscreen_swig_py.new_rdir2d(*args)
         try: self.this.append(this)
         except: self.this = this
-styles_swigregister = exlib_offscreen_swig_py.styles_swigregister
-styles_swigregister(styles)
+    def shoot(self, *args) -> "void" : return exlib_offscreen_swig_py.rdir2d_shoot(self, *args)
+rdir2d_swigregister = exlib_offscreen_swig_py.rdir2d_swigregister
+rdir2d_swigregister(rdir2d)
+
+class rdir3d(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rdir3d
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_rdir3d(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def shoot(self, *args) -> "void" : return exlib_offscreen_swig_py.rdir3d_shoot(self, *args)
+rdir3d_swigregister = exlib_offscreen_swig_py.rdir3d_swigregister
+rdir3d_swigregister(rdir3d)
+
+class sg_style_colormap(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_style_colormap
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_style_colormap(*args)
+        try: self.this.append(this)
+        except: self.this = this
+sg_style_colormap_swigregister = exlib_offscreen_swig_py.sg_style_colormap_swigregister
+sg_style_colormap_swigregister(sg_style_colormap)
+
+class sg_style_default_colormap(sg_style_colormap):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_style_default_colormap
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_style_default_colormap(*args)
+        try: self.this.append(this)
+        except: self.this = this
+sg_style_default_colormap_swigregister = exlib_offscreen_swig_py.sg_style_default_colormap_swigregister
+sg_style_default_colormap_swigregister(sg_style_default_colormap)
+
+class sg_style_ROOT_colormap(sg_style_colormap):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_style_ROOT_colormap
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_style_ROOT_colormap(*args)
+        try: self.this.append(this)
+        except: self.this = this
+sg_style_ROOT_colormap_swigregister = exlib_offscreen_swig_py.sg_style_ROOT_colormap_swigregister
+sg_style_ROOT_colormap_swigregister(sg_style_ROOT_colormap)
+
+class xml_styles(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_xml_styles
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_xml_styles(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def out(self) -> "std::ostream &" : return exlib_offscreen_swig_py.xml_styles_out(self)
+    def add_colormap(self, *args) -> "void" : return exlib_offscreen_swig_py.xml_styles_add_colormap(self, *args)
+xml_styles_swigregister = exlib_offscreen_swig_py.xml_styles_swigregister
+xml_styles_swigregister(xml_styles)
 
 class SOPI_color(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -1451,6 +1549,11 @@ class vec2f(object):
         this = exlib_offscreen_swig_py.new_vec2f(*args)
         try: self.this.append(this)
         except: self.this = this
+    def x(self) -> "float const &" : return exlib_offscreen_swig_py.vec2f_x(self)
+    def y(self) -> "float const &" : return exlib_offscreen_swig_py.vec2f_y(self)
+    def set_value(self, *args) -> "void" : return exlib_offscreen_swig_py.vec2f_set_value(self, *args)
+    def length(self) -> "float" : return exlib_offscreen_swig_py.vec2f_length(self)
+    def normalize(self) -> "float" : return exlib_offscreen_swig_py.vec2f_normalize(self)
 vec2f_swigregister = exlib_offscreen_swig_py.vec2f_swigregister
 vec2f_swigregister(vec2f)
 
@@ -1463,6 +1566,12 @@ class vec3f(object):
         this = exlib_offscreen_swig_py.new_vec3f(*args)
         try: self.this.append(this)
         except: self.this = this
+    def x(self) -> "float const &" : return exlib_offscreen_swig_py.vec3f_x(self)
+    def y(self) -> "float const &" : return exlib_offscreen_swig_py.vec3f_y(self)
+    def z(self) -> "float const &" : return exlib_offscreen_swig_py.vec3f_z(self)
+    def set_value(self, *args) -> "void" : return exlib_offscreen_swig_py.vec3f_set_value(self, *args)
+    def length(self) -> "float" : return exlib_offscreen_swig_py.vec3f_length(self)
+    def normalize(self) -> "float" : return exlib_offscreen_swig_py.vec3f_normalize(self)
 vec3f_swigregister = exlib_offscreen_swig_py.vec3f_swigregister
 vec3f_swigregister(vec3f)
 
@@ -1490,6 +1599,23 @@ class rotf(object):
 rotf_swigregister = exlib_offscreen_swig_py.rotf_swigregister
 rotf_swigregister(rotf)
 
+class box3f(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_box3f
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_box3f(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def make_empty(self) -> "void" : return exlib_offscreen_swig_py.box3f_make_empty(self)
+    def is_empty(self) -> "bool" : return exlib_offscreen_swig_py.box3f_is_empty(self)
+    def extend_by(self, *args) -> "void" : return exlib_offscreen_swig_py.box3f_extend_by(self, *args)
+    def mn(self) -> "inlib::vec3f const &" : return exlib_offscreen_swig_py.box3f_mn(self)
+    def mx(self) -> "inlib::vec3f const &" : return exlib_offscreen_swig_py.box3f_mx(self)
+box3f_swigregister = exlib_offscreen_swig_py.box3f_swigregister
+box3f_swigregister(box3f)
+
 class vec3d(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -1499,6 +1625,12 @@ class vec3d(object):
         this = exlib_offscreen_swig_py.new_vec3d(*args)
         try: self.this.append(this)
         except: self.this = this
+    def x(self) -> "double const &" : return exlib_offscreen_swig_py.vec3d_x(self)
+    def y(self) -> "double const &" : return exlib_offscreen_swig_py.vec3d_y(self)
+    def z(self) -> "double const &" : return exlib_offscreen_swig_py.vec3d_z(self)
+    def set_value(self, *args) -> "void" : return exlib_offscreen_swig_py.vec3d_set_value(self, *args)
+    def length(self) -> "double" : return exlib_offscreen_swig_py.vec3d_length(self)
+    def normalize(self) -> "double" : return exlib_offscreen_swig_py.vec3d_normalize(self)
 vec3d_swigregister = exlib_offscreen_swig_py.vec3d_swigregister
 vec3d_swigregister(vec3d)
 
@@ -1513,6 +1645,23 @@ class rotd(object):
         except: self.this = this
 rotd_swigregister = exlib_offscreen_swig_py.rotd_swigregister
 rotd_swigregister(rotd)
+
+class box3d(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_box3d
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_box3d(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def make_empty(self) -> "void" : return exlib_offscreen_swig_py.box3d_make_empty(self)
+    def is_empty(self) -> "bool" : return exlib_offscreen_swig_py.box3d_is_empty(self)
+    def extend_by(self, *args) -> "void" : return exlib_offscreen_swig_py.box3d_extend_by(self, *args)
+    def mn(self) -> "inlib::vec3d const &" : return exlib_offscreen_swig_py.box3d_mn(self)
+    def mx(self) -> "inlib::vec3d const &" : return exlib_offscreen_swig_py.box3d_mx(self)
+box3d_swigregister = exlib_offscreen_swig_py.box3d_swigregister
+box3d_swigregister(box3d)
 
 class sf_string(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -1591,6 +1740,7 @@ class sf_bool(object):
         try: self.this.append(this)
         except: self.this = this
     def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_bool_value(self, *args)
+    def value_cp(self) -> "bool" : return exlib_offscreen_swig_py.sf_bool_value_cp(self)
 sf_bool_swigregister = exlib_offscreen_swig_py.sf_bool_swigregister
 sf_bool_swigregister(sf_bool)
 
@@ -1604,6 +1754,7 @@ class sf_float(object):
         try: self.this.append(this)
         except: self.this = this
     def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_float_value(self, *args)
+    def value_cp(self) -> "float" : return exlib_offscreen_swig_py.sf_float_value_cp(self)
 sf_float_swigregister = exlib_offscreen_swig_py.sf_float_swigregister
 sf_float_swigregister(sf_float)
 
@@ -1630,19 +1781,6 @@ class sf_img_byte(object):
     def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_img_byte_value(self, *args)
 sf_img_byte_swigregister = exlib_offscreen_swig_py.sf_img_byte_swigregister
 sf_img_byte_swigregister(sf_img_byte)
-
-class sf_enum_marker_tyle(object):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    __repr__ = _swig_repr
-    __swig_destroy__ = exlib_offscreen_swig_py.delete_sf_enum_marker_tyle
-    __del__ = lambda self : None;
-    def __init__(self, *args): 
-        this = exlib_offscreen_swig_py.new_sf_enum_marker_tyle(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_enum_marker_tyle_value(self, *args)
-sf_enum_marker_tyle_swigregister = exlib_offscreen_swig_py.sf_enum_marker_tyle_swigregister
-sf_enum_marker_tyle_swigregister(sf_enum_marker_tyle)
 
 class sf_enum_font_modeling(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -1760,6 +1898,32 @@ class sf_enum_vjust(object):
     def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_enum_vjust_value(self, *args)
 sf_enum_vjust_swigregister = exlib_offscreen_swig_py.sf_enum_vjust_swigregister
 sf_enum_vjust_swigregister(sf_enum_vjust)
+
+class sf_enum_draw_type(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sf_enum_draw_type
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sf_enum_draw_type(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_enum_draw_type_value(self, *args)
+sf_enum_draw_type_swigregister = exlib_offscreen_swig_py.sf_enum_draw_type_swigregister
+sf_enum_draw_type_swigregister(sf_enum_draw_type)
+
+class sf_enum_shade_type(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sf_enum_shade_type
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sf_enum_shade_type(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_enum_shade_type_value(self, *args)
+sf_enum_shade_type_swigregister = exlib_offscreen_swig_py.sf_enum_shade_type_swigregister
+sf_enum_shade_type_swigregister(sf_enum_shade_type)
 
 class mf_float(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -1907,6 +2071,11 @@ layout_text_at_left_of_image = exlib_offscreen_swig_py.layout_text_at_left_of_im
 auto_lut_none = exlib_offscreen_swig_py.auto_lut_none
 auto_lut_min_max = exlib_offscreen_swig_py.auto_lut_min_max
 auto_lut_mean_rms = exlib_offscreen_swig_py.auto_lut_mean_rms
+draw_points = exlib_offscreen_swig_py.draw_points
+draw_lines = exlib_offscreen_swig_py.draw_lines
+draw_filled = exlib_offscreen_swig_py.draw_filled
+shade_flat = exlib_offscreen_swig_py.shade_flat
+shade_smooth = exlib_offscreen_swig_py.shade_smooth
 
 def font_arialbd_ttf() -> "std::string const &" :
   return exlib_offscreen_swig_py.font_arialbd_ttf()
@@ -1979,6 +2148,10 @@ modeling_I = exlib_offscreen_swig_py.modeling_I
 def modeling_plus() -> "std::string const &" :
   return exlib_offscreen_swig_py.modeling_plus()
 modeling_plus = exlib_offscreen_swig_py.modeling_plus
+
+def modeling_markers() -> "std::string const &" :
+  return exlib_offscreen_swig_py.modeling_markers()
+modeling_markers = exlib_offscreen_swig_py.modeling_markers
 class style(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -1987,6 +2160,7 @@ class style(object):
     back_color = _swig_property(exlib_offscreen_swig_py.style_back_color_get, exlib_offscreen_swig_py.style_back_color_set)
     line_width = _swig_property(exlib_offscreen_swig_py.style_line_width_get, exlib_offscreen_swig_py.style_line_width_set)
     marker_size = _swig_property(exlib_offscreen_swig_py.style_marker_size_get, exlib_offscreen_swig_py.style_marker_size_set)
+    point_size = _swig_property(exlib_offscreen_swig_py.style_point_size_get, exlib_offscreen_swig_py.style_point_size_set)
     font_size = _swig_property(exlib_offscreen_swig_py.style_font_size_get, exlib_offscreen_swig_py.style_font_size_set)
     font_modeling = _swig_property(exlib_offscreen_swig_py.style_font_modeling_get, exlib_offscreen_swig_py.style_font_modeling_set)
     front_face = _swig_property(exlib_offscreen_swig_py.style_front_face_get, exlib_offscreen_swig_py.style_front_face_set)
@@ -2072,6 +2246,13 @@ class render_action(object):
 render_action_swigregister = exlib_offscreen_swig_py.render_action_swigregister
 render_action_swigregister(render_action)
 
+class write_action(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
+    __repr__ = _swig_repr
+write_action_swigregister = exlib_offscreen_swig_py.write_action_swigregister
+write_action_swigregister(write_action)
+
 class polyhedron(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -2122,6 +2303,7 @@ class sg_node(object):
     __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_node
     __del__ = lambda self : None;
     def render(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_node_render(self, *args)
+    def write(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_node_write(self, *args)
 sg_node_swigregister = exlib_offscreen_swig_py.sg_node_swigregister
 sg_node_swigregister(sg_node)
 
@@ -2136,6 +2318,8 @@ class sg_group(sg_node):
         try: self.this.append(this)
         except: self.this = this
     def add(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_group_add(self, *args)
+    def remove(self, *args) -> "bool" : return exlib_offscreen_swig_py.sg_group_remove(self, *args)
+    def remove_index(self, *args) -> "bool" : return exlib_offscreen_swig_py.sg_group_remove_index(self, *args)
 sg_group_swigregister = exlib_offscreen_swig_py.sg_group_swigregister
 sg_group_swigregister(sg_group)
 
@@ -2150,6 +2334,18 @@ class sg_separator(sg_group):
         except: self.this = this
 sg_separator_swigregister = exlib_offscreen_swig_py.sg_separator_swigregister
 sg_separator_swigregister(sg_separator)
+
+class sg_selection(sg_separator):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_selection
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_selection(*args)
+        try: self.this.append(this)
+        except: self.this = this
+sg_selection_swigregister = exlib_offscreen_swig_py.sg_selection_swigregister
+sg_selection_swigregister(sg_selection)
 
 class sg_base_camera(sg_node):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -2187,6 +2383,76 @@ class sg_ortho(sg_base_camera):
 sg_ortho_swigregister = exlib_offscreen_swig_py.sg_ortho_swigregister
 sg_ortho_swigregister(sg_ortho)
 
+
+def sg_cast_ortho(*args) -> "inlib::sg::ortho *" :
+  return exlib_offscreen_swig_py.sg_cast_ortho(*args)
+sg_cast_ortho = exlib_offscreen_swig_py.sg_cast_ortho
+class sg_perspective(sg_base_camera):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def near_height(self) -> "float" : return exlib_offscreen_swig_py.sg_perspective_near_height(self)
+    def zoom(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_perspective_zoom(self, *args)
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_perspective_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_perspective
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_perspective(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    height_angle = _swig_property(exlib_offscreen_swig_py.sg_perspective_height_angle_get, exlib_offscreen_swig_py.sg_perspective_height_angle_set)
+sg_perspective_swigregister = exlib_offscreen_swig_py.sg_perspective_swigregister
+sg_perspective_swigregister(sg_perspective)
+
+
+def sg_cast_perspective(*args) -> "inlib::sg::perspective *" :
+  return exlib_offscreen_swig_py.sg_cast_perspective(*args)
+sg_cast_perspective = exlib_offscreen_swig_py.sg_cast_perspective
+class sg_frustum(sg_base_camera):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def near_height(self) -> "float" : return exlib_offscreen_swig_py.sg_frustum_near_height(self)
+    def zoom(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_frustum_zoom(self, *args)
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_frustum_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_frustum
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_frustum(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    left = _swig_property(exlib_offscreen_swig_py.sg_frustum_left_get, exlib_offscreen_swig_py.sg_frustum_left_set)
+    right = _swig_property(exlib_offscreen_swig_py.sg_frustum_right_get, exlib_offscreen_swig_py.sg_frustum_right_set)
+    bottom = _swig_property(exlib_offscreen_swig_py.sg_frustum_bottom_get, exlib_offscreen_swig_py.sg_frustum_bottom_set)
+    top = _swig_property(exlib_offscreen_swig_py.sg_frustum_top_get, exlib_offscreen_swig_py.sg_frustum_top_set)
+sg_frustum_swigregister = exlib_offscreen_swig_py.sg_frustum_swigregister
+sg_frustum_swigregister(sg_frustum)
+
+
+def sg_cast_frustum(*args) -> "inlib::sg::frustum *" :
+  return exlib_offscreen_swig_py.sg_cast_frustum(*args)
+sg_cast_frustum = exlib_offscreen_swig_py.sg_cast_frustum
+class sg_lrbt(sg_base_camera):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def near_height(self) -> "float" : return exlib_offscreen_swig_py.sg_lrbt_near_height(self)
+    def zoom(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_lrbt_zoom(self, *args)
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_lrbt_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_lrbt
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_lrbt(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    left = _swig_property(exlib_offscreen_swig_py.sg_lrbt_left_get, exlib_offscreen_swig_py.sg_lrbt_left_set)
+    right = _swig_property(exlib_offscreen_swig_py.sg_lrbt_right_get, exlib_offscreen_swig_py.sg_lrbt_right_set)
+    bottom = _swig_property(exlib_offscreen_swig_py.sg_lrbt_bottom_get, exlib_offscreen_swig_py.sg_lrbt_bottom_set)
+    top = _swig_property(exlib_offscreen_swig_py.sg_lrbt_top_get, exlib_offscreen_swig_py.sg_lrbt_top_set)
+sg_lrbt_swigregister = exlib_offscreen_swig_py.sg_lrbt_swigregister
+sg_lrbt_swigregister(sg_lrbt)
+
+
+def sg_cast_lrbt(*args) -> "inlib::sg::lrbt *" :
+  return exlib_offscreen_swig_py.sg_cast_lrbt(*args)
+sg_cast_lrbt = exlib_offscreen_swig_py.sg_cast_lrbt
 class sg_rgba(sg_node):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -2262,6 +2528,20 @@ class sg_head_light(sg_torche):
 sg_head_light_swigregister = exlib_offscreen_swig_py.sg_head_light_swigregister
 sg_head_light_swigregister(sg_head_light)
 
+class sg_blend(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_blend_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_blend
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_blend(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    on = _swig_property(exlib_offscreen_swig_py.sg_blend_on_get, exlib_offscreen_swig_py.sg_blend_on_set)
+sg_blend_swigregister = exlib_offscreen_swig_py.sg_blend_swigregister
+sg_blend_swigregister(sg_blend)
+
 class sg_matrix(sg_node):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -2304,6 +2584,183 @@ class sg_polyhedron(sg_node):
 sg_polyhedron_swigregister = exlib_offscreen_swig_py.sg_polyhedron_swigregister
 sg_polyhedron_swigregister(sg_polyhedron)
 
+class sg_cone_hat(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_cone_hat_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_cone_hat
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_cone_hat(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    height = _swig_property(exlib_offscreen_swig_py.sg_cone_hat_height_get, exlib_offscreen_swig_py.sg_cone_hat_height_set)
+    rmin = _swig_property(exlib_offscreen_swig_py.sg_cone_hat_rmin_get, exlib_offscreen_swig_py.sg_cone_hat_rmin_set)
+    rmax = _swig_property(exlib_offscreen_swig_py.sg_cone_hat_rmax_get, exlib_offscreen_swig_py.sg_cone_hat_rmax_set)
+    angle = _swig_property(exlib_offscreen_swig_py.sg_cone_hat_angle_get, exlib_offscreen_swig_py.sg_cone_hat_angle_set)
+    steps = _swig_property(exlib_offscreen_swig_py.sg_cone_hat_steps_get, exlib_offscreen_swig_py.sg_cone_hat_steps_set)
+sg_cone_hat_swigregister = exlib_offscreen_swig_py.sg_cone_hat_swigregister
+sg_cone_hat_swigregister(sg_cone_hat)
+
+class sg_cube(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_cube_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_cube
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_cube(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    width = _swig_property(exlib_offscreen_swig_py.sg_cube_width_get, exlib_offscreen_swig_py.sg_cube_width_set)
+    height = _swig_property(exlib_offscreen_swig_py.sg_cube_height_get, exlib_offscreen_swig_py.sg_cube_height_set)
+    depth = _swig_property(exlib_offscreen_swig_py.sg_cube_depth_get, exlib_offscreen_swig_py.sg_cube_depth_set)
+sg_cube_swigregister = exlib_offscreen_swig_py.sg_cube_swigregister
+sg_cube_swigregister(sg_cube)
+
+class sg_sphere(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_sphere_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_sphere
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_sphere(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    radius = _swig_property(exlib_offscreen_swig_py.sg_sphere_radius_get, exlib_offscreen_swig_py.sg_sphere_radius_set)
+    slices = _swig_property(exlib_offscreen_swig_py.sg_sphere_slices_get, exlib_offscreen_swig_py.sg_sphere_slices_set)
+    stacks = _swig_property(exlib_offscreen_swig_py.sg_sphere_stacks_get, exlib_offscreen_swig_py.sg_sphere_stacks_set)
+sg_sphere_swigregister = exlib_offscreen_swig_py.sg_sphere_swigregister
+sg_sphere_swigregister(sg_sphere)
+
+class sg_draw_style(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_draw_style_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_draw_style
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_draw_style(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    style = _swig_property(exlib_offscreen_swig_py.sg_draw_style_style_get, exlib_offscreen_swig_py.sg_draw_style_style_set)
+    line_width = _swig_property(exlib_offscreen_swig_py.sg_draw_style_line_width_get, exlib_offscreen_swig_py.sg_draw_style_line_width_set)
+    line_pattern = _swig_property(exlib_offscreen_swig_py.sg_draw_style_line_pattern_get, exlib_offscreen_swig_py.sg_draw_style_line_pattern_set)
+    point_size = _swig_property(exlib_offscreen_swig_py.sg_draw_style_point_size_get, exlib_offscreen_swig_py.sg_draw_style_point_size_set)
+    cull_face = _swig_property(exlib_offscreen_swig_py.sg_draw_style_cull_face_get, exlib_offscreen_swig_py.sg_draw_style_cull_face_set)
+    winding_ccw = _swig_property(exlib_offscreen_swig_py.sg_draw_style_winding_ccw_get, exlib_offscreen_swig_py.sg_draw_style_winding_ccw_set)
+sg_draw_style_swigregister = exlib_offscreen_swig_py.sg_draw_style_swigregister
+sg_draw_style_swigregister(sg_draw_style)
+
+class sg_shade_model(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_shade_model_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_shade_model
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_shade_model(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    model = _swig_property(exlib_offscreen_swig_py.sg_shade_model_model_get, exlib_offscreen_swig_py.sg_shade_model_model_set)
+sg_shade_model_swigregister = exlib_offscreen_swig_py.sg_shade_model_swigregister
+sg_shade_model_swigregister(sg_shade_model)
+
+
+def points() -> "inlib::gl::mode_t" :
+  return exlib_offscreen_swig_py.points()
+points = exlib_offscreen_swig_py.points
+
+def lines() -> "inlib::gl::mode_t" :
+  return exlib_offscreen_swig_py.lines()
+lines = exlib_offscreen_swig_py.lines
+
+def line_loop() -> "inlib::gl::mode_t" :
+  return exlib_offscreen_swig_py.line_loop()
+line_loop = exlib_offscreen_swig_py.line_loop
+
+def line_strip() -> "inlib::gl::mode_t" :
+  return exlib_offscreen_swig_py.line_strip()
+line_strip = exlib_offscreen_swig_py.line_strip
+
+def triangles() -> "inlib::gl::mode_t" :
+  return exlib_offscreen_swig_py.triangles()
+triangles = exlib_offscreen_swig_py.triangles
+
+def triangle_strip() -> "inlib::gl::mode_t" :
+  return exlib_offscreen_swig_py.triangle_strip()
+triangle_strip = exlib_offscreen_swig_py.triangle_strip
+
+def triangle_fan() -> "inlib::gl::mode_t" :
+  return exlib_offscreen_swig_py.triangle_fan()
+triangle_fan = exlib_offscreen_swig_py.triangle_fan
+
+def is_mode(*args) -> "bool" :
+  return exlib_offscreen_swig_py.is_mode(*args)
+is_mode = exlib_offscreen_swig_py.is_mode
+
+def is_line(*args) -> "bool" :
+  return exlib_offscreen_swig_py.is_line(*args)
+is_line = exlib_offscreen_swig_py.is_line
+class sf_mode_t(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sf_mode_t
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sf_mode_t(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def value(self, *args) -> "void" : return exlib_offscreen_swig_py.sf_mode_t_value(self, *args)
+    def value_cp(self) -> "unsigned char" : return exlib_offscreen_swig_py.sf_mode_t_value_cp(self)
+sf_mode_t_swigregister = exlib_offscreen_swig_py.sf_mode_t_swigregister
+sf_mode_t_swigregister(sf_mode_t)
+
+class sg_vertices(sg_node):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_vertices_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_vertices
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_vertices(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    mode = _swig_property(exlib_offscreen_swig_py.sg_vertices_mode_get, exlib_offscreen_swig_py.sg_vertices_mode_set)
+    xyzs = _swig_property(exlib_offscreen_swig_py.sg_vertices_xyzs_get, exlib_offscreen_swig_py.sg_vertices_xyzs_set)
+    def add(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_vertices_add(self, *args)
+    def number(self) -> "size_t" : return exlib_offscreen_swig_py.sg_vertices_number(self)
+    def clear(self) -> "void" : return exlib_offscreen_swig_py.sg_vertices_clear(self)
+    def add_dashed_line(self, *args) -> "bool" : return exlib_offscreen_swig_py.sg_vertices_add_dashed_line(self, *args)
+    def center(self) -> "bool" : return exlib_offscreen_swig_py.sg_vertices_center(self)
+sg_vertices_swigregister = exlib_offscreen_swig_py.sg_vertices_swigregister
+sg_vertices_swigregister(sg_vertices)
+
+class sg_atb_vertices(sg_vertices):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self) -> "inlib::sg::node *" : return exlib_offscreen_swig_py.sg_atb_vertices_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_atb_vertices
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_atb_vertices(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    rgbas = _swig_property(exlib_offscreen_swig_py.sg_atb_vertices_rgbas_get, exlib_offscreen_swig_py.sg_atb_vertices_rgbas_set)
+    nms = _swig_property(exlib_offscreen_swig_py.sg_atb_vertices_nms_get, exlib_offscreen_swig_py.sg_atb_vertices_nms_set)
+    do_back = _swig_property(exlib_offscreen_swig_py.sg_atb_vertices_do_back_get, exlib_offscreen_swig_py.sg_atb_vertices_do_back_set)
+    epsilon = _swig_property(exlib_offscreen_swig_py.sg_atb_vertices_epsilon_get, exlib_offscreen_swig_py.sg_atb_vertices_epsilon_set)
+    draw_edges = _swig_property(exlib_offscreen_swig_py.sg_atb_vertices_draw_edges_get, exlib_offscreen_swig_py.sg_atb_vertices_draw_edges_set)
+    def add_pos_color(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_atb_vertices_add_pos_color(self, *args)
+    def add_rgba(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_atb_vertices_add_rgba(self, *args)
+    def add_color(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_atb_vertices_add_color(self, *args)
+    def add_normal(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_atb_vertices_add_normal(self, *args)
+    def add_dashed_line_rgba(self, *args) -> "bool" : return exlib_offscreen_swig_py.sg_atb_vertices_add_dashed_line_rgba(self, *args)
+    def clear(self) -> "void" : return exlib_offscreen_swig_py.sg_atb_vertices_clear(self)
+sg_atb_vertices_swigregister = exlib_offscreen_swig_py.sg_atb_vertices_swigregister
+sg_atb_vertices_swigregister(sg_atb_vertices)
+
 class base_freetype(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
@@ -2323,6 +2780,8 @@ plottable_swigregister(plottable)
 class h1d2plot(plottable):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_h1d2plot
+    __del__ = lambda self : None;
     def __init__(self, *args): 
         this = exlib_offscreen_swig_py.new_h1d2plot(*args)
         try: self.this.append(this)
@@ -2333,6 +2792,8 @@ h1d2plot_swigregister(h1d2plot)
 class h1d2plot_cp(plottable):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_h1d2plot_cp
+    __del__ = lambda self : None;
     def __init__(self, *args): 
         this = exlib_offscreen_swig_py.new_h1d2plot_cp(*args)
         try: self.this.append(this)
@@ -2414,6 +2875,7 @@ class sg_plotter(sg_node):
     func2D_borders_visible = _swig_property(exlib_offscreen_swig_py.sg_plotter_func2D_borders_visible_get, exlib_offscreen_swig_py.sg_plotter_func2D_borders_visible_set)
     theta = _swig_property(exlib_offscreen_swig_py.sg_plotter_theta_get, exlib_offscreen_swig_py.sg_plotter_theta_set)
     phi = _swig_property(exlib_offscreen_swig_py.sg_plotter_phi_get, exlib_offscreen_swig_py.sg_plotter_phi_set)
+    tau = _swig_property(exlib_offscreen_swig_py.sg_plotter_tau_get, exlib_offscreen_swig_py.sg_plotter_tau_set)
     legends_automated = _swig_property(exlib_offscreen_swig_py.sg_plotter_legends_automated_get, exlib_offscreen_swig_py.sg_plotter_legends_automated_set)
     legends_origin = _swig_property(exlib_offscreen_swig_py.sg_plotter_legends_origin_get, exlib_offscreen_swig_py.sg_plotter_legends_origin_set)
     unit_percent = exlib_offscreen_swig_py.sg_plotter_unit_percent
@@ -2435,6 +2897,8 @@ class sg_plotter(sg_node):
     superpose_bins = _swig_property(exlib_offscreen_swig_py.sg_plotter_superpose_bins_get, exlib_offscreen_swig_py.sg_plotter_superpose_bins_set)
     number_of_levels = _swig_property(exlib_offscreen_swig_py.sg_plotter_number_of_levels_get, exlib_offscreen_swig_py.sg_plotter_number_of_levels_set)
     levels = _swig_property(exlib_offscreen_swig_py.sg_plotter_levels_get, exlib_offscreen_swig_py.sg_plotter_levels_set)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_plotter
+    __del__ = lambda self : None;
     def __init__(self, *args): 
         this = exlib_offscreen_swig_py.new_sg_plotter(*args)
         try: self.this.append(this)
@@ -2449,6 +2913,7 @@ class sg_plotter(sg_node):
     def legend_style(self, *args) -> "inlib::sg::style &" : return exlib_offscreen_swig_py.sg_plotter_legend_style(self, *args)
     def infos_style(self) -> "inlib::sg::text_style &" : return exlib_offscreen_swig_py.sg_plotter_infos_style(self)
     def clear(self) -> "void" : return exlib_offscreen_swig_py.sg_plotter_clear(self)
+    def etc_sep(self, *args) -> "inlib::sg::separator &" : return exlib_offscreen_swig_py.sg_plotter_etc_sep(self, *args)
     def plot(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_plotter_plot(self, *args)
     def plot_cp(self, *args) -> "void" : return exlib_offscreen_swig_py.sg_plotter_plot_cp(self, *args)
 sg_plotter_swigregister = exlib_offscreen_swig_py.sg_plotter_swigregister
@@ -2474,6 +2939,8 @@ class sg_plots(sg_node):
     bottom_margin = _swig_property(exlib_offscreen_swig_py.sg_plots_bottom_margin_get, exlib_offscreen_swig_py.sg_plots_bottom_margin_set)
     horizontal_spacing = _swig_property(exlib_offscreen_swig_py.sg_plots_horizontal_spacing_get, exlib_offscreen_swig_py.sg_plots_horizontal_spacing_set)
     vertical_spacing = _swig_property(exlib_offscreen_swig_py.sg_plots_vertical_spacing_get, exlib_offscreen_swig_py.sg_plots_vertical_spacing_set)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_plots
+    __del__ = lambda self : None;
     def __init__(self, *args): 
         this = exlib_offscreen_swig_py.new_sg_plots(*args)
         try: self.this.append(this)
@@ -2494,8 +2961,13 @@ def sg_set_plotter_camera(*args) -> "void" :
 sg_set_plotter_camera = exlib_offscreen_swig_py.sg_set_plotter_camera
 class viewer(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_viewer
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_viewer(*args)
+        try: self.this.append(this)
+        except: self.this = this
     def out(self) -> "std::ostream &" : return exlib_offscreen_swig_py.viewer_out(self)
     def width(self) -> "unsigned int" : return exlib_offscreen_swig_py.viewer_width(self)
     def height(self) -> "unsigned int" : return exlib_offscreen_swig_py.viewer_height(self)
@@ -2578,6 +3050,155 @@ class sg_zb_action(render_action):
 sg_zb_action_swigregister = exlib_offscreen_swig_py.sg_zb_action_swigregister
 sg_zb_action_swigregister(sg_zb_action)
 
+class sg_write_bsg(write_action):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def protocol(self) -> "unsigned int" : return exlib_offscreen_swig_py.sg_write_bsg_protocol(self)
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_write_bsg(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_write_bsg
+    __del__ = lambda self : None;
+    def open_buffer(self) -> "bool" : return exlib_offscreen_swig_py.sg_write_bsg_open_buffer(self)
+    def close_buffer(self) -> "bool" : return exlib_offscreen_swig_py.sg_write_bsg_close_buffer(self)
+    def write_file(self, *args) -> "bool" : return exlib_offscreen_swig_py.sg_write_bsg_write_file(self, *args)
+sg_write_bsg_swigregister = exlib_offscreen_swig_py.sg_write_bsg_swigregister
+sg_write_bsg_swigregister(sg_write_bsg)
+
+
+def net_serror() -> "std::string" :
+  return exlib_offscreen_swig_py.net_serror()
+net_serror = exlib_offscreen_swig_py.net_serror
+class base_socket(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined - class is abstract")
+    __repr__ = _swig_repr
+    def disconnect(self) -> "void" : return exlib_offscreen_swig_py.base_socket_disconnect(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_base_socket
+    __del__ = lambda self : None;
+    def verbose(self) -> "bool" : return exlib_offscreen_swig_py.base_socket_verbose(self)
+    def set_verbose(self, *args) -> "void" : return exlib_offscreen_swig_py.base_socket_set_verbose(self, *args)
+    def is_connected(self) -> "bool" : return exlib_offscreen_swig_py.base_socket_is_connected(self)
+    def out(self) -> "std::ostream &" : return exlib_offscreen_swig_py.base_socket_out(self)
+    def close(self) -> "void" : return exlib_offscreen_swig_py.base_socket_close(self)
+    def send_uchar(self, *args) -> "bool" : return exlib_offscreen_swig_py.base_socket_send_uchar(self, *args)
+    def send_bool(self, *args) -> "bool" : return exlib_offscreen_swig_py.base_socket_send_bool(self, *args)
+    def fetch_bool(self, *args) -> "bool" : return exlib_offscreen_swig_py.base_socket_fetch_bool(self, *args)
+    def send_string(self, *args) -> "bool" : return exlib_offscreen_swig_py.base_socket_send_string(self, *args)
+    def send_text(self, *args) -> "bool" : return exlib_offscreen_swig_py.base_socket_send_text(self, *args)
+    def send_file(self, *args) -> "bool" : return exlib_offscreen_swig_py.base_socket_send_file(self, *args)
+    def fetch_file(self, *args) -> "bool" : return exlib_offscreen_swig_py.base_socket_fetch_file(self, *args)
+    def is_active(self, a_micro_secs : 'unsigned int'=10) -> "bool" : return exlib_offscreen_swig_py.base_socket_is_active(self, a_micro_secs)
+base_socket_swigregister = exlib_offscreen_swig_py.base_socket_swigregister
+base_socket_swigregister(base_socket)
+
+
+def net_herror() -> "std::string" :
+  return exlib_offscreen_swig_py.net_herror()
+net_herror = exlib_offscreen_swig_py.net_herror
+class net_inet_socket(base_socket):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def disconnect(self) -> "void" : return exlib_offscreen_swig_py.net_inet_socket_disconnect(self)
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_net_inet_socket(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_net_inet_socket
+    __del__ = lambda self : None;
+    def bind(self, *args) -> "bool" : return exlib_offscreen_swig_py.net_inet_socket_bind(self, *args)
+    def set_dump_ECONNABORTED(self, *args) -> "void" : return exlib_offscreen_swig_py.net_inet_socket_set_dump_ECONNABORTED(self, *args)
+    def bind_accept(self, *args) -> "bool" : return exlib_offscreen_swig_py.net_inet_socket_bind_accept(self, *args)
+    def connect(self, *args) -> "bool" : return exlib_offscreen_swig_py.net_inet_socket_connect(self, *args)
+net_inet_socket_swigregister = exlib_offscreen_swig_py.net_inet_socket_swigregister
+net_inet_socket_swigregister(net_inet_socket)
+
+
+def net_host_name(*args) -> "bool" :
+  return exlib_offscreen_swig_py.net_host_name(*args)
+net_host_name = exlib_offscreen_swig_py.net_host_name
+
+def net_inet_sip(*args) -> "bool" :
+  return exlib_offscreen_swig_py.net_inet_sip(*args)
+net_inet_sip = exlib_offscreen_swig_py.net_inet_sip
+class net_sg_client(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_net_sg_client(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_net_sg_client
+    __del__ = lambda self : None;
+    def is_connected(self) -> "bool" : return exlib_offscreen_swig_py.net_sg_client_is_connected(self)
+    def socket(self) -> "inlib::net::inet_socket &" : return exlib_offscreen_swig_py.net_sg_client_socket(self)
+    def out(self) -> "std::ostream &" : return exlib_offscreen_swig_py.net_sg_client_out(self)
+    def initialize(self, *args) -> "bool" : return exlib_offscreen_swig_py.net_sg_client_initialize(self, *args)
+    def steer(self) -> "bool" : return exlib_offscreen_swig_py.net_sg_client_steer(self)
+    def poll(self) -> "bool" : return exlib_offscreen_swig_py.net_sg_client_poll(self)
+    def send_string(self, *args) -> "bool" : return exlib_offscreen_swig_py.net_sg_client_send_string(self, *args)
+    def get_sg_serv_params(self, *args) -> "bool" : return exlib_offscreen_swig_py.net_sg_client_get_sg_serv_params(self, *args)
+    def send_sg(self, *args) -> "bool" : return exlib_offscreen_swig_py.net_sg_client_send_sg(self, *args)
+net_sg_client_swigregister = exlib_offscreen_swig_py.net_sg_client_swigregister
+net_sg_client_swigregister(net_sg_client)
+
+
+def sg_s_send_placement() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_send_placement()
+sg_s_send_placement = exlib_offscreen_swig_py.sg_s_send_placement
+
+def sg_s_placement_static() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_placement_static()
+sg_s_placement_static = exlib_offscreen_swig_py.sg_s_placement_static
+
+def sg_s_placement_dynamic() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_placement_dynamic()
+sg_s_placement_dynamic = exlib_offscreen_swig_py.sg_s_placement_dynamic
+
+def sg_s_placement_screen() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_placement_screen()
+sg_s_placement_screen = exlib_offscreen_swig_py.sg_s_placement_screen
+
+def sg_s_send_radius() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_send_radius()
+sg_s_send_radius = exlib_offscreen_swig_py.sg_s_send_radius
+
+def sg_s_send_scale() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_send_scale()
+sg_s_send_scale = exlib_offscreen_swig_py.sg_s_send_scale
+
+def sg_s_send_clear() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_send_clear()
+sg_s_send_clear = exlib_offscreen_swig_py.sg_s_send_clear
+
+def sg_s_protocol_start() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_start()
+sg_s_protocol_start = exlib_offscreen_swig_py.sg_s_protocol_start
+
+def sg_s_protocol_disconnect() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_disconnect()
+sg_s_protocol_disconnect = exlib_offscreen_swig_py.sg_s_protocol_disconnect
+
+def sg_s_protocol_zdoc() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_zdoc()
+sg_s_protocol_zdoc = exlib_offscreen_swig_py.sg_s_protocol_zdoc
+
+def sg_s_protocol_arg_sep() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_arg_sep()
+sg_s_protocol_arg_sep = exlib_offscreen_swig_py.sg_s_protocol_arg_sep
+
+def sg_s_protocol_clear_static_sg() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_clear_static_sg()
+sg_s_protocol_clear_static_sg = exlib_offscreen_swig_py.sg_s_protocol_clear_static_sg
+
+def sg_s_protocol_clear_dynamic_sg() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_clear_dynamic_sg()
+sg_s_protocol_clear_dynamic_sg = exlib_offscreen_swig_py.sg_s_protocol_clear_dynamic_sg
+
+def sg_s_protocol_clear_screen_sg() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_clear_screen_sg()
+sg_s_protocol_clear_screen_sg = exlib_offscreen_swig_py.sg_s_protocol_clear_screen_sg
 class gui_viewer(viewer):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
@@ -2596,7 +3217,11 @@ class gui_viewer(viewer):
     def toggle_light(self) -> "void" : return exlib_offscreen_swig_py.gui_viewer_toggle_light(self)
     def set_plane_viewer(self, *args) -> "void" : return exlib_offscreen_swig_py.gui_viewer_set_plane_viewer(self, *args)
     def hide_meta_zone(self) -> "void" : return exlib_offscreen_swig_py.gui_viewer_hide_meta_zone(self)
+    def scene(self, *args) -> "inlib::sg::selection &" : return exlib_offscreen_swig_py.gui_viewer_scene(self, *args)
     def styles(self, *args) -> "inlib::xml::styles &" : return exlib_offscreen_swig_py.gui_viewer_styles(self, *args)
+    def set_scene_camera(self, *args) -> "void" : return exlib_offscreen_swig_py.gui_viewer_set_scene_camera(self, *args)
+    def scene_camera(self) -> "inlib::sg::base_camera *" : return exlib_offscreen_swig_py.gui_viewer_scene_camera(self)
+    def set_scene_light(self, *args) -> "void" : return exlib_offscreen_swig_py.gui_viewer_set_scene_light(self, *args)
     s_default = staticmethod(exlib_offscreen_swig_py.gui_viewer_s_default)
     def first_data_dir(self, *args) -> "bool" : return exlib_offscreen_swig_py.gui_viewer_first_data_dir(self, *args)
     def find_file(self, *args) -> "bool" : return exlib_offscreen_swig_py.gui_viewer_find_file(self, *args)
@@ -2616,9 +3241,9 @@ def get_sg_plots(*args) -> "inlib::sg::plots *" :
   return exlib_offscreen_swig_py.get_sg_plots(*args)
 get_sg_plots = exlib_offscreen_swig_py.get_sg_plots
 
-def style_from_res(*args) -> "void" :
-  return exlib_offscreen_swig_py.style_from_res(*args)
-style_from_res = exlib_offscreen_swig_py.style_from_res
+def sg_style_from_res(*args) -> "void" :
+  return exlib_offscreen_swig_py.sg_style_from_res(*args)
+sg_style_from_res = exlib_offscreen_swig_py.sg_style_from_res
 class waxml_file(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -2771,8 +3396,13 @@ def rroot_read(*args) -> "void" :
 rroot_read = exlib_offscreen_swig_py.rroot_read
 class rroot_branch(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_rroot_branch(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rroot_branch
+    __del__ = lambda self : None;
     def find_entry(self, *args) -> "bool" : return exlib_offscreen_swig_py.rroot_branch_find_entry(self, *args)
 rroot_branch_swigregister = exlib_offscreen_swig_py.rroot_branch_swigregister
 rroot_branch_swigregister(rroot_branch)
@@ -2781,25 +3411,43 @@ class rroot_leaf_int(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rroot_leaf_int
+    __del__ = lambda self : None;
     def value(self, *args) -> "int" : return exlib_offscreen_swig_py.rroot_leaf_int_value(self, *args)
 rroot_leaf_int_swigregister = exlib_offscreen_swig_py.rroot_leaf_int_swigregister
 rroot_leaf_int_swigregister(rroot_leaf_int)
+
+def leaf_int(*args):
+    val = exlib_offscreen_swig_py.new_leaf_int(*args)
+    return val
 
 class rroot_leaf_float(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rroot_leaf_float
+    __del__ = lambda self : None;
     def value(self, *args) -> "float" : return exlib_offscreen_swig_py.rroot_leaf_float_value(self, *args)
 rroot_leaf_float_swigregister = exlib_offscreen_swig_py.rroot_leaf_float_swigregister
 rroot_leaf_float_swigregister(rroot_leaf_float)
+
+def leaf_float(*args):
+    val = exlib_offscreen_swig_py.new_leaf_float(*args)
+    return val
 
 class rroot_leaf_double(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_rroot_leaf_double
+    __del__ = lambda self : None;
     def value(self, *args) -> "double" : return exlib_offscreen_swig_py.rroot_leaf_double_value(self, *args)
 rroot_leaf_double_swigregister = exlib_offscreen_swig_py.rroot_leaf_double_swigregister
 rroot_leaf_double_swigregister(rroot_leaf_double)
+
+def leaf_double(*args):
+    val = exlib_offscreen_swig_py.new_leaf_double(*args)
+    return val
 
 class rroot_base_leaf(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
@@ -2854,6 +3502,10 @@ spark_get_xyzs = exlib_offscreen_swig_py.spark_get_xyzs
 def fits_image_read_slice_to_img(*args) -> "bool" :
   return exlib_offscreen_swig_py.fits_image_read_slice_to_img(*args)
 fits_image_read_slice_to_img = exlib_offscreen_swig_py.fits_image_read_slice_to_img
+
+def xml_load_style_file(*args) -> "bool" :
+  return exlib_offscreen_swig_py.xml_load_style_file(*args)
+xml_load_style_file = exlib_offscreen_swig_py.xml_load_style_file
 class sg_text_freetype(base_freetype):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -2892,5 +3544,9 @@ class sg_gl2ps_action(render_action):
 sg_gl2ps_action_swigregister = exlib_offscreen_swig_py.sg_gl2ps_action_swigregister
 sg_gl2ps_action_swigregister(sg_gl2ps_action)
 
+
+def sg_write_paper(*args) -> "bool" :
+  return exlib_offscreen_swig_py.sg_write_paper(*args)
+sg_write_paper = exlib_offscreen_swig_py.sg_write_paper
 
 

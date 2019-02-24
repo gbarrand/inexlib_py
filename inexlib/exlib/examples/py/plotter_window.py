@@ -3,6 +3,10 @@
 
 import inlib
 
+number_of_points = 10000
+
+verbose = False
+
 #//////////////////////////////////////////////////////////
 #/// create and fill histogram : //////////////////////////
 #//////////////////////////////////////////////////////////
@@ -12,7 +16,7 @@ rg = inlib.rgaussd(0,1)
 for I in range(0,10000): h.fill(rg.shoot(),1)
 del rg
 
-#print(h.entries());print(h.mean());print(h.rms())
+#print h.entries(),h.mean(),h.rms()
 
 #//////////////////////////////////////////////////////////
 #/// create and fill a 2D cloud : /////////////////////////
@@ -25,43 +29,68 @@ for I in range(0,10000): c2.fill(rg.shoot(),rbw.shoot(),1)
 del rg
 del rbw
 
-print(c2.entries());print(c2.mean_y());print(c2.rms_y())
+#print c2.entries(),c2.mean_y(),c2.rms_y()
 
 #//////////////////////////////////////////////////////////
-#/// plotting : ///////////////////////////////////////////
+#/// create and fill a 3D cloud : /////////////////////////
 #//////////////////////////////////////////////////////////
+c3 = inlib.histo_c3d('Rand gauss/BW/gauss')
+
+rg = inlib.rgaussd(0,1)
+rbw = inlib.rbwd(0,1)
+for I in range(0,number_of_points): c3.fill(rg.shoot(),rbw.shoot(),rg.shoot(),1)
+del rg
+del rbw
+
+if verbose == True :
+  print("inlib::histo::c3d entries : "+str(c3.entries()))
+  print("  mean x = "+str(c3.mean_x())+", rms x = "+str(c3.rms_x()))
+  print("  mean y = "+str(c3.mean_y())+", rms y = "+str(c3.rms_y()))
+  print("  mean z = "+str(c3.mean_z())+", rms z = "+str(c3.rms_z()))
+  
+#///////////////////////////////////////////////////////////////////////////////////////
+#/// plotting : /////////////////////////////////////////////////////////////////////////
+#///////////////////////////////////////////////////////////////////////////////////////
+
+if verbose == True : print("plot ...")
+
 import exlib_window as exlib
 
-gl2ps_mgr = exlib.sg_gl2ps_manager()
 smgr = exlib.session(inlib.get_cout()) # screen manager
 if smgr.is_valid() == True :
-  plotter = exlib.plotter(smgr,2,1,0,0,700,500)
+  plotter = exlib.plotter(smgr,2,2,0,0,700,500)
   if plotter.has_window() == True :
+
     sgp = plotter.plots().current_plotter()
     sgp.bins_style(0).color.value(inlib.colorf_blue())
     sgp.infos_style().font.value(inlib.font_arialbd_ttf())
     sgp.infos_x_margin.value(0.01) #percent of plotter width.
     sgp.infos_y_margin.value(0.01) #percent of plotter height.
-
-    plotter.plot(h)
-
+    sgp.plot(h)
+    
     plotter.plots().next()
     sgp = plotter.plots().current_plotter()
-    sgp.points_style(0).color.value(inlib.colorf_red())
+    sgp.points_style(0).color.value(inlib.colorf_blue())
+    sgp.points_style(0).modeling.value(inlib.modeling_points())
     sgp.infos_style().font.value(inlib.font_arialbd_ttf())
     sgp.infos_x_margin.value(0.01) #percent of plotter width.
     sgp.infos_y_margin.value(0.01) #percent of plotter height.
-
-    plotter.plot(c2)
+    sgp.plot(c2)
+    
+    plotter.plots().next()
+    sgp = plotter.plots().current_plotter()
+    sgp.shape.value(inlib.sg_plotter.xyz)
+    sgp.shape_automated.value(False)
+    sgp.points_style(0).color.value(inlib.colorf_blue())
+    sgp.points_style(0).modeling.value(inlib.modeling_points())
+    sgp.points_style(0).point_size.value(1)
+    sgp.infos_style().font.value(inlib.font_arialbd_ttf())
+    sgp.infos_x_margin.value(0.01) #percent of plotter width.
+    sgp.infos_y_margin.value(0.01) #percent of plotter height.
+    sgp.plot(c3)
 
     plotter.plots().view_border.value(False)
 
-    waction = exlib.sg_gl2ps_action(gl2ps_mgr,inlib.get_cout(),plotter.width(),plotter.height())
-    waction.open('out.ps')
-    plotter.sg().render(waction)
-    waction.close()
-    del waction
-    
     plotter.show()
 
     plotter.steer()
@@ -69,7 +98,10 @@ if smgr.is_valid() == True :
   del plotter
 
 del smgr
-del gl2ps_mgr
+
+#//////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////
 del h
 del c2
-                
+del c3                

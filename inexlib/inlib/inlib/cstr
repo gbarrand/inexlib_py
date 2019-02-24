@@ -43,6 +43,26 @@ inline char* str_dup(const char* a_cstr
   return ::strcpy((char*)::malloc(::strlen(a_cstr)+1),a_cstr);
 }
 
+inline char* str_from_buffer(const char* a_buffer,size_t a_len
+#ifdef INLIB_MEM
+                     ,bool a_inc = true
+#endif		     
+		     ) {
+#ifdef INLIB_MEM
+  if(a_inc) {
+#ifdef INLIB_CSTR_DEBUG_MEM
+    ::printf("debug : str_from_buffer.\n");
+#endif    
+    mem::increment(s_cstr().c_str());
+  }    
+#endif
+  char* s = (char*)::malloc(a_len+1);
+  if(s==NULL) return NULL;
+  s = ::strncpy(s,a_buffer,a_len);
+  s[a_len] = 0;
+  return s;
+}
+
 inline void str_del(char*& a_cstr) {
   if(a_cstr==NULL) return;
 #ifdef INLIB_MEM
@@ -313,6 +333,18 @@ inline size_t str_lcat(char *dst, const char *src, size_t siz) {
   *d = '\0';
 
   return(dlen + (s - src)); // count does not include NUL.
+}
+
+template <class VECTOR>
+inline bool str_2ds(char* a_s,const char* a_sep,VECTOR& a_v) {
+  a_v.clear();
+  const char* tok;
+  double d;
+  for (tok = ::strtok(a_s,a_sep);tok && *tok;tok = ::strtok(NULL,a_sep)) {
+    if(!str_2d(tok,d)) {a_v.clear();return false;}
+    a_v.push_back(d);    
+  }
+  return true;
 }
 
 }

@@ -6,64 +6,88 @@
 
 #include "../platform"
 
+#include "gui_items"
 #include "guiv"
+/*
 #include "noderef"
 #include "acbk"
+*/
 #include "holder" //for m_tmp_group
+/*
 #include "draw_style"
 #include "_switch"
 #include "ghost"
 #include "style_parser"
 #include "style"
 #include "text_style"
+*/
 #include "selection"
 #include "torche"
 #include "progress"
+/*
 #include "slider"
 #include "matrix"
+*/
 #include "depth_test"
 #include "ortho"
 #include "perspective"
 #include "frustum"
 #include "lrbt"
+/*
 #include "vertices"
+*/
 #include "simple_button"
 #include "button_grid"
 #include "cube_manip"
 #include "search"
 #include "camera_anim"
 #include "count_action"
+/*
 
 #include "list"
 #include "infos_box"
+*/
 #include "scroll_text"
 #include "scroll_infos"
+/*
 #include "numeric"
 #include "edvalop"
+*/
 #include "entry"
 #include "entries"
+/*
 #include "colors"
 #include "image_text_button"
+*/
 #include "params2entries"
+/*
 #include "enum2s"
+*/
 #include "opener"
+
+/*
 #include "../image_reader"
 
+*/
 #include "../cbk/timer"
 //#include "../cbk/none"
-
 #include "../event_timer"
-#include "../vpair"
+//#include "../vpair"
 #include "../mapmanip"
+/*
 
-//#include "../wall/protocol" //fo set_wall_action_prots()
-
+*/
 #include "fundata_cbk"
 #include "gv_cbk"
 #include "base_dumper"
 #include "zb_manager"
 #include "mem_action"
 #include "../atime2s"
+
+#include "../sys/file" //tmpname
+/*
+#include "blend"
+*/
 
 //#ifdef _MSC_VER
 //#pragma warning(disable:4355)
@@ -246,9 +270,15 @@ public:
   virtual void enable_anim() {
     if(has_valid_work(anim_work::s_class())) return;
     add_work(new anim_work(*this));
+    m_params.m_anim_on = true;
+    m_camenu_disable_anim_image_button.color = colorf_pink();
   }
 
-  virtual void disable_anim() {invalidate_works(anim_work::s_class());}
+  virtual void disable_anim() {
+    invalidate_works(anim_work::s_class());
+    m_params.m_anim_on = false;
+    m_camenu_disable_anim_image_button.color = m_params.m_gui_back_color;
+  }
 
   virtual void ask_to_sync_clients() {}
 
@@ -371,7 +401,9 @@ public:
   ,m_camenu_focal_button(a_ttf)
   ,m_camenu_viewing_button(a_ttf)
   ,m_camenu_gsto_button(a_ttf)
+  ,m_camenu_light_button(a_ttf)
   ,m_camenu_plane_exam_button(a_ttf)
+  ,m_camenu_disable_anim_text_button(a_ttf)
   ,m_console(a_ttf)
 
   ,m_popup_cbks()
@@ -390,14 +422,14 @@ public:
 
   ,m_motion_slider(0)
 
-  ,m_treat_mouse_motion(false)
+  //,m_treat_mouse_motion(false)
 
   ,m_cursor_camera(0)
 
   ,m_memory_warning(false)
   //,m_jpeg_data(a_out)
 
-  ,m_action_prots()
+  //,m_action_prots()
 
   ,m_dumpers()
   ,m_opener(get_me(),0)
@@ -439,7 +471,7 @@ public:
 
     m_cursor_matrix.set_identity();
 
-    set_arconf(m_console,"");
+    set_arconf(m_params,m_console,"");
     m_console.hjust = sg::left;
     m_console.confine = false;
     m_console.add_callback
@@ -491,7 +523,9 @@ protected:
   ,m_camenu_focal_button(m_ttf)
   ,m_camenu_viewing_button(m_ttf)
   ,m_camenu_gsto_button(m_ttf)
+  ,m_camenu_light_button(m_ttf)
   ,m_camenu_plane_exam_button(m_ttf)
+  ,m_camenu_disable_anim_text_button(m_ttf)
   ,m_console(m_ttf)
 
   ,m_popup_cbks(a_from.m_popup_cbks)
@@ -508,13 +542,13 @@ protected:
 
   ,m_motion_slider(0)
 
-  ,m_treat_mouse_motion(false)
+  //,m_treat_mouse_motion(false)
 
   ,m_cursor_camera(0)
 
   ,m_memory_warning(false)
 
-  ,m_action_prots(a_from.m_action_prots)
+  //,m_action_prots(a_from.m_action_prots)
 
   //,m_jpeg_data(a_from.m_out)
   ,m_dumpers()
@@ -572,13 +606,13 @@ protected:
 
     m_motion_slider = 0;
 
-    m_treat_mouse_motion = false;
+    //m_treat_mouse_motion = false;
 
     m_cursor_camera = 0;
 
     m_memory_warning = false;
 
-    m_action_prots = a_from.m_action_prots;
+    //m_action_prots = a_from.m_action_prots;
 
     copy<std::string,base_dumper>(m_dumpers,a_from.m_dumpers);
 
@@ -601,12 +635,12 @@ public:
   //}
   //bool vr_mode() const {return m_vr_mode;}
 public:   
-
   ///////////////////////////////////////////////////
-  /// wall : for communication with data_client : ///
+  /// wall : for communication with sg_client : /////
   ///////////////////////////////////////////////////
 
   typedef std::map<unsigned int,std::string> action_prots_t;
+/*
   const action_prots_t& action_prots() const {return m_action_prots;}
   //action_prots_t& action_prots() {return m_action_prots;}
 
@@ -622,7 +656,7 @@ public:
     a_action = 0;
     return false;
   }
-
+*/
 /* previously used in exlib/app/wall_client :
   void set_wall_action_prots() {
     //used by wall_screen and wall data client programs.
@@ -649,6 +683,69 @@ public:
     m_action_prots[gui_cbk::action_cam_anim_zoom_in_out_rot()] = wall::protocol::s_rwc_cam_anim_zoom_in_out_rot();
   }
 */
+
+  bool receive_document_buffer(char* a_buffer,unsigned int a_length,const std::string& a_arg_sep) {
+    char* copt = str_dup(a_buffer);
+    std::string options(copt);
+    str_del(copt);
+
+    size_t lopt = options.size();
+    size_t ldoc = a_length-(lopt+1);
+    char* pdoc = a_buffer+lopt+1;
+
+    if(ldoc==0) {
+      m_out << "inlib::sg::gui_viewer::receive_document_buffer :"
+            << " WARNING : receive an empty document."
+            << std::endl;
+      //not fatal
+      return true;
+    }
+
+    //see inlib/sg/send
+    args _args(options,a_arg_sep,false);
+    bool done;
+    if(!opener().open(ldoc,pdoc,_args,done)){
+      m_out << "inlib::sg::gui_viewer::receive_document_buffer :"
+            << " open buffer failed."
+            << std::endl;
+      //not fatal
+      win_render();
+      return true;
+    }
+
+    if(done) {
+      win_render();
+      return true;
+    }
+
+    std::string DOCUMENT;
+    if(!tmpname("","gui_viewer_","",DOCUMENT)) {
+      m_out << "inlib::sg::gui_viewer::receive_document_buffer :"
+            << " can't get tmp file name."
+            << std::endl;
+      return false;
+    }
+
+    if(!file::write_bytes(DOCUMENT,pdoc,ldoc)) {
+      m_out << "inlib::sg::gui_viewer::receive_document_buffer :"
+            << " can't write file " << inlib::sout(DOCUMENT) << "."
+            << std::endl;
+      return false;
+    }
+
+    if(!opener().open(DOCUMENT,file::s_format_guessed(),_args,done) || !done) {
+      m_out << "inlib::sg::gui_viewer::receive_document_buffer :"
+            << " open_file failed."
+             << std::endl;
+      //not fatal
+    }
+    win_render();
+
+    ::remove(DOCUMENT.c_str());
+
+    return true;
+  }
+  
   ///////////////////////////////////////////////////
   ///////////////////////////////////////////////////
   ///////////////////////////////////////////////////
@@ -712,6 +809,11 @@ public:
     if(!m_scene_light) return false;
     m_scene_light->on = a_value;
     m_params.m_light_on = a_value; //keep in sync.
+    if(a_value) {
+      m_camenu_light_button.back_area::color = colorf_pink();
+    } else {
+      m_camenu_light_button.back_area::color = m_params.m_gui_back_color;
+    }
     return true;
   }
 
@@ -1242,23 +1344,7 @@ public:
     a_node.border_color = m_params.m_gui_border_color;
     a_node.arm_color = m_params.m_gui_arm_color;
   }
-  void set_arconf(text& a_text,const std::string& a_s){
-    a_text.strings.clear();
-    a_text.strings.add(a_s);
-    a_text.font = m_params.m_gui_font;
-    a_text.font_modeling = m_params.m_gui_font_modeling;
-    a_text.confine = true;
-    a_text.hjust = center;
-  }
-  static void set_arconf(const gui_params& a_params,text& a_text,const std::string& a_s){
-    a_text.strings.clear();
-    a_text.strings.add(a_s);
-    a_text.font = a_params.m_gui_font;
-    a_text.font_modeling = a_params.m_gui_font_modeling;
-    a_text.confine = true;
-    a_text.hjust = center;
-  }
-
+  
   void set_text_layout(text& a_node,float a_wcw,float a_wch,float a_hbutton,matrix& a_mtx) const {
     a_node.width = a_wcw*0.7F;
 
@@ -1531,19 +1617,19 @@ public:
   }
   
   void set_camera_menu_labels() {
-    set_arconf(m_camenu_shift_button,anim_shift_button_label());
-    set_arconf(m_camenu_viewing_button,viewing_button_label());
+    set_arconf(m_params,m_camenu_shift_button,anim_shift_button_label());
+    set_arconf(m_params,m_camenu_viewing_button,viewing_button_label());
 
     set_img_from_res_file(single_shoot_image_button_file(),m_camenu_sshoot_image_button.img.value());
     m_camenu_sshoot_image_button.img.touch();
-    set_arconf(m_camenu_sshoot_text_button,single_shoot_button_label());
+    set_arconf(m_params,m_camenu_sshoot_text_button,single_shoot_button_label());
 
     set_img_from_res_file(rot_90_image_button_file(),m_camenu_90_image_button.img.value());
     m_camenu_90_image_button.img.touch();
-    set_arconf(m_camenu_90_text_button,rot_90_button_label());
+    set_arconf(m_params,m_camenu_90_text_button,rot_90_button_label());
 
-    set_arconf(m_camenu_focal_button,around_focal_button_label());
-    set_arconf(m_camenu_plane_exam_button,plane_exam_button_label());
+    set_arconf(m_params,m_camenu_focal_button,around_focal_button_label());
+    set_arconf(m_params,m_camenu_plane_exam_button,plane_exam_button_label());
     set_use_gsto(m_use_gsto);
   }
 
@@ -2007,8 +2093,9 @@ public:
     return to_render;
   }
 
+/*
   void treat_mouse_motion(bool a_value) {m_treat_mouse_motion = a_value;}
-
+  
   bool mouse_motion(unsigned int a_x,unsigned int a_y) {
     bool to_render = false;
 
@@ -2026,7 +2113,7 @@ public:
 
     return to_render;
   }
-
+*/
   /////////////////////////////////////
   /// gesture (mainly iOS) ////////////
   /////////////////////////////////////
@@ -2106,286 +2193,6 @@ public:
   template <class T>
   void remove_in_tmp_group(const std::string& a_name) {
     remove_holders<T>(m_tmp_group.children(),a_name);
-  }
-
-protected:
-  static void set_button_style(const gui_params& a_params,
-                               text_button& a_node) {
-    a_node.back_area::color = a_params.m_gui_back_color;
-    a_node.back_area::border_color = a_params.m_gui_border_color;
-    a_node.color = a_params.m_gui_front_color;
-    a_node.arm_color = a_params.m_gui_arm_color;
-    a_node.hmargin_factor = 0.5f; //Apple seems to have that.
-    a_node.font = a_params.m_gui_font;
-    a_node.font_modeling = a_params.m_gui_font_modeling;
-  }
-  static void set_image_button_style(const gui_params& a_params,
-                                     image_button& a_node) {
-    a_node.back_area::color = a_params.m_gui_back_color;
-    a_node.back_area::border_color = a_params.m_gui_border_color;
-    a_node.color = a_params.m_gui_back_color;
-    a_node.arm_color = a_params.m_gui_arm_color;
-    //a_node.hmargin_factor = 0.8f;
-    a_node.hmargin_factor = 0.6f;
-  }
-  static void set_arrow_button_style(const gui_params& a_params,
-                                     arrow_button& a_node) {
-    a_node.back_area::color = a_params.m_gui_back_color;
-    a_node.back_area::border_color = a_params.m_gui_border_color;
-    a_node.color = a_params.m_gui_front_color;
-    a_node.arm_color = a_params.m_gui_arm_color;
-  }
-
-  //static //not static because of set_img_from_file
-  void create_main_button(std::ostream&,
-                          const std::string& /*a_res_dir*/,
-                          const gui_params& a_params,
-                          separator& a_parent,
-                          float a_wcw,float a_wch,float a_wb,float a_hb,
-                          float a_roffset,
-                          unsigned int a_col,unsigned int a_row,
-                          const std::string& a_label,
-                          const std::string& a_img_label,
-                          const std::string& a_img,
-                          bcbk* a_cbk) { //take ownerhship.
-    //a_col=[0,a_cols-1] 0=left
-    //a_row=[0,a_rows-1] 0=bottom
-    //a_roffset : for Wt : to see right border of buttons at right.
- 
-    //float wbutton = a_wcw/float(a_cols);
-    //float hbutton = a_wch/float(a_rows);
-    float wbutton = a_wb;
-    float hbutton = a_hb;
-
-    separator* sep = new separator;
-    a_parent.add(sep);
-
-    matrix* m = new matrix;
-
-    float x = -a_wcw*0.5F+wbutton*0.5f; //at left.
-    x += a_col*wbutton;
-    x -= a_wcw*a_roffset;
-
-    float y = -a_wch*0.5F+hbutton*0.5f; //at bottom.
-    y += a_row*hbutton;
-
-    m->set_translate(x,y,0);
-    sep->add(m);
-
-    if(a_img.size()&&a_params.m_image_buttons) {
-      image_text_button* b = new image_text_button(m_ttf);
-      b->width = wbutton;
-      b->height = hbutton;
-
-      set_image_button_style(a_params,*b);
-      set_img_from_res_file(a_img,b->img.value());
-      b->img.touch();
-
-      if(a_img_label.size()) {
-        b->text().strings.clear();
-        b->text().strings.add(a_img_label);
-        b->text().font = a_params.m_gui_font;
-        b->text().font_modeling = a_params.m_gui_font_modeling;
-        b->text().color = a_params.m_gui_front_color;
-      }
-      s2layout_policy(m_params.m_list_item_layout,b->layout.value());
-      b->corner_radius = a_params.m_corner_radius;
-
-      b->add_callback(a_cbk);
-      sep->add(b);
-
-    } else {
-      text_button* b = new text_button(m_ttf);
-      b->width = wbutton;
-      b->height = hbutton;
-
-      set_button_style(a_params,*b);
-      set_arconf(*b,a_label);
-
-      b->corner_radius = a_params.m_corner_radius;
-
-      b->add_callback(a_cbk);
-      sep->add(b);
-    }
-  }
-
-  //static //not static because of set_img_from_file
-  void create_main_button(std::ostream&,
-                          const std::string& /*a_res_dir*/,
-                          const gui_params& a_params,
-                          separator& a_parent,
-                          float a_wcw,float a_wch,float a_wb,float a_hb,
-                          float a_roffset,
-                          unsigned int a_col,unsigned int a_row,
-                          image_button& a_img_button,
-                          text_button& a_button,
-                          const std::string& a_label,
-                          const std::string& a_img,
-                          bcbk* a_cbk) { //take ownerhship.
-    float wbutton = a_wb;
-    float hbutton = a_hb;
-
-    separator* sep = new separator;
-    a_parent.add(sep);
-
-    matrix* m = new matrix;
-
-    float x = -a_wcw*0.5F+wbutton*0.5f; //at left.
-    x += a_col*wbutton;
-    x -= a_wcw*a_roffset;
-
-    float y = -a_wch*0.5F+hbutton*0.5f; //at bottom.
-    y += a_row*hbutton;
-
-    m->set_translate(x,y,0);
-    sep->add(m);
-
-    if(a_params.m_image_buttons) {
-      a_img_button.width = wbutton;
-      a_img_button.height = hbutton;
-
-      set_image_button_style(a_params,a_img_button);
-      set_img_from_res_file(a_img,a_img_button.img.value());
-      a_img_button.img.touch();
-
-      a_img_button.corner_radius = a_params.m_corner_radius;
-
-      a_img_button.clear_cbks();
-      a_img_button.add_callback(a_cbk);
-      sep->add(new noderef(a_img_button));
-
-    } else {
-      a_button.width = wbutton;
-      a_button.height = hbutton;
-
-      set_button_style(a_params,a_button);
-      set_arconf(a_button,a_label);
-
-      a_button.corner_radius = a_params.m_corner_radius;
-
-      a_button.clear_cbks();
-      a_button.add_callback(a_cbk);
-      sep->add(new noderef(a_button));
-    }
-  }
-
-  static void create_main_button(
-                          const gui_params& a_params,
-                          separator& a_parent,
-                          float a_wcw,float a_wch,float a_wb,float a_hb,
-                          float a_roffset,
-                          unsigned int a_col,unsigned int a_row,
-                          const std::string& a_label,
-                          text_button& a_button,
-                          bcbk* a_cbk) { //take ownerhship.
-    float wbutton = a_wb;
-    float hbutton = a_hb;
-
-    separator* sep = new separator;
-    a_parent.add(sep);
-
-    matrix* m = new matrix;
-
-    float x = -a_wcw*0.5F+wbutton*0.5f; //at left.
-    x += a_col*wbutton;
-    x -= a_wcw*a_roffset;
-
-    float y = -a_wch*0.5F+hbutton*0.5f; //at bottom.
-    y += a_row*hbutton;
-
-    m->set_translate(x,y,0);
-    sep->add(m);
-
-    a_button.width = wbutton;
-    a_button.height = hbutton;
-
-    set_button_style(a_params,a_button);
-    set_arconf(a_params,a_button,a_label);
-
-    a_button.corner_radius = a_params.m_corner_radius;
-
-    a_button.clear_cbks();
-    a_button.add_callback(a_cbk);
-
-    sep->add(new noderef(a_button));
-  }
-
-  static void create_arrow(const gui_params& a_params,
-                           separator& a_parent,
-                           float a_wcw,float a_wch,float a_wb,float a_hb,
-                           float a_roffset,
-                           unsigned int a_col,unsigned int a_row,
-                           arrow_type a_type,
-                           bcbk* a_cbk) { //take ownerhship.
-    float wbutton = a_wb;
-    float hbutton = a_hb;
-
-    separator* sep = new separator;
-    a_parent.add(sep);
-
-    matrix* m = new matrix;
-
-    float x = -a_wcw*0.5F+wbutton*0.5f; //at left.
-    x += a_col*wbutton;
-    x -= a_wcw*a_roffset;
-
-    float y = -a_wch*0.5F+hbutton*0.5f; //at bottom.
-    y += a_row*hbutton;
-
-    m->set_translate(x,y,0);
-    sep->add(m);
-
-    arrow_button* b = new arrow_button;
-    b->width = wbutton;
-    b->height = hbutton;
-    b->orientation = a_type;
-    set_arrow_button_style(a_params,*b);
-
-    b->corner_radius = a_params.m_corner_radius;
-
-    b->add_callback(a_cbk);
-
-    sep->add(b);
-  }
-
-  static void create_meta_zone(const gui_params& a_params,
-                               const base_freetype& a_ttf,
-                               separator& a_parent,
-                               _switch& a_meta_switch,
-                               float a_wcw,float a_wch,float a_hzone,
-                               bcbk* a_cbk) { //take ownerhship.
-    int old_meta_switch_which = a_meta_switch.which;
-
-    separator* sep = new separator;
-    a_parent.add(sep);
-
-    matrix* m = new matrix;
-    float wbutton = a_wcw;
-    float x = 0;
-    float y = -a_wch*0.5F+a_hzone*0.5f;
-    m->set_translate(x,y,-0.1f);
-    sep->add(m);
-
-    a_meta_switch.clear();
-    sep->add(new noderef(a_meta_switch));
-
-   {text_button* b = new text_button(a_ttf);
-    set_arconf(a_params,*b,"scene to menu area (shown once)");
-    set_button_style(a_params,*b);
-    b->back_area::color = colorf(0.7f,0.9f,1,0.4f);  //alpha = 0.5f so that it is visible on a black back (case of pmx).
-    //b->width = wbutton*(1-2*0.3f);
-    b->width = wbutton;
-    b->height = a_hzone;
-    b->add_callback(a_cbk->copy());
-    a_meta_switch.add(b);}
-
-   {ghost* b = new ghost;
-    b->width = wbutton;
-    b->height = a_hzone;
-    b->add_callback(a_cbk);
-    a_meta_switch.add(b);}
-
-    a_meta_switch.which = old_meta_switch_which;
   }
 
 public:
@@ -2653,32 +2460,32 @@ protected:
   // virtual gui methods containing callbacks :
   // For example redefined for the wall data client remote control gui.
   virtual void create_meta_zone(float a_wcw,float a_wch,float a_hzone) {
-    create_meta_zone(m_params,m_ttf,*m_gui,m_meta_switch,
+    sg::create_meta_zone(m_params,m_ttf,*m_gui,m_meta_switch,
                      a_wcw,a_wch,a_hzone,
                      new gv_cbk(*this,action_activate_meta_zone));
   }
 
   virtual void create_control_items(float a_wcw,float a_wch,
                                     float a_wb,float a_hb,float a_roffset) {
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_full_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        0,0,"home","home","go_home_large.jpg",
                        new gv_cbk(*this,action_push_home));
 
     if(params_button_visible.value()) { 
-      create_main_button(m_out,m_res_dir,m_params,
+      create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                          m_full_sep,a_wcw,a_wch,a_wb,a_hb,0,
                          0,1,"params","params","system_config_boot.jpg",
                          new gv_cbk(*this,action_params_show));
     }
   
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_full_sep,a_wcw,a_wch,a_wb,a_hb,a_roffset,
                        2,0,"back","back","turn_around.jpg",
                        new gv_cbk(*this,action_push_back_item));
 
     if(camera_button_visible.value()) { 
-      create_main_button(m_out,m_res_dir,m_params,
+      create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                          m_full_sep,a_wcw,a_wch,a_wb,a_hb,a_roffset,
                          2,1,"camera","camera","movie_camera.jpg",
                          new gv_cbk(*this,action_show_camera_menu));
@@ -2716,7 +2523,7 @@ protected:
                        new gv_cbk(*this,action_toggle_param_anim_shift));
 
     //outside top-left "single shoot" button :
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-3,2,
                        m_camenu_sshoot_image_button,
@@ -2726,20 +2533,20 @@ protected:
                        new gv_cbk(*this,action_toggle_param_single_shoot));
 
     //outside bottom-right hide button :
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-1,0,"hide","","close.jpg",
                        new gv_cbk(*this,action_hide_camera_menu));
 
     //outside top-right reset camera button :
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-1,2,"reset","","edit_undo.jpg",
                        new gv_cbk(*this,action_reset_camera));
 
     //outside bottom-left "90" button :
     if(camenu_90_visible.value()) {
-      create_main_button(m_out,m_res_dir,m_params,
+      create_main_button(m_out,m_res_dir,m_params,m_image_readers,
                          m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                          a_nb-3,0,
                          m_camenu_90_image_button,
@@ -2751,7 +2558,7 @@ protected:
 
     if(camenu_edit_visible.value()) {
       //outside top-left "edit" button :
-      create_main_button(m_out,m_res_dir,m_params,
+      create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                          m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                          a_nb-4,2,"edit","","edit.jpg",
                          new gv_cbk(*this,action_cam_choose_type));
@@ -2775,23 +2582,32 @@ protected:
                          new gv_cbk(*this,action_toggle_param_viewing));
     }
 
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-5,2,"mv","","",
                        new gv_cbk(*this,action_cam_choose_anim));
 
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-5,1,"EA","","object_rotate_left.jpg",
                        new gv_cbk(*this,action_enable_anim));
-
-    create_main_button(m_out,m_res_dir,m_params,
+		       
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
-                       a_nb-5,0,"DA","","stop_object_rotate_left.jpg",
+                       a_nb-5,0,
+                       m_camenu_disable_anim_image_button,
+                       m_camenu_disable_anim_text_button,
+                       "DA",
+                       "stop_object_rotate_left.jpg",
                        new gv_cbk(*this,action_disable_anim));
+    if(m_params.m_anim_on) {
+      m_camenu_disable_anim_image_button.color = colorf_pink();
+    } else {
+      m_camenu_disable_anim_image_button.color = m_params.m_gui_back_color;
+    }		          
 
 /*
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-5,1,"P/O","","",
                        new gv_cbk(*this,action_swap_camera_kind));
@@ -2801,13 +2617,13 @@ protected:
     ///////////////////////////////////////////////////////////////////////
 
 /*
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        0,0,"clear","","edit_clear.jpg",
                        new gv_cbk(*this,action_clear_static_and_dynamic_scene)); //does not compile.
 */
 
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        0,0,"W/B","","",
                        new gv_cbk(*this,action_swap_scene_clear_color));
@@ -2819,21 +2635,27 @@ protected:
                        new gv_cbk(*this,action_toggle_plane_exam));
 
     if(camenu_view_all_visible.value()) {
-      create_main_button(m_out,m_res_dir,m_params,
+      create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                          m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                          0,2,"<)","","",
                          new gv_cbk(*this,action_adapt_camera_to_scene));
-   }
+    }
 
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        1,0,"N","","",
                        new gv_cbk(*this,action_count_points));
 
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_params,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
-                       1,1,"^","","",
+                       1,1,"^",
+                       m_camenu_light_button,
                        new gv_cbk(*this,action_toggle_light));
+    if(m_params.m_light_on) {
+      m_camenu_light_button.back_area::color = colorf_pink();
+    } else {
+      m_camenu_light_button.back_area::color = m_params.m_gui_back_color;
+    }
 
     create_main_button(m_params,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
@@ -2842,7 +2664,7 @@ protected:
                        new gv_cbk(*this,action_toggle_gsto));
     set_use_gsto(m_use_gsto); //update back color.
 
-    create_main_button(m_out,m_res_dir,m_params,
+    create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        1,3,"png","","",
                        new gv_cbk(*this,action_export_png));
@@ -3039,7 +2861,7 @@ protected:
     } else {
       text_button* b = new text_button(m_ttf);
       set_button_style(m_params,*b);
-      set_arconf(*b,"H");
+      set_arconf(m_params,*b,"H");
       b->add_callback
         (new fundata_cbk<gui_viewer,_switch,pos_data>(*this,m_sliders_switch,action_hide,pos_data(false,0,0)));
       m_hide_sliders_sep.add(b); //1
@@ -3190,6 +3012,9 @@ public:
     new_cam->focal = z;
 
     new_cam->position.value() += c;
+
+    new_cam->da = cam->da;
+    new_cam->ds = cam->ds;
 
     if(!grp->replace(cam,new_cam,true)) {
       delete new_cam;
@@ -3661,7 +3486,7 @@ public:
     full_sep->add(mat);
 
     draw_style* ds = new draw_style;
-    ds->style = draw_style::lines;
+    ds->style = draw_lines;
     ds->line_width = cursor_line_width;
     full_sep->add(ds);
 
@@ -4599,17 +4424,17 @@ protected:
     }
   public:
     anim_work(gui_viewer& a_gv)
-    :bcbk()
+    :parent()
     ,m_gv(a_gv)
     {}
     virtual ~anim_work(){}
   public:
     anim_work(const anim_work& a_from)
-    :bcbk(a_from)
+    :parent(a_from)
     ,m_gv(a_from.m_gv)
     {}
     anim_work& operator=(const anim_work& a_from){
-      bcbk::operator=(a_from);
+      parent::operator=(a_from);
       return *this;
     }
   protected:
@@ -4663,22 +4488,12 @@ public:
   }
 */
 public:
+  //void set_arconf(text& a_text,const std::string& a_s){
+  //  sg::set_arconf(m_params,a_text,a_s);
+  //}
+  
   bool set_img_from_res_file(const std::string& a_file,img_byte& a_img) {
-    if(a_file.empty()) {a_img.clear();return true;}
-    std::string path;
-    if(m_res_dir.size()) path = m_res_dir+sep();
-    path += a_file;
-    inlib_vforcit(image::readers::named_reader,m_image_readers.named_readers(),it) {
-      image::ireader* _reader = (*it).second;
-      if(!_reader->is(path)) continue;
-      unsigned int w,h,bpp;
-      unsigned char* buffer = _reader->read(m_out,path,w,h,bpp);
-      if(!buffer) continue;
-      a_img.set(w,h,bpp,buffer,true);
-      return true;
-    }  
-    a_img.clear();
-    return false;
+    return sg::set_img_from_res_file(m_out,m_res_dir,m_image_readers,a_file,a_img);
   }
 
   void separator_to_vertices(separator& a_sep) {
@@ -4929,7 +4744,11 @@ protected:
   text_button m_camenu_focal_button;  
   text_button m_camenu_viewing_button;  
   text_button m_camenu_gsto_button;  
+  text_button m_camenu_light_button;  
   text_button m_camenu_plane_exam_button;
+
+  image_button m_camenu_disable_anim_image_button;
+  text_button m_camenu_disable_anim_text_button;
 
   _switch m_gui_sliders_switch;
   _switch m_sliders_switch;
@@ -4974,7 +4793,7 @@ protected:
 
   slider* m_motion_slider;
 
-  bool m_treat_mouse_motion;
+  //bool m_treat_mouse_motion;
 
   //wall :
   separator m_cursor;
@@ -4985,7 +4804,7 @@ protected:
   bool m_memory_warning;
   group m_tmp_group; //to deposit sg::holder to data.
 
-  action_prots_t m_action_prots;
+  //action_prots_t m_action_prots;
   //end wall.
 
   dumpers_t m_dumpers;  
@@ -5387,7 +5206,9 @@ inline return_action action_toggle_camera_menu_at_pos(gui_viewer& a_gv,const pos
 INLIB_GLOBAL_STRING(files)
 INLIB_GLOBAL_STRING(export)
 INLIB_GLOBAL_STRING(ftp)
-INLIB_GLOBAL_STRING(wall)
+//INLIB_GLOBAL_STRING(wall)
+INLIB_GLOBAL_STRING(to_serv)
+INLIB_GLOBAL_STRING(sg_serv)
 
 }}
 

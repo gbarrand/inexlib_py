@@ -10,13 +10,10 @@
 #include "../mem"
 #endif
 
+#include "cursor_shape"
+
 namespace inlib {
 namespace sg {
-
-enum cursor_shape {
-  cursor_default = 0,
-  cursor_target
-};  
 
 class viewer {
 public:

@@ -180,6 +180,20 @@ public:
     return true;
   }
 
+  bool insert_begin(const std::string& a_key,const std::string& a_value = "",bool a_override = true){
+    if(a_override) {
+      inlib_vforit(arg,m_args,it) {
+        if((*it).first==a_key) {
+          (*it).second = a_value;
+          return true;
+        }
+      }
+    }
+    if(a_key.empty()) return false;
+    m_args.insert(m_args.begin(),arg(a_key,a_value));
+    return true;
+  }
+
   void add(const std::vector<std::string>& a_args,bool a_strip = false) {
     inlib_vforcit(std::string,a_args,it) {
       std::vector<std::string> ws;

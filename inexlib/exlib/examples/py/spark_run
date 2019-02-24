@@ -1,16 +1,60 @@
 #!/bin/bash
 
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file exlib.license for terms.
+
 #/////////////////////////////////////////////////////////////////
 #/// arguments : /////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
 run_set_x=no
 run_args=
+run_vis_mode=gui_window
+run_vis_host=
+run_vis_port=
+run_vis_format=
+run_redshift_min=
+run_redshift_max=
+
+run_inexlib_serv_local=no
+
 what=
 
 while test $# -ge 1 ; do
   case $1 in
     -x) run_set_x=yes;run_args="${run_args} $1";;
+      
+    -offscreen)  run_vis_mode=offscreen;     run_args="${run_args} $1";;
+    -gui_window) run_vis_mode=gui_window;    run_args="${run_args} $1";;
+    -window)     run_vis_mode=window;        run_args="${run_args} $1";;
+    -client)     run_vis_mode=client;        run_args="${run_args} $1";;
+    -local)      run_inexlib_serv_local=yes; run_args="${run_args} $1";;
+
+    -vis_host)   run_args="${run_args} $1"
+                 if [ $# -ge 2 ] ; then
+                   run_vis_host=$2
+                   run_args="${run_args} $2"
+                   shift
+                 fi
+                 ;;
+    -vis_port)   run_args="${run_args} $1"
+                 if [ $# -ge 2 ] ; then
+                   run_vis_port=$2
+                   run_args="${run_args} $2"
+                   shift
+                 fi
+                 ;;
+    -vis_format) run_args="${run_args} $1"
+                 if [ $# -ge 2 ] ; then
+                   run_vis_format=$2
+                   run_args="${run_args} $2"
+                   shift
+                 fi
+                 ;;
+
+    -redshift_min) if [ $# -ge 2 ] ; then run_redshift_min=$2;shift; fi;;
+    -redshift_max) if [ $# -ge 2 ] ; then run_redshift_max=$2;shift; fi;;
+    
     -*) run_args="${run_args} $1";;  
      *) if [ "${what}" = "" ] ; then
           what=$1
@@ -25,67 +69,180 @@ done
 if [ ${run_set_x} = "yes" ] ; then set -x; fi
 
 if [ "${what}" = "all" ] ; then
-  find . -maxdepth 1 -name 'spark_*.py' -exec ./spark_run ${run_args} {} \;
+  find . -maxdepth 1 -name 'spark_*.py' -print -exec ./spark_run ${run_args} {} \;
   exit
 fi
 
+script=
 if [ "${what}" = "" ] ; then
-  echo 'give a python script.'
-  exit
-fi
+  echo 'spark_run : you have to give a .py script to execute.'
+  exit    
+fi    
 
 script="${what}"
+
 if [ ! -f ${script} ] ; then
-  echo "${script} not found."
+  echo "spark_run : ${script} not found."
   exit
 fi
+
+spark_args=
+spark_flags=
+
+pack_spark_fits=com.github.astrolabsoftware:spark-fits_2.11:0.6.0
 
 #/////////////////////////////////////////////////////////////////
 #/// where : /////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
+on_lal_spark_cluster=no
+if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
+
+on_my_mac_2014=no
+on_my_mac_2018=no
+if [ `uname` = Darwin ] ; then
+  on_my_mac_2014="`networksetup -listallhardwareports | grep '78:31'`"
+  if [ "${on_my_mac_2014}" != "" ] ; then on_my_mac_2014=yes; else on_my_mac_2014=no; fi
+  on_my_mac_2018="`networksetup -listallhardwareports | grep '86:00'`"
+  if [ "${on_my_mac_2018}" != "" ] ; then on_my_mac_2018=yes; else on_my_mac_2018=no; fi
+fi
+
+# `uname -a` contains cray_ari_c
+on_nersc_cori_nid=no
+if [ "`uname -n | grep nid`" != "" ] ; then on_nersc_cori_nid=yes; fi
+
 if [ -x ./modules/inlib_swig_py.so ] ; then
   # running from an inexlib_py distribution :
   build_path=./bin    
   modules_path=./modules
 else    
-  build_args=
-  bush_home=`dirname $0`/../../../../bush
-  . ${bush_home}/exlib_header  # to get build_path
-  modules_path=${build_path}
+  if [ ${on_nersc_cori_nid} = yes ] ; then
+    build_path=./bin_gnu
+    modules_path=./bin_gnu
+  else      
+    build_args=
+    bush_home=`dirname $0`/../../../../bush
+    . ${bush_home}/exlib_header  # to get build_path
+    modules_path=${build_path}
+  fi    
 fi
 
 run_use_py3=no
+if [ ! -e "${build_path}/which_py" ] ; then
+  echo "spark_run : ${build_path}/which_py not found."
+  exit
+fi
 if [ "`${build_path}/which_py`" = Python3 ] ; then run_use_py3=yes;fi    
 
-on_lal_spark_cluster=no
-if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
+#/////////////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
 
-#/////////////////////////////////////////////////////////////////
-#/////////////////////////////////////////////////////////////////
-#/////////////////////////////////////////////////////////////////
-if [ ${on_lal_spark_cluster} = yes ] ; then
-  # hdfs dfs -put <file>
-  # hdfs dfs -ls
-  data_file="hdfs:///user/guy.barrand/test_data.fits"
-  if [ "`basename ${script}`" = "spark_cfitsio_ntuple.py" ] ; then
-    data_file="hdfs:///user/guy.barrand/cfitsio_write_ntuple.fits"
+spark_args="${spark_args} -vis_mode ${run_vis_mode}"
+if [ "${run_vis_mode}" = "client" ] ; then
+  if [ "${run_inexlib_serv_local}" = yes ] ; then
+    run_vis_host="`uname -n`"
+    run_vis_port=50800     
   fi
-  #if [ ! -f ${data_file} ] ; then
-  #  echo "Data file ${data_file} not found."
-  #  exit
-  #fi
-else
-  data_file_name=spark_test_data.fits
-  if [ "`basename ${script}`" = "spark_cfitsio_ntuple.py" ] ; then data_file_name=cfitsio_write_ntuple.fits; fi
-  data_file="../../data/${data_file_name}"
-  if [ ! -f ${data_file} ] ; then
-    data_file="./data/${data_file_name}"  # if running from inexlib_py distribution.
-    if [ ! -f ${data_file} ] ; then
-      echo "data file ${data_file_name} not found."
-      exit      
-    fi
+  if [ "${run_vis_host}" = "" ] ; then
+    echo 'spark_run : you have to pass a -vis_host argument.'
+    exit      
+  fi
+  spark_args="${spark_args} -vis_host ${run_vis_host}"
+  if [ "${run_vis_port}" = "" ] ; then
+    echo 'spark_run : you have to pass a -vis_port argument.'
+    exit      
+  fi
+  spark_args="${spark_args} -vis_port ${run_vis_port}"
+fi
+
+if [ "${run_vis_mode}" = "offscreen" ] ; then
+  if [ "${run_vis_format}" != "" ] ; then
+    spark_args="${spark_args} -vis_format ${run_vis_format}"
   fi
 fi
+
+#/////////////////////////////////////////////////////////////////
+#/// per .py options : ///////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+
+#/////////////////////////////////////////////////////////////////
+#/// read parquet file : /////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+items="spark_parquet_vis.py spark_parquet_radec_vis.py spark_parquet_colored_galaxies_vis.py"
+for item in ${items} ; do
+  if [ "`basename ${script}`" = ${item} ] ; then
+    if [ ${on_nersc_cori_nid} = yes ] ; then
+      echo "spark_run : parquet data file not found."
+      exit
+    fi      
+    if [ "${run_redshift_min}" != "" ] ; then
+      spark_args="${spark_args} -redshift_min ${run_redshift_min}"
+    fi
+    if [ "${run_redshift_max}" != "" ] ; then
+      spark_args="${spark_args} -redshift_max ${run_redshift_max}"
+    fi
+    file_name="xyz_v1.1.4.parquet"
+    if [ ${item} = "spark_parquet_colored_galaxies_vis.py" ] ; then
+      file_name="xyz_v1.1.4_mass_and_mag_onepix.parquet"
+    fi	
+    if [ ${on_lal_spark_cluster} = yes ] ; then
+      # hdfs dfs -put <file>
+      # hdfs dfs -ls
+     #data_file="hdfs://134.158.75.222:8020//lsst/CosmoDC2/xyz_v1.0.parquet"
+     #data_file="/Users/barrand/xyz_v1.0.parquet"
+     #data_file="hdfs:///lsst/CosmoDC2/xyz_v1.0.parquet"
+      data_file="hdfs:///lsst/CosmoDC2/${file_name}"
+    else
+      data_file="/Users/barrand/${file_name}"
+      if [ ! -f ${data_file} ] ; then
+        echo "spark_run : data file ${data_file_name} not found."
+        exit      
+      fi
+    fi
+    spark_args="${spark_args} -file ${data_file}"
+  fi
+done
+
+#/////////////////////////////////////////////////////////////////
+#/// read fits file : ////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+items="spark_fits.py spark_fits_ntuple_vis.py spark_fits_vis.py"
+for item in ${items} ; do
+  if [ "`basename ${script}`" = ${item} ] ; then
+    if [ ${on_nersc_cori_nid} = yes ] ; then
+      data_file=/global/cscratch1/sd/gbarrand/spark_test_data.fits
+      if [ "`basename ${script}`" = "spark_fits_ntuple_vis.py" ] ; then
+        data_file=/global/cscratch1/sd/gbarrand/cfitsio_write_ntuple.fits
+      fi
+      if [ ! -f ${data_file} ] ; then
+        echo "spark_run : data file ${data_file_name} not found."
+        exit      
+      fi
+    elif [ ${on_lal_spark_cluster} = yes ] ; then
+      # hdfs dfs -put <file>
+      # hdfs dfs -ls
+      data_file="hdfs:///user/guy.barrand/test_data.fits"
+      if [ "`basename ${script}`" = "spark_fits_ntuple_vis.py" ] ; then
+        data_file="hdfs:///user/guy.barrand/cfitsio_write_ntuple.fits"
+      fi
+    else
+      data_file_name=spark_test_data.fits
+      if [ "`basename ${script}`" = "spark_fits_ntuple_vis.py" ] ; then
+        data_file_name=cfitsio_write_ntuple.fits
+      fi
+      data_file="../../data/${data_file_name}"
+      if [ ! -f ${data_file} ] ; then
+        data_file="./data/${data_file_name}"  # if running from inexlib_py distribution.
+        if [ ! -f ${data_file} ] ; then
+          echo "spark_run : data file ${data_file_name} not found."
+          exit      
+        fi
+      fi
+    fi
+    spark_args="${spark_args} -file ${data_file} -hdu 1"
+    spark_flags="${spark_flags} --packages ${pack_spark_fits}"
+  fi
+done	
 
 #/////////////////////////////////////////////////////////////////
 #/// Python : ////////////////////////////////////////////////////
@@ -95,30 +252,50 @@ fi
 #           the plugins inlib_swig_py.so, exlib_[offscreen,window]_swig_py.so.
 
 spy_dir=spy
-if [ ${on_lal_spark_cluster} = yes ] ; then
-  if [ ${run_use_py3} = yes ] ; then
-    PYSPARK_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_PYTHON
-    PYSPARK_DRIVER_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_DRIVER_PYTHON
-    spy_dir=spy3    
-  else
-    PYSPARK_PYTHON=/usr/bin/python2.7;export PYSPARK_PYTHON
-    PYSPARK_DRIVER_PYTHON=/usr/bin/python2.7;export PYSPARK_DRIVER_PYTHON
+if [ ${on_nersc_cori_nid} = yes ] ; then
+  if [ ${run_use_py3} = no ] ; then
+    echo "spark_run : cant' use Python3 with spark/2.3.0."
+    exit    
   fi
-else  
-  if [ ${run_use_py3} = yes ] ; then
-    PYSPARK_PYTHON=/opt/local/bin/python3.6;export PYSPARK_PYTHON
-    PYSPARK_DRIVER_PYTHON=/opt/local/bin/python3.6;export PYSPARK_DRIVER_PYTHON
-    spy_dir=spy3    
-  else    
-    PYSPARK_PYTHON=/opt/local/bin/pythonw2.7;export PYSPARK_PYTHON
-    PYSPARK_DRIVER_PYTHON=/opt/local/bin/pythonw2.7;export PYSPARK_DRIVER_PYTHON
+  if [ ! -e ./libpython3.6m.so.1.0 ] ; then
+    echo "spark_run : copy libpython3.6m.so.1.0 in the local directory."
+    exit    
+  fi  	
+  if [ ! -e ./libpython3.so ] ; then
+    echo "spark_run : copy libpython3.so in the local directory."
+    exit    
+  fi  	
+  module load spark/2.3.0 #python3.6m
+else
+  
+  if [ ${on_lal_spark_cluster} = yes ] ; then
+    if [ ${run_use_py3} = yes ] ; then
+      PYSPARK_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_PYTHON
+      PYSPARK_DRIVER_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_DRIVER_PYTHON
+      spy_dir=spy3    
+    else
+      echo 'spark_run : inexlib_py not built with Python3.'
+      exit	
+      PYSPARK_PYTHON=/usr/bin/python2.7;export PYSPARK_PYTHON
+      PYSPARK_DRIVER_PYTHON=/usr/bin/python2.7;export PYSPARK_DRIVER_PYTHON
+    fi
+  else  
+    if [ ${run_use_py3} = yes ] ; then
+      PYSPARK_PYTHON=/opt/local/bin/python3.6;export PYSPARK_PYTHON
+      PYSPARK_DRIVER_PYTHON=/opt/local/bin/python3.6;export PYSPARK_DRIVER_PYTHON
+      spy_dir=spy3    
+    else    
+      PYSPARK_PYTHON=/opt/local/bin/pythonw2.7;export PYSPARK_PYTHON
+      PYSPARK_DRIVER_PYTHON=/opt/local/bin/pythonw2.7;export PYSPARK_DRIVER_PYTHON
+    fi
   fi
-fi
 
-if [ ! -e ${PYSPARK_PYTHON} ] ; then
-  echo "Python program ${PYSPARK_PYTHON} not found."
-  exit    
-fi    
+  if [ ! -e ${PYSPARK_PYTHON} ] ; then
+    echo "spark_run : Python program ${PYSPARK_PYTHON} not found."
+    exit    
+  fi    
+
+fi
 
 #/////////////////////////////////////////////////////////////////
 #/// PYTHONPATH : ////////////////////////////////////////////////
@@ -127,7 +304,8 @@ fi
 sep=':'
 if [ "`uname | grep CYGWIN`" != "" ] ; then sep=';' ;fi
 
-py_path="./res/${spy_dir}"
+py_path="./res/py"
+py_path="${py_path}${sep}./res/${spy_dir}"
 py_path="${py_path}${sep}${modules_path}"
 
 py_curr=`printenv PYTHONPATH`
@@ -149,42 +327,54 @@ unset py_path
 #/////////////////////////////////////////////////////////////////
 #/// envs before startup : ///////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
-echo "PYSPARK_PYTHON = ${PYSPARK_PYTHON}"
-echo "PYSPARK_DRIVER_PYTHON = ${PYSPARK_DRIVER_PYTHON}"
-echo "PATH = ${PATH}"
-echo "PYTHONPATH = ${PYTHONPATH}"
+#echo "PYSPARK_PYTHON = ${PYSPARK_PYTHON}"
+#echo "PYSPARK_DRIVER_PYTHON = ${PYSPARK_DRIVER_PYTHON}"
+#cho "PATH = ${PATH}"
+#echo "PYTHONPATH = ${PYTHONPATH}"
 
 #/////////////////////////////////////////////////////////////////
 #/// spark : /////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
-spark_flags=
-if [ ${on_lal_spark_cluster} = yes ] ; then
-  spark_home=/opt/spark-2.3.1-bin-hadoop2.7
-
-  packs=com.github.astrolabsoftware:spark-fits_2.11:0.6.0
-
-  spark_flags="${spark_flags} --master spark://134.158.75.222:7077"
-  spark_flags="${spark_flags} --driver-memory 4g --executor-memory 30g"
-  spark_flags="${spark_flags} --executor-cores 17 --total-executor-cores 34"
-  
-else
-  spark_home=/usr/local/spark/2.3.0/spark-2.3.0-bin-hadoop2.7
-
-  packs=com.github.astrolabsoftware:spark-fits_2.11:0.6.0
-
-  spark_flags="${spark_flags} --master local[*]"
-  
+if [ ${on_my_mac_2018} = yes ] ; then
+  java_home=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home/bin
+  PATH="${java_home}:${PATH}";export PATH
 fi
 
-spark_flags="${spark_flags} --packages ${packs}"
+if [ ${on_nersc_cori_nid} = yes ] ; then
+  spark_flags="${spark_flags}  --master $SPARKURL"
+  spark_flags="${spark_flags}  --driver-memory 15g"
+  spark_flags="${spark_flags}  --executor-memory 50g --executor-cores 32 --total-executor-cores 192"
+  
+  start-all.sh
+  shifter spark-submit ${spark_flags} ${script} ${spark_args}
+  stop-all.sh
 
-spark_exe="${spark_home}/bin/spark-submit"
-if [ ! -x ${spark_exe} ] ; then
-  echo "${spark_exe} not found."
-  exit
-fi    
+else
+  
+  if [ ${on_lal_spark_cluster} = yes ] ; then
+    spark_flags="${spark_flags} --master spark://134.158.75.222:7077"
+    spark_flags="${spark_flags} --driver-memory 4g --executor-memory 30g"
+    spark_flags="${spark_flags} --executor-cores 17 --total-executor-cores 34"
 
-${spark_exe} ${spark_flags} ${script} -fits ${data_file} -hdu 1
+    spark_home=/opt/spark-2.3.1-bin-hadoop2.7
+    spark_exe="${spark_home}/bin/spark-submit"
+    
+  else
+    spark_flags="${spark_flags} --master local[*]"
+   #spark_flags="${spark_flags} --master local[4]"
+    spark_flags="${spark_flags} --driver-memory 8g --executor-memory 8g"
+    spark_flags="${spark_flags} --executor-cores 4 --total-executor-cores 6"
 
+    spark_home=/usr/local/spark/2.3.0/spark-2.3.0-bin-hadoop2.7
+    spark_exe="${spark_home}/bin/spark-submit"
+  fi
 
+  if [ ! -x ${spark_exe} ] ; then
+    echo "spark_run : ${spark_exe} not found."
+    exit
+  fi    
+
+  ${spark_exe} ${spark_flags} ${script} ${spark_args}
+
+fi

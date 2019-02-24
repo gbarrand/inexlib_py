@@ -24,6 +24,7 @@ public:
   sf_vec<colorf,float> back_color;
   sf<float> line_width;
   sf<float> marker_size;
+  sf<float> point_size;
   sf<float> font_size;
   sf_enum<sg::font_modeling> font_modeling;
   sf_enum<winding_type> front_face;
@@ -67,6 +68,7 @@ public:
       INLIB_ARG_FIELD_DESC(back_color),
       INLIB_ARG_FIELD_DESC(line_width),
       INLIB_ARG_FIELD_DESC(marker_size),
+      INLIB_ARG_FIELD_DESC(point_size),
       INLIB_ARG_FIELD_DESC(font_size),
       INLIB_ARG_FIELD_DESC(font_modeling),
       INLIB_ARG_FIELD_DESC(front_face),
@@ -111,6 +113,7 @@ private:
     add_field(&back_color);
     add_field(&line_width);
     add_field(&marker_size);
+    add_field(&point_size);
     add_field(&font_size);
     add_field(&font_modeling);
     add_field(&front_face);
@@ -154,6 +157,7 @@ public:
   ,back_color(colorf_white())
   ,line_width(1)
   ,marker_size(1)
+  ,point_size(1)
   ,font_size(10)
   ,font_modeling(font_filled)
   ,front_face(winding_ccw)
@@ -200,6 +204,7 @@ public:
   ,back_color(a_from.back_color)
   ,line_width(a_from.line_width)
   ,marker_size(a_from.marker_size)
+  ,point_size(a_from.point_size)
   ,font_size(a_from.font_size)
   ,font_modeling(a_from.font_modeling)
   ,front_face(a_from.front_face)
@@ -245,6 +250,7 @@ public:
     back_color = a_from.back_color;
     line_width = a_from.line_width;
     marker_size = a_from.marker_size;
+    point_size = a_from.point_size;
     font_size = a_from.font_size;
     font_modeling = a_from.font_modeling;
     front_face = a_from.front_face;
@@ -292,6 +298,7 @@ public:
     sp.back_color(back_color.value());
     sp.line_width(line_width.value());
     sp.marker_size(marker_size.value());
+    sp.point_size(point_size.value());
     sp.font_size(font_size.value());
     sp.font_modeling(font_modeling.value());
     sp.front_face(front_face.value());
@@ -344,6 +351,7 @@ public:
     back_color.value(sp.back_color());
     line_width.value(sp.line_width());
     marker_size.value(sp.marker_size());
+    point_size.value(sp.point_size());
     font_size.value(sp.font_size());
     font_modeling.value(sp.font_modeling());
     front_face = sp.front_face();

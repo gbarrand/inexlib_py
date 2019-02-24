@@ -128,6 +128,10 @@ inline const std::string& modeling_plus() {
   static const std::string s_v("plus");
   return s_v;
 }
+inline const std::string& modeling_markers() { //used in sg::plotter.
+  static const std::string s_v("markers");
+  return s_v;
+}
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -225,6 +229,7 @@ INLIB_GLOBAL_STRING(movable)
 
 INLIB_GLOBAL_STRING(1D)
 INLIB_GLOBAL_STRING(2D)
+INLIB_GLOBAL_STRING(3D)
 
 //INLIB_GLOBAL_STRING(whole)
 INLIB_GLOBAL_STRING(col)
@@ -247,6 +252,40 @@ INLIB_GLOBAL_STRING(class)
 INLIB_GLOBAL_STRING(camera_height)
 
 INLIB_GLOBAL_STRING(none)
+
+// send sg options :
+INLIB_GLOBAL_STRING_VALUE(send_placement,placement)
+INLIB_GLOBAL_STRING_VALUE(placement_static,static)
+INLIB_GLOBAL_STRING_VALUE(placement_dynamic,dynamic)
+INLIB_GLOBAL_STRING_VALUE(placement_screen,screen)
+INLIB_GLOBAL_STRING_VALUE(send_radius,radius)
+INLIB_GLOBAL_STRING_VALUE(send_scale,scale)
+INLIB_GLOBAL_STRING_VALUE(send_clear,clear)
+//INLIB_GLOBAL_STRING_VALUE(send_height,height)
+
+INLIB_GLOBAL_STRING_VALUE(protocol_start,start)
+INLIB_GLOBAL_STRING_VALUE(protocol_disconnect,disconnect)
+INLIB_GLOBAL_STRING_VALUE(protocol_zdoc,zdoc)
+INLIB_GLOBAL_STRING_VALUE(protocol_get_wall_params,get_wall_params)
+
+INLIB_GLOBAL_STRING_VALUE(protocol_arg_sep,;)
+
+INLIB_GLOBAL_STRING_VALUE(protocol_rwc,rwc)
+INLIB_GLOBAL_STRING_VALUE(protocol_set_params,rwc_set_params)
+INLIB_GLOBAL_STRING_VALUE(protocol_set_camera,rwc_set_camera)
+INLIB_GLOBAL_STRING_VALUE(protocol_clear_static_sg,rwc_clear_static_scene)
+INLIB_GLOBAL_STRING_VALUE(protocol_clear_dynamic_sg,rwc_clear_dynamic_scene)
+INLIB_GLOBAL_STRING_VALUE(protocol_clear_screen_sg,rwc_clear_screen_scene)
+
+INLIB_GLOBAL_STRING_VALUE(dir_diaporama,diaporama)
+
+// sg_serv params :
+INLIB_GLOBAL_STRING_VALUE(sg_serv_ww,ww)
+INLIB_GLOBAL_STRING_VALUE(sg_serv_wh,wh)
+INLIB_GLOBAL_STRING_VALUE(sg_serv_bw,bw)
+INLIB_GLOBAL_STRING_VALUE(sg_serv_bh,bh)
+INLIB_GLOBAL_STRING_VALUE(sg_serv_cols,cols)
+INLIB_GLOBAL_STRING_VALUE(sg_serv_rows,rows)
 
 }}
 

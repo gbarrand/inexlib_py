@@ -66,6 +66,7 @@ public:
   virtual void set_winding(winding_type a_v) {
     m_ccw = (a_v==winding_ccw?true:false);
   }
+  virtual void set_shade_model(shade_type) {}
 
   virtual void set_depth_test(bool) {}
   virtual void set_cull_face(bool) {}
@@ -82,6 +83,7 @@ public:
                             float,float,float,float){}
 
   virtual void set_lighting(bool) {}
+  virtual void set_blend(bool) {}
 
   virtual void restore_state(unsigned int /*a_ret_num_light*/) {
     const sg::state& _state = state();

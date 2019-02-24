@@ -245,6 +245,12 @@ public: //from a_path
       return 0;
     }
     const path_t& path = cm->m_path;
+    if(path.empty()) { //case of a cube_manip sent to a sg_serv.
+      if(a_verbose) {
+        a_out << "is_maniped : sg::cube_manip path is empty." << std::endl;
+      }
+      return 0;
+    }
     if(&a_node!=path[path.size()-1]) {
       if(a_verbose) {
         a_out << "is_maniped : node mismatch" << std::endl;
@@ -268,9 +274,7 @@ public: //from a_path
       return false;
     }
     if(a_verbose) {
-      a_out << "inlib::cbk::move_manip::set_manip :"
-            << " found matrix"
-            << std::endl;
+      a_out << "inlib::cbk::move_manip::set_manip : found matrix" << std::endl;
     }
     sg::node* asg = a_path[a_path.size()-1];
     return _set_manip(a_ui,a_out,*asg,a_node,*grp,mtx,a_path,gidx,a_verbose);

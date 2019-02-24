@@ -124,7 +124,7 @@ inline sg::return_action action_create(sg::gui_viewer& a_gv,sg::entries& a_widge
 
 */
 
-  sg::separator& dsep = _evd->detector_sg();
+  sg::separator& dsep = _evd->static_sg();
   //dsep.clear();
 
   sg::separator* sep = new sg::separator;
@@ -157,7 +157,7 @@ inline sg::return_action action_create(sg::gui_viewer& a_gv,sg::entries& a_widge
 
   } else if(scls==sg::circle::s_class()) {
     sg::draw_style* ds = new sg::draw_style;
-    ds->style = sg::draw_style::lines;
+    ds->style = sg::draw_lines;
     ds->line_width = a_gv.is_wall_screen_app()?5.0f:1.0f;
     sep->add(ds);
 
@@ -222,7 +222,7 @@ inline sg::return_action action_create(sg::gui_viewer& a_gv,sg::entries& a_widge
 
   } else if(scls==sg::h1d::s_class()) {
     sg::h1d* node = new sg::h1d(a_gv.ttf());
-    a_gv.set_arconf(node->node(),"h1d");
+    set_arconf(a_gv.m_params,node->node(),"h1d");
     node->border_visible = true;
     node->border_width = 0.05f; //outside width,height square.
     node->border_height = 0.05f;

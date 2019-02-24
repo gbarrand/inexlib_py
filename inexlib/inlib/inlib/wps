@@ -142,11 +142,9 @@ public:
   
     float scale;
     if(m_deviceWidth<=m_deviceHeight) {
-      scale =
-        (a_height<=a_width?m_deviceWidth/a_width:m_deviceWidth/a_height);
+      scale = (a_height<=a_width?m_deviceWidth/a_width:m_deviceWidth/a_height);
     } else {
-      scale =
-        (a_height<=a_width?m_deviceHeight/a_width:m_deviceHeight/a_height);
+      scale = (a_height<=a_width?m_deviceHeight/a_width:m_deviceHeight/a_height);
     }
   
    {float xtra,ytra;

@@ -1,5 +1,8 @@
 #!/bin/sh -f
 
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file exlib.license for terms.
+
 bush_home=`dirname $0`/../../../bush
 
 inlib_home=${bush_home}/../inexlib/inlib
@@ -8,20 +11,29 @@ exlib_home=${bush_home}/../inexlib/exlib
 what=""
 
 build_verbose=no
-build_verbose_name=no
 build_all_args=
 build_args=
+build_res=no
 
 while test $# -ge 1 ; do
   build_all_args="${build_all_args} $1"
   case $1 in
     -v) build_verbose=yes;build_args="${build_args} $1";;
-    -verbose_name) build_verbose_name=yes;;
+    -res)    build_res=yes;;
     -*) build_args="${build_args} $1";;
-     *) if [ $# = 1 ] ; then what=$1; else echo "unknown option : $1"; fi;;
+     *) if [ $# = 1 ] ; then what=$1; else echo "exlib/mgr/build : unknown option : $1"; fi;;
   esac
   shift
 done
+
+if [ ${build_res} = yes ] ; then
+  if [ ${build_verbose} = yes ] ; then
+    ${exlib_home}/mgr/build_res -v
+  else
+    ${exlib_home}/mgr/build_res
+  fi      
+  exit
+fi
 
 if [ "${what}" = "" ] ; then
   # cleanup before starting :
@@ -43,8 +55,6 @@ if [ "${what}" = "" ] ; then
   done
 
   # NOTE : for exas, we use the local build script.
-  if [ ${build_verbose_name} = yes ] ; then build_args="${build_args} -verbose_name";fi
-  
   find ../examples/cpp -maxdepth 1 -name '*.cpp' -type f -exec ./build_exa ${build_args} {} \;
 
   exit
@@ -58,6 +68,10 @@ if [ "${what}" = "swig" ] ; then
   ./build ${build_args} ../exlib/spy3/inlib_swig.i
   ./build ${build_args} ../exlib/spy3/exlib_offscreen_swig.i
   ./build ${build_args} ../exlib/spy3/exlib_window_swig.i
+
+  ./build ${build_args} ../exlib/slua/inlib_swig.i
+  ./build ${build_args} ../exlib/slua/exlib_offscreen_swig.i
+  ./build ${build_args} ../exlib/slua/exlib_window_swig.i
   exit
 fi
 
@@ -72,7 +86,7 @@ if [ "${what}" = "${base_name}" ] ; then
   # only the name entered, find exact places :
   found="`find .. -name "${base_name}" -print`"
   if [ "${found}" = "" ] ; then
-    echo "not found."
+    echo "exlib/mgr/build : ${base_name} not found."
   else
     find .. -name "${base_name}" -type f -print -exec ./build ${build_args} {} \;
   fi
@@ -113,20 +127,19 @@ if [ "${file_java}" = yes ] ; then exit;fi
 
 if [ "${suffix}" = "lua" -o "${suffix}" = "icc" -o "${suffix}" = "pyc" -o "${suffix}" = "py" -o "${suffix}" = "gmk" -o "${suffix}" = "shader" ] ; then
   if [ ${build_verbose} = yes ] ; then
-    echo "exlib/mgr/build : suffix ${suffix} not treated.";
+    echo "exlib/mgr/build : suffix ${suffix} not treated."
   fi
   exit
 fi
 if [ "${suffix}" = "y" -o "${suffix}" = "l" ] ; then
   if [ ${build_verbose} = yes ] ; then
-    echo "exlib/mgr/build : suffix ${suffix} not treated.";
+    echo "exlib/mgr/build : suffix ${suffix} not treated."
   fi
   exit
 fi
 
 if [ "`echo ${what} | grep '\.ps'`" != "" ] ; then exit; fi
 
-if [ ${group} = "swig" ] ; then exit;fi
 if [ ${group} = "CVS"  ] ; then exit;fi
 
 if [ ${name} = "README" ] ; then exit;fi
@@ -134,22 +147,17 @@ if [ ${name} = "README" ] ; then exit;fi
 #////////////////////////////////////
 #////////////////////////////////////
 #////////////////////////////////////
-
-if [ ${build_verbose} = yes -o ${build_verbose_name} = yes ] ; then
-  echo "exlib/mgr/build : ${what} in group ${group} ..."
-fi
-
-if [ ${name} = "iv2wall" -o ${name} = "iv2bsg" -o ${name} = "iv2png" ] ; then
+if [ ${name} = "iv_to_sg_serv" -o ${name} = "iv2bsg" -o ${name} = "iv2png" ] ; then
   build_args="${build_args} -bin_batch -inlib_gl"
-  echo "exlib/build : ${name} : enforce -bin_batch -inlib_gl."
+  echo "exlib/mgr/build : ${name} : enforce -bin_batch -inlib_gl."
 fi
 
 . ${bush_home}/on_where
 
 build_geant4_10x=yes
-if [ ${group} = "geant4" -o ${name} = "gdml_read" -o ${base_name} = geant4.cpp ] ; then
+if [ ${group} = "geant4" -o ${name} = "gdml_read" -o ${base_name} = geant4.cpp -o ${base_name} = media_geo.cpp ] ; then
   if [ ${on_my_win_xp} = yes ] ; then
-    echo 'enforce geant4/95 on this machine.'
+    echo 'exlib/mgr/build : enforce geant4/95 on this machine.'
     build_geant4_10x=no
   else    
     if [ ${on_macpro4} = yes ] ; then #clang++ knows c++11, but we do not have libc++ here.
@@ -163,7 +171,19 @@ if [ ${name} = "term_cling" ] ; then
   build_args="${build_args} -c++11 -bdir_suffix=_c++11"
 fi
 
+if [ ${group} = "iOS" ] ; then
+  if [ `uname` != "Darwin" ] ; then
+    echo 'exlib/mgr/build : build for iOS not handled on this platform.'
+    exit      
+  fi	
+  build_args="${build_args} -sdk_ios"
+fi
+
 . ${bush_home}/exlib_header
+
+if [ ${build_verbose} = yes -o ${build_verbose_name} = yes ] ; then
+  echo "exlib/mgr/build : ${what} in group ${group} ..."
+fi
 
 #////////////////////////////////////
 #////////////////////////////////////
@@ -228,6 +248,13 @@ fi
 #//////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////
 
+if [ ${group} = "swig" ] ; then
+  if [ ${base_name} = "test.i" ] ; then
+    /usr/local/SWIG/3.0.2/bin/swig -rootswig -c++ -w503,501,502 ../exlib/swig/test.i
+    exit
+  fi
+fi
+
 if [ ${is_app} = "yes" ] ; then
   #echo dummy > /dev/null
 
@@ -250,8 +277,8 @@ if [ ${is_app} = "yes" ] ; then
   if [ ${name} = "utest" -o ${name} = "rslua" -o ${name} = "rspy" ] ; then
     if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
   fi
-
-  if [ ${name} = "iv2wall" -o ${name} = "iv2bsg" -o ${name} = "iv2png" ] ; then
+  
+  if [ ${name} = "iv_to_sg_serv" -o ${name} = "iv2bsg" -o ${name} = "iv2png" ] ; then
     if [ ${build_visual} = "yes" ] ; then
       use_Windows=yes
     else
@@ -261,7 +288,7 @@ if [ ${is_app} = "yes" ] ; then
     fi
     use_GL=no
     use_GLU=no
-    echo "exlib/build : ${name} : disconnect use/GLU,GL."
+    echo "exlib/mgr/build : ${name} : disconnect use/GLU,GL."
   fi
 
   if [ ${name} = "aida_cern_root" ] ; then
@@ -298,8 +325,11 @@ if [ ${is_app} = "yes" ] ; then
 
 else # lib
 
-  if [ "${sub_group}" = "app" -a ${group} = "Cocoa" ] ; then echo 'bypass exlib/app/Cocoa group.';exit;fi
-  if [ "${sub_group}" = "app" -a ${group} = "iOS" ] ; then echo 'bypass exlib/app/iOS group.';exit;fi
+  if [ ${group} = "WebGL" ] ; then  # cl.exe : to handle the painfull include casing problem.
+    if [ ${build_visual} = "yes" ] ; then
+      cppflags="${cppflags} -I${inlib_home}/inlib/${group}"
+    fi
+  fi
 
   if [ ${group} = "cern_root" ] ; then
     if [ "${ROOTSYS}" = "" ] ; then
@@ -432,7 +462,11 @@ else # lib
       is_py_plugin=yes
       plugin=${name}
       pyname=${name}
-      cppfiles="${cppfiles} ${what}"
+      if [ `uname` = "Darwin" ] ; then
+        mmfiles="${mmfiles} ${what}"
+      else
+        cppfiles="${cppfiles} ${what}"
+      fi
       if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
     fi
   fi
@@ -497,15 +531,12 @@ else # lib
     if [ ${name} = "exlib_window_swig_lua" ] ; then
       is_plugin=yes
       plugin=${name}
-      cppfiles="${cppfiles} ${what}"
-      if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
-
-      if [ ${build_visual} = "yes" ] ; then
-        use_Windows=yes
+      if [ `uname` = "Darwin" ] ; then
+        mmfiles="${mmfiles} ${what}"
       else
-        use_X11=yes
-        use_GLX=yes
+        cppfiles="${cppfiles} ${what}"
       fi
+      if [ ${build_visual} = "yes" ] ; then cppflags="${cppflags} -bigobj";fi
     fi
 
   fi
@@ -592,12 +623,22 @@ if [ "${suffix}" = "f" ] ; then
 fi
 
 if [ "${use_screen}" = "yes" ] ; then
-  if [ ${build_visual} = "yes" ] ; then
-    use_Windows=yes
+  if [ `uname` = "Darwin" ] ; then
+    use_Cocoa=yes
   else
-    use_X11=yes
-    use_GLX=yes
+    if [ ${build_visual} = "yes" ] ; then
+      use_Windows=yes
+    else
+      use_X11=yes
+      use_GLX=yes
+    fi
   fi
+fi
+
+if [ "${use_Windows}" = "yes" ] ; then
+  if [ ${on_wsl} = "yes" ] ; then
+    cppflags="${cppflags} -I${exlib_home}/exlib/Windows"
+  fi	
 fi
 
 if [ ${build_no_gl} = "yes" ] ; then
@@ -635,6 +676,7 @@ fi
 . ${bush_home}/use/X11
 . ${bush_home}/use/Windows
 . ${bush_home}/use/DirectX
+. ${bush_home}/use/Cocoa
 
 #/////////////////////////////////
 #/// graphics : //////////////////
@@ -643,6 +685,12 @@ fi
 . ${bush_home}/use/CoinGL
 . ${bush_home}/use/GLU
 . ${bush_home}/use/GL
+
+. ${bush_home}/use/CoinXt
+. ${bush_home}/use/CoinWin
+. ${bush_home}/use/CoinNextStep
+. ${bush_home}/use/CoinQt
+. ${bush_home}/use/CoinGtk
 
 #/////////////////////////////////
 #/// over C/C++ only /////////////
@@ -875,6 +923,14 @@ else
     f77files="${f77files} ${what}"
   elif [ "${suffix}" = "c" ] ; then
     cfiles="${cfiles} ${what}"
+  elif [ "${suffix}" = "hm" ] ; then
+    mmfiles="${mmfiles} ${what}"
+  elif [ "${suffix}" = "mm" ] ; then
+    mmfiles="${mmfiles} ${what}"
+  elif [ "${suffix}" = "m" ] ; then
+    mfiles="${mfiles} ${what}"
+  elif [ "${suffix}" = "h" ] ; then
+    cppfiles="${cppfiles} ${what}"
   else	
     cppfiles="${cppfiles} ${what}"
   fi      

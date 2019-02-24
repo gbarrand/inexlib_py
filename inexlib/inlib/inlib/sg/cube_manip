@@ -4,8 +4,9 @@
 #ifndef inlib_sg_cube_manip
 #define inlib_sg_cube_manip
 
-#include "matrix"
 #include "separator"
+#include "matrix"
+#include "draw_style"
 #include "noderef"
 #include "cube"
 //#include "_switch"
@@ -310,6 +311,10 @@ protected:
    {matrix* mx = new matrix();
     mx->set_translate(center.value());
     m_sep.add(mx);}
+
+   {draw_style* ds = new draw_style();
+    ds->style = draw_filled;
+    m_sep.add(ds);}
 
    {sg::rgba* mat = new sg::rgba();
     mat->color = color;

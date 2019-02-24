@@ -77,11 +77,11 @@ class buffer : public rbuf {
 #endif
 
 public:
-  buffer(std::ostream& a_out,bool a_byte_swap,
-         uint32 a_size,char* a_buffer,uint32 a_klen,bool a_verbose)
+  buffer(std::ostream& a_out,bool a_byte_swap,uint32 a_size,char* a_buffer,uint32 a_klen,bool a_verbose)
   :parent(a_out,a_byte_swap,a_buffer+a_size,m_pos)
   ,m_byte_swap(a_byte_swap)
   ,m_verbose(a_verbose)
+  //,m_verbose(true)
   ,m_size(a_size)     //expect a not zero size.
   ,m_buffer(a_buffer) //don't get ownership.
   ,m_pos(a_buffer)
@@ -283,6 +283,8 @@ public:
     a_obj = 0;
     a_created = false;
 
+    //m_out << "debug : inlib::rroot::buffer::read_object : begin :" << std::endl;
+
     // before reading object save start position
     uint32 startpos = (uint32)(m_pos-m_buffer);
 
@@ -298,16 +300,13 @@ public:
 
     if(m_verbose) {
       m_out << "inlib::rroot::buffer::read_object :"
-            << " class " << sout(sclass)
-            << " bcnt " << bcnt
+            << " class " << sout(sclass) << ", is_ref " << is_ref
+            << ", bcnt " << bcnt
             << std::endl;
     }
 
-    if(is_ref) {
-      //bcnt is the position toward an object or an object ref.
-      //m_out << "inlib::rroot::buffer::read_object :"
-      //      << " is_ref : bcnt " << bcnt
-      //      << std::endl;
+    if(is_ref) { //bcnt is the position toward an object or an object ref.
+      //m_out << "debug : inlib::rroot::buffer::read_object : is_ref : bcnt " << bcnt << std::endl;
 
       unsigned int obj_offset = bcnt;
       obj_offset -= kMapOffset();
@@ -315,7 +314,10 @@ public:
 
       if(m_map_objs) {
 #ifdef INLIB_RROOT_OBJ_MAP_HASH_TABLE
-        if(m_objs.find(obj_offset,a_obj)) return true;
+        if(m_objs.find(obj_offset,a_obj)) {
+          //m_out << "debug : inlib::rroot::buffer::read_object : found object in map." << bcnt << std::endl;
+          return true;
+        }
 #else
         obj_map::const_iterator it = m_objs.find(obj_offset);
         if(it!=m_objs.end()) {
@@ -332,10 +334,16 @@ public:
       m_pos = m_buffer + obj_offset;
 
       uint32 first_int;
-      if(!parent::read(first_int)) return false;
+      if(!parent::read(first_int)) {
+        m_out << "inlib::rroot::buffer::read_object : parent::read(first_int) failed." << std::endl;
+        return false;
+      }
       if(first_int & kByteCountMask()) {
         std::string scls;
-        if(!read_class_tag(scls)) return false;
+        if(!read_class_tag(scls)) {
+          m_out << "inlib::rroot::buffer::read_object : read_class_tag() failed." << std::endl;
+          return false;
+	}
         if(scls.empty()) {
           m_out << "inlib::rroot::buffer::read_object :"
                 << " read_class_tag did not find a class name."
@@ -348,7 +356,11 @@ public:
         //      << std::endl;
 
         iro* obj = a_fac.create(scls,a_args);
-        if(!obj) return false;
+        if(!obj) {
+          m_out << "inlib::rroot::buffer::read_object : is_ref : creation of object"
+                << " of class " << sout(sclass) << " failed." << std::endl;
+	  return false;
+	}
 
         if(m_map_objs) {
           //must be done before stream()
@@ -398,13 +410,12 @@ public:
 
     } else {
       if(sclass.empty()) {
-        //m_out << "inlib::rroot::buffer::read_object :"
-        //      << " found empty class name."
-        //      << std::endl;
+        //m_out << "debug : inlib::rroot::buffer::read_object : found empty class name." << std::endl;
 
         m_pos = m_buffer+startpos+bcnt+sizeof(unsigned int); 
 
       } else {
+        //m_out << "debug : inlib::rroot::buffer::read_object : not a ref, create object." << std::endl;
 
         // Being not a ref, it must NOT be in the map.
         // We gain a lot by not doing the below find.
@@ -425,7 +436,12 @@ public:
 */
 
         iro* obj = a_fac.create(sclass,a_args);
-        if(!obj) return false;
+        if(!obj) {
+          m_out << "inlib::rroot::buffer::read_object : creation of object"
+                << " of class " << sout(sclass) << " failed." << std::endl;
+          return false;
+        }
+        //m_out << "debug : inlib::rroot::buffer::read_object : object created." << std::endl;
 
         if(m_map_objs) {
           //must be done before stream()
@@ -444,6 +460,8 @@ public:
 
         //NOTE : if class ref, "up there"-startpos = 8.
         if(!obj->stream(*this)) {
+          m_out << "inlib::rroot::buffer::read_object : object.stream() failed"
+                << " for object of class " << sout(sclass) << "." << std::endl;
           //restore a good buffer position :
           //m_pos = m_buffer+startpos+bcnt+sizeof(unsigned int);
           a_fac.destroy(obj);
@@ -469,9 +487,7 @@ public:
     }
 
     if(m_verbose) {
-      m_out << "inlib::rroot::buffer::read_object :"
-            << " end : "
-            << std::endl;
+      m_out << "inlib::rroot::buffer::read_object : end." << std::endl;
     }
 
     return true;
@@ -679,8 +695,7 @@ inline bool pointer_stream(buffer& a_buffer,
 }
 
 template <class T>
-inline bool pointer_stream(buffer& a_buffer,
-                           ifac& a_fac,ifac::args& a_args,T*& a_obj){
+inline bool pointer_stream(buffer& a_buffer,ifac& a_fac,ifac::args& a_args,T*& a_obj){
   //return pointer_stream(a_buffer,a_fac,a_args,T::s_class(),a_obj);
   return pointer_stream(a_buffer,a_fac,a_args,T::id_class(),a_obj);
 }

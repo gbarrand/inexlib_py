@@ -53,6 +53,17 @@ protected:
 
   static unsigned int SCREEN_CAMERA()  {return 0;}
 public:
+  bool insh__dispatch(const std::string& a_cmd,const std::vector<std::string>& a_args) {
+    if(a_cmd=="clear_static_scene") {
+      static_sg().clear();
+      return true;
+    } else if(a_cmd=="clear_dynamic_scene") {
+      dynamic_sg().clear();
+      return true;
+    }
+    return false;
+  }
+
   bool replace_camera(base_camera* a_camera){
     if(m_gv.scene().size()<3) return false;
     infos* _node = safe_cast<node,infos>(*(m_gv.scene()[INFOS()]));
@@ -166,13 +177,13 @@ public:
 
   }
 
-  const separator& detector_sg() const {return m_detector;}
-  separator& detector_sg() {return m_detector;}
+  //const separator& detector_sg() const {return m_detector;}
+  //separator& detector_sg() {return m_detector;}
   const separator& static_sg() const {return m_detector;}
   separator& static_sg() {return m_detector;}
 
-  const separator& event_sg() const {return m_event;}
-  separator& event_sg() {return m_event;}
+  //const separator& event_sg() const {return m_event;}
+  //separator& event_sg() {return m_event;}
   const separator& dynamic_sg() const {return m_event;}
   separator& dynamic_sg() {return m_event;}
 
@@ -217,7 +228,7 @@ public:
     _create_diapo_scene(a_hcam,a_same,a_one_screen);
 
     // can't be on detector() since openers works on that.
-    separator& sep = event_sg();
+    separator& sep = dynamic_sg();
     sep.clear();
 
     doc_anim* node = new doc_anim(_now,*a_it,a_opener,static_sg(),a_nclear);
@@ -615,6 +626,17 @@ inline return_action action_show_scene_title(gui_viewer& a_gv,const pos_data& a_
 }
 */
 
+template <class VIEW_SG_CLIENT>
+inline return_action action_send_static_sg(gui_viewer& a_gv) {
+  view_evd* _evd = cast_view_evd(a_gv);
+  if(!_evd) return return_none;
+  VIEW_SG_CLIENT* _view_sg_client = safe_cast<viewer,VIEW_SG_CLIENT>(a_gv);
+  if(!_view_sg_client) return return_none;
+  inlib::args opts;
+  _view_sg_client->send_sg(_evd->static_sg(),opts);
+  return return_to_render;
+}
+  
 }}
 
 //inlib_build_use kernel

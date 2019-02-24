@@ -144,6 +144,32 @@ inline std::string ext_fmt(const std::string& a_ext) {
   return s_format_guessed();
 }
 
+inline bool paper_format_extension(const std::string& a_format,std::string& a_ext) {
+  if(a_format=="GL2PS_EPS") {
+    a_ext = "eps";
+  } else if(a_format=="GL2PS_PS") {
+    a_ext = "ps";
+  } else if(a_format=="GL2PS_PDF") {
+    a_ext = "pdf";
+  } else if(a_format=="GL2PS_SVG") {
+    a_ext = "svg";
+  } else if(a_format=="GL2PS_TEX") {
+    a_ext = "tex";
+  } else if(a_format=="GL2PS_PGF") {
+    a_ext = "pgf";
+  } else if(a_format=="INZB_PS") {
+    a_ext = "ps";
+  } else if(a_format=="INZB_JPEG") {
+    a_ext = "jpg";
+  } else if(a_format=="INZB_PNG") {
+    a_ext = "png";
+  } else {
+    a_ext = "unknown";
+    return false;
+  }
+  return true;
+}
+
 }}
 
 #endif

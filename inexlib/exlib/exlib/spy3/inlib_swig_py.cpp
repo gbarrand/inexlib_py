@@ -3,7 +3,7 @@
 
 #include "../spy/inlib_swig_py.cpp"
 
-//exlib_build_use inlib csz kernel
+//exlib_build_use inlib csz kernel socket
 //exlib_build_use Python3
 
 

@@ -7,9 +7,10 @@ EXIT_FAILURE = 1
 EXIT_SUCCESS = 0
 
 def main():
+  out_file='out_waxml.aida'
   writer = inlib.waxml_file()
-  if writer.open('inlib_waxml.aida') == False :
-    print("can't open inlib_axml.aida.")
+  if writer.open(out_file) == False :
+    print("can't open "+out_file)
     return EXIT_FAILURE
 
   entries = 1000000

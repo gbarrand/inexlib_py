@@ -34,6 +34,17 @@ inline void nosuffix(const std::string& a_string,std::string& a_value,bool a_bac
   }
 }
 
+inline void path_no_suffix(const std::string& a_string,std::string& a_value){
+  // If a_string = dir0/dir1/dir2/dir3/name.xxx
+  //   a_value = dir0/dir1/dir2/dir3/name
+  std::string::size_type dot_pos = a_string.rfind('.');
+  if(dot_pos==std::string::npos) {
+    a_value = a_string;
+  } else {
+    a_value = a_string.substr(0,dot_pos);
+  }
+}
+
 inline bool has_dir(const std::string& a_string){
   if(a_string.rfind('/')!=std::string::npos) return true;
   if(a_string.rfind('\\')!=std::string::npos) return true;
@@ -65,6 +76,14 @@ inline void base_name(const std::string& a_path,std::string& a_value) {
   pos++;
   a_value = a_path.substr(pos,a_path.size()-pos);
 }
+
+//inline bool first_word(const std::string& a_string,std::string& a_value) {
+//  if(a_string.empty()) {a_value.clear();return false;}
+//  std::string::size_type pos = a_string.find(' ');
+//  if(pos==std::string::npos) {a_value = a_string;return true;}
+//  a_value = a_string.substr(0,pos);
+//  return true;
+//}
 
 inline std::string suffix(const std::string& a_string,bool a_back = true) {
   std::string value;

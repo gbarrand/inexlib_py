@@ -261,7 +261,7 @@ public:
       _sep->add(ltsf);
 
       draw_style* ds = new draw_style;
-      ds->style = draw_style::lines;
+      ds->style = draw_lines;
       _sep->add(ds);
 
       vertices* vtxs = new vertices;
@@ -273,7 +273,7 @@ public:
     } else*/ { // rep marker :
       if(marker_style.value()==marker_dot) {
         draw_style* ds = new draw_style;
-        ds->style = draw_style::points;
+        ds->style = draw_points;
         ds->point_size = marker_size;
         _sep->add(ds);
         vertices* vtxs = new vertices;
@@ -306,7 +306,7 @@ public:
 
     if(font==font_hershey()) {
       draw_style* ds = new draw_style;
-      ds->style.value(draw_style::lines);
+      ds->style.value(draw_lines);
       _sep->add(ds);
     }
 

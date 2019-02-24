@@ -279,7 +279,7 @@ public:
     if(font==font_hershey()) {
 
       draw_style* ds = new draw_style;
-      ds->style = draw_style::lines;
+      ds->style = draw_lines;
       ds->line_width = line_width;
       m_sep.add(ds);
 

@@ -1,5 +1,8 @@
 #!/bin/sh -f
 
+# Copyright (C) 2010, Guy Barrand. All rights reserved.
+# See the file exlib.license for terms.
+
 bush_home=`dirname $0`/../../../../bush
 
 inlib_home=${bush_home}/../inexlib/inlib
@@ -8,31 +11,34 @@ exlib_home=${bush_home}/../inexlib/exlib
 #set -x
 
 build_clean=no
-build_verbose_name=no
 build_use_qt5=no
 build_use_py3=no
+
+build_verbose=no
+build_res=no
 
 what=""
 args=""
 while test $# -ge 1 ; do
   case $1 in
-    -verbose_name) build_verbose_name=yes;;
     -clean)  build_clean=yes;;
 
-    -x11)    echo "-x11 not accepted";exit;;
-    -X11)    echo "-X11 not accepted";exit;;
-    -cocoa)  echo "-cocoa not accepted";exit;;
-    -ios)    echo "-ios not accepted";exit;;
-    -iossim) echo "-iossim not accepted";exit;;
+    -x11)    echo "exlib/examples/cpp/build : -x11 not accepted";exit;;
+    -X11)    echo "exlib/examples/cpp/build : -X11 not accepted";exit;;
+    -cocoa)  echo "exlib/examples/cpp/build : -cocoa not accepted";exit;;
+    -ios)    echo "exlib/examples/cpp/build : -ios not accepted";exit;;
+    -iossim) echo "exlib/examples/cpp/build : -iossim not accepted";exit;;
 
     -qt5)    build_use_qt5=yes;;
     -py3)    build_use_py3=yes;;
+    -res)    build_res=yes;;
+    -v)      build_verbose=yes;args="${args} $1";;  # we need it here for build_res.
 
     -*) args="${args} $1";;
      *) if [ $# = 1 ] ; then
           what=$1
         else         
-        echo "exlib/examples/cpp/build : unknown option : $1"
+          echo "exlib/examples/cpp/build : unknown option : $1"
         fi
         ;;
   esac
@@ -41,6 +47,15 @@ done
 
 if [ ${build_clean} = "yes" ] ; then
   echo "exlib/examples/cpp/build : do it by hand."
+  exit
+fi
+
+if [ ${build_res} = yes ] ; then
+  if [ ${build_verbose} = yes ] ; then
+    ${exlib_home}/mgr/build_res -v
+  else
+    ${exlib_home}/mgr/build_res
+  fi      
   exit
 fi
 
@@ -81,6 +96,7 @@ name="${base_name}"
 name=`echo ${name} | sed -e 's:\.cpp::g'`
 name=`echo ${name} | sed -e 's:\.c::g'`
 name=`echo ${name} | sed -e 's:\.f::g'`
+name=`echo ${name} | sed -e 's:\.mm::g'`
 name=`echo ${name} | sed -e 's:\.ecpp::g'`
 #name=`echo ${name} | sed -e 's:./::g'`
 
@@ -93,7 +109,7 @@ build_arg_cxx11=no
 build_geant4_10x=yes
 if [ ${base_name} = "clhep.cpp" ] ; then
   if [ ${on_my_win_xp} = yes ] ; then
-    echo 'enforce geant4/95 on this machine.'
+    echo 'exlib/examples/cpp/build : enforce geant4/95 on this machine.'
     build_geant4_10x=no
   else    
     if [ ${on_macpro4} = yes ] ; then #clang++ knows c++11, but we do not have libc++ here.
@@ -117,6 +133,11 @@ if [ ${build_arg_cxx11} = yes ] ; then
   args="${args} -c++11 -bdir_suffix=_c++11"
 fi
 
+if [ ${base_name} = "LHCb_artist_offscreen.cpp" ] ; then
+  args="${args} -bin_batch -inlib_gl"
+  echo "exlib/examples/cpp/build : ${base_name} : enforce -bin_batch -inlib_gl."
+fi
+
 #//////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////
@@ -125,7 +146,9 @@ build_args="${args}"
 
 build_distrib=no
 
-if [ ${build_verbose} = yes -o ${build_verbose_name} = yes ] ; then echo "exlib/examples/cpp/build ${name} ...";fi
+if [ ${build_verbose} = yes -o ${build_verbose_name} = yes ] ; then
+  echo "exlib/examples/cpp/build : do ${name} ..."
+fi    
 
 #//////////////////////////////////////////////////////////
 #/// look for //exlib_build_use in the ${what} file ///////
@@ -186,15 +209,25 @@ fi
 
 if [ ${name} = "h1d_spy" ] ; then
   cppfiles="${cppfiles} ${exlib_home}/exlib/${spy_dir}/inlib_swig_py.cpp"
-  /bin/mkdir -p ./res/${spy_dir}
-  find ../../exlib/${spy_dir} -name '*.py' -exec /bin/cp {} ./res/${spy_dir}/. \;
+  build_res=yes
 fi
 
 if [ ${name} = "plotter_spy_screen" ] ; then
-  cppfiles="${cppfiles} ${exlib_home}/exlib/${spy_dir}/inlib_swig_py.cpp"
-  cppfiles="${cppfiles} ${exlib_home}/exlib/${spy_dir}/exlib_window_swig_py.cpp"
-  /bin/mkdir -p ./res/${spy_dir}
-  find ../../exlib/${spy_dir} -name '*.py' -exec /bin/cp {} ./res/${spy_dir}/. \;
+  build_res=yes
+fi
+
+if [ ${name} = "LHCb_artist_offscreen" ] ; then
+  if [ ${build_visual} = "yes" ] ; then
+    use_Windows=yes
+  fi
+fi
+  
+if [ ${build_res} = yes ] ; then
+  if [ ${build_verbose} = yes ] ; then
+    ${exlib_home}/mgr/build_res -v
+  else
+    ${exlib_home}/mgr/build_res
+  fi      
 fi
 
 #/////////////////////////////////////////////////////////
@@ -205,6 +238,24 @@ if [ ${build_use_qt5} = yes ] ; then
   . ${bush_home}/use/qt5
 else
   . ${bush_home}/use/Qt
+fi
+
+if [ ${name} = "page_Qt" ] ; then
+  cppfiles="${cppfiles} moc_QPageViewer.cpp"
+  ${moc_exe} -o moc_QPageViewer.cpp ../../exlib/Qt/QPageViewer
+  to_rm="${to_rm} moc_QPageViewer.cpp"
+  
+  cppfiles="${cppfiles} moc_q3_hbox.cpp"
+  ${moc_exe} -o moc_q3_hbox.cpp ../../exlib/Qt/q3_hbox
+  to_rm="${to_rm} moc_q3_hbox.cpp"
+
+  cppfiles="${cppfiles} moc_q3_vbox.cpp"
+  ${moc_exe} -o moc_q3_vbox.cpp ../../exlib/Qt/q3_vbox
+  to_rm="${to_rm} moc_q3_vbox.cpp"
+
+  cppfiles="${cppfiles} moc_q3_frame.cpp"
+  ${moc_exe} -o moc_q3_frame.cpp ../../exlib/Qt/q3_frame
+  to_rm="${to_rm} moc_q3_frame.cpp"
 fi
 
 if [ ${name} = "button_Qt" ] ; then
@@ -229,12 +280,22 @@ fi
 # ////////////////////////////////////
 
 if [ "${use_screen}" = "yes" ] ; then
-  if [ ${build_visual} = "yes" ] ; then
-    use_Windows=yes
+  if [ `uname` = "Darwin" ] ; then
+    use_Cocoa=yes
   else
-    use_X11=yes
-    use_GLX=yes
+    if [ ${build_visual} = "yes" ] ; then
+      use_Windows=yes
+    else
+      use_X11=yes
+      use_GLX=yes
+    fi
   fi
+fi
+
+if [ "${use_Windows}" = "yes" ] ; then
+  if [ ${on_wsl} = "yes" ] ; then
+    cppflags="${cppflags} -I${exlib_home}/exlib/Windows"
+  fi	
 fi
 
 . ${bush_home}/use/inlib
@@ -255,6 +316,10 @@ fi
 
 . ${bush_home}/use/Xm
 . ${bush_home}/use/XmOpenGLArea
+
+. ${bush_home}/use/Xaw
+. ${bush_home}/use/Xt
+. ${bush_home}/use/Xmu
 
 . ${bush_home}/use/GLX  # before X11
 . ${bush_home}/use/X11

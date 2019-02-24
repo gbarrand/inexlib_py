@@ -347,7 +347,7 @@ protected:
       m_back_sep.add(mat);
   
       draw_style* ds = new draw_style;
-      ds->style = draw_style::lines;
+      ds->style = draw_lines;
       ds->line_width = border_line_width;
       m_back_sep.add(ds);
   

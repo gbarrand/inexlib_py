@@ -220,7 +220,7 @@ protected:
     m_sep.add(mat);
 
     draw_style* ds = new draw_style;
-    ds->style = draw_style::lines;
+    ds->style = draw_lines;
     ds->line_width = 1;
     m_sep.add(ds);
 

@@ -169,6 +169,19 @@ inline void plot(gui_viewer& a_gv,const histo::c2d& a_histo) {
   style_from_res(a_gv.styles(),guiv::s_default(),plotter,true);       
 }
 
+inline plotter* plot(gui_viewer& a_gv,const histo::c3d& a_histo,bool a_cp = true) {
+  plots* _plots = get_sg_plots(a_gv);if(!_plots) return 0;
+  plotter& plotter = _plots->current_plotter();
+  plotter.clear();
+  if(a_cp) {
+    plotter.add_plottable(new c3d2plot_cp(a_histo));
+  } else {
+    plotter.add_plottable(new c3d2plot(a_histo));
+  }
+  style_from_res(a_gv.styles(),guiv::s_default(),plotter,true);
+  return &plotter;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 /// actions : ///////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -406,7 +419,8 @@ inline void add_plotter_entries(plotter& a_plotter,entries& a_entries){
     /////////////////////////////////////////////////
     /// bins[0] /////////////////////////////////////
     /////////////////////////////////////////////////
-   {std::vector<std::string> opts = a_plotter.bins_modelings(0);
+   {std::vector<std::string> opts;
+    a_plotter.bins_modelings(0,opts);
     a_entries.add_opts("bins[0].modeling",opts.size()?opts[0]:"",opts);}
 
     a_entries.add_color("bins[0].color",a_plotter.bins_style(0).color.value());

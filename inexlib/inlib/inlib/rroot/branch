@@ -13,6 +13,7 @@
 #include "../mnmx"
 #include "../forit"
 #include "../sprintf"
+#include "dummy" //for TIOFeatures streaming.
 
 #include <map>
 
@@ -42,6 +43,7 @@ public:
   virtual iro* copy() const {return new branch(*this);}
   virtual bool stream(buffer& a_buffer) {
     _clear();
+    //::printf("debug : branch::stream : begin\n");
 
     int fCompress;
     int fBasketSize;
@@ -80,8 +82,7 @@ public:
     
     if(!Named_stream(a_buffer,m_name,m_title)) return false;
 
-    //::printf("debug : branch::stream %s %s\n",
-    //   m_name.c_str(),m_title.c_str());
+    //::printf("debug : branch::stream %s %s\n",m_name.c_str(),m_title.c_str());
 
     if(vers<=5) {
       if(!a_buffer.read(fCompress)) return false;
@@ -211,6 +212,13 @@ public:
      {uint64 v;
       if(!a_buffer.read(v)) return false;
       m_entry_number = uint32(v);}
+      if(vers>=13) {
+        dummy _dummy;
+        if(!_dummy.stream(a_buffer)) { //TIOFeatures fIOFeatures
+          m_out << "inlib::rroot::branch::stream : can't read (dummy) TIOFeatures." << std::endl;
+          return false;
+        }
+      }
       if(!a_buffer.read(fOffset)) return false;
       if(!a_buffer.read(fMaxBaskets)) return false;
       if(!a_buffer.read(fSplitLevel)) return false;

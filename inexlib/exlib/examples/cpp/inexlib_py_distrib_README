@@ -1,23 +1,33 @@
 
- To run:
-    UNIX> <arrange that your X11 environment is ok>
+  To run:
+    UNIX> <if using X11 graphics, arrange that your X11 environment is ok>
     UNIX> cd <installation_path>/inexlib_py/<version>
 
-  For the moment, the examples using the "gui viewer" must be run
- from this directory so that fonts and icon files be found.
+  For the moment, the examples using the "gui viewer" must be run from this directory so that
+ fonts and icon files be found. Note that on macOS, the windowing used by default is not X11 but straight Cocoa.
 
- To activate .py examples from the Python program:
-    UNIX> <setenv PYTHONPATH ./res/[spy,spy3]:./modules>
+  To activate .py examples from the Python program:
+     csh> source ./setup.csh  # to setup PYTHONPATH
+    ( sh> . ./setup.sh )
+    
     UNIX> <python> ./h1d.py                 # inlib histo.
     UNIX> <python> ./rroot.py               # read an histo in a root file.
-    UNIX> <python> ./plotter_window.py      # plot an histo by using softinex graphics and plotting.
-    UNIX> <python> ./plotter_offscreen.py   # plot an histo and produce an out.ps Postscript file.
+    UNIX> <python> ./waxml.py               # write histos at the AIDA XML file format.
     UNIX> <python> ./tree.py                # project a ntuple found in the pawdemo.root file
                                             # and plot the histo.
-    UNIX> <python> ./gui_plotter_windpw.py  # plots in a high level "GUI" viewer.
-    UNIX> <python> ./waxml.py               # write histos at the AIDA XML file format.
-    UNIX> <python> ./cfitsio_hst.py         # visualise an image in a fits file.
-    UNIX> <python> ./polyhedron.py          # visualise a solid/shape boolean operation.
+    
+    UNIX> <python> ./polyhedron_vis.py      # visualise a solid/shape boolean operation.
+    UNIX> <python> ./plotter_window.py      # plot an histo by using softinex graphics and plotting. A simple viewer is used.
+    UNIX> <python> ./plotter_vis.py         # same as upper but by using a more advanced "gui viewer".
+    UNIX> <python> ./cfitsio_hst_vis.py     # visualise an image in a fits file.
+    UNIX> <python> ./rdirs_vis.py           # random clouds of points in a plot.
+    UNIX> <python> ./two_cubes_vis.pye      # show the "blender effect" on a coarse grained rearranged random points.
+    
+    UNIX> <python> ./c3d_vis.py             # create, fill and plot a 3D cloud of 3D random points.
+    UNIX> <python> ./csv_c3d_vis.py         # read points from cosmo_dc2_rdz_cut.csv, fill and plot a 3D cloud.
+    UNIX> <python> ./csv_h1d_vis.py         # read points from cosmo_dc2_rdz_cut.csv, fill and plot histos.
+    UNIX> <python> ./csv_vertices_vis.py    # read points from cosmo_dc2_rdz_cut.csv, and visualize them with a simple viewer (without a plot).
+    UNIX> <python> ./csv_vertices_gui_viewer_vis.py # same as upper, but by using a more advanced viewer.
  or:
     UNIX> <python>
     >>> import h1d
@@ -28,35 +38,52 @@
   To execute all examples :
     UNIX> ./run all
     
- IMPORTANT: in the upper, "<python>" means the program corresponding to the Python installation
+  IMPORTANT: in the upper, "<python>" means the program corresponding to the Python installation
  used to build. Someone must be aware than multiple Python installations may be present on one
  system, and must be cautious to use the python program corresponding to the one used to link
  the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so and the example
- applications. (On MacOS, there is a Python under /System and another one may be found
+ applications. (On macOS, there is a Python under /System and another one may be found
  under /opt/local/bin coming indirectly from some Macports installation).
 
- To run a Spark python examples:
+  To run a Spark python example:
     <if needed, customize the spark_run script file to find your Spark and Python>
     UNIX> ./spark_run ./spark_<example>.py
  for example:     
-    UNIX> ./spark_run ./spark_hello.py          # hello from the C++ inlib::spark_greet().
-    UNIX> ./spark_run ./spark_h1d.py            # inlib histo.
-    UNIX> ./spark_run ./spark_c3d_window.py     # do a spark action, get (x,y,z) lists,
-                                                # and plot the 3D cloud with a inlib-exlib/plotter.
-    UNIX> ./spark_run ./spark_c3d_gui_window.py # the same, but by using a "gui viewer" similar
-                                                # to the ioda viewer. See softinex/"Apps general behaviour"
-                                                # for explanations about the button panels.
-    UNIX> ./spark_run ./spark_c3d_offscreen.py  # do a spark action, get (x,y,z) lists,
-                                                # and plot the 3D cloud "offscreen" by producing an out.ps
-                                                # Postscript file (done with gl2ps).
-    UNIX> ./spark_run ./spark_cfitsio_ntuple.py # read a TBL in a fits file, do "ntuple projections" with Spark,
-                                                # and plot with the inexlib/plotter.
+    UNIX> ./spark_run ./spark_inlib_h1d_vis.py   # inlib histo.
+    UNIX> ./spark_run ./spark_fits.py            # open spark_test_data.fits and a simple collect.
+    UNIX> ./spark_run ./spark_fits_ntuple_vis.py # read a TBL in a fits file, do "ntuple projections" with Spark,
+                                                 # and plot with the inexlib/plotter.
+    UNIX> ./spark_run ./spark_fits_vis.py        # open spark_test_data.fits, do a simple collect, fill and plot an histo.
+
+ The scripts:						
+    spark_parquet_vis.py
+    spark_parquet_radec_vis.py
+    spark_parquet_colored_galaxies_vis.py
+ uses parquet files not in the distribution.
+
  to execute all examples:
     UNIX> ./spark_run all
 
- To run "C++ activating python" apps:
+ To run "C++ activating python" from a compiled apps:
     UNIX> ./bin/hello_py
     UNIX> ./bin/mandel_py           # this is a unitary test. If passing it says nothing.
     UNIX> ./bin/h1d_spy             # example using inlib SWIG wrapping.
     UNIX> ./bin/plotter_spy_screen  # example using inlib/exlib SWIG wrapping.
 
+ Options :
+ -------
+  By default, the *_vis.py examples open and draw in a local window. The viewer used is in general a "gui viewer" and the
+ behaviour of it is similar to the softinex apps (see softinex web pages in the softinex/"Apps general behaviour" section for that).
+ If using ./run (./spark_run) to launch, for some examples you can use the "-window" to have a "simple viewer"
+ (no GUI behaviour here).
+
+  In the same way, on some examples you may use the "-offscreen" option to run offscreen and produce png and ps output file.
+
+  Some examples support the "-client" option that permits to connect to a "inexlib_serv" application
+ and send to it the scene graph that visualizes the data (for example a plot). If using this, you have to provide also the
+ "-vis_host" and "-vis_port" options specifying the IP address of the host on which the inexlib_serv runs and the port it listens on.
+ (When launching a inexlib_serv, you have to specify these). For example :
+    <run somewhere a inexlib_serv application by specifying the ip of the host it runs on and a port>
+    UNIX> ./run -vis_port <ip_of_inexlib_serv_host> -vis_port <port_of_inexlib_serv> cube_client.py 
+    UNIX> ./run -client -vis_port <ip_of_inexlib_serv_host> -vis_port <port_of_inexlib_serv> polyhedron_vis.py
+    UNIX> ./spark_run -client -vis_port <ip_of_inexlib_serv_host> -vis_port <port_of_inexlib_serv> spark_fits_vis.py
