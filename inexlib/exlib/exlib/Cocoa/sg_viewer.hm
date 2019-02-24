@@ -1,0 +1,154 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_Cocoa_sg_viewer_hm
+#define exlib_Cocoa_sg_viewer_hm
+
+#include "../sg/viewer"
+
+#include "session.hm"
+
+@interface exlib_Cocoa_sg_viewer_GLView : NSOpenGLView {
+  exlib::sg::viewer* m_viewer;
+}
+- (id)init:(NSRect)rect viewer:(exlib::sg::viewer*)a_viewer;
+- (void)dealloc;
+- (void)drawRect:(NSRect)a_rect;
+@end
+@implementation exlib_Cocoa_sg_viewer_GLView
+- (id)init:(NSRect)a_rect viewer:(exlib::sg::viewer*)a_viewer {
+  NSOpenGLPixelFormatAttribute att[32];
+  int i = 0;
+  att[i++] = NSOpenGLPFADoubleBuffer;
+  att[i++] = NSOpenGLPFAAccelerated;
+  att[i++] = NSOpenGLPFAAccumSize;
+  att[i++] = (NSOpenGLPixelFormatAttribute)32;
+  att[i++] = NSOpenGLPFAColorSize;
+  att[i++] = (NSOpenGLPixelFormatAttribute)32;
+  att[i++] = NSOpenGLPFADepthSize;
+  att[i++] = (NSOpenGLPixelFormatAttribute)32;
+
+  // Antialiasing :
+  att[i++] = NSOpenGLPFASampleBuffers;
+  att[i++] = 1;
+  att[i++] = NSOpenGLPFASamples;
+  att[i++] = 2;
+  att[i++] = NSOpenGLPFANoRecovery;
+
+  att[i] = (NSOpenGLPixelFormatAttribute)0;
+  NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:att];
+
+  if(self = [super initWithFrame:a_rect pixelFormat:pixelFormat]) {
+    // flush buffer only during the vertical retrace of the monitor
+    const GLint vals[1] = {1};
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1014
+    [[self openGLContext] setValues:vals forParameter:NSOpenGLCPSwapInterval];
+#else
+    [[self openGLContext] setValues:vals forParameter:NSOpenGLContextParameterSwapInterval];
+#endif    
+  }
+  
+  [pixelFormat release];
+
+  m_viewer = a_viewer;
+
+  return self;
+}
+
+- (void)dealloc {[super dealloc];}
+
+- (void)drawRect:(NSRect)a_rect {
+  if(!m_viewer) return;
+  int w = a_rect.size.width;
+  int h = a_rect.size.height;
+  m_viewer->set_size(w,h);
+  [[self openGLContext] makeCurrentContext];
+  m_viewer->render();
+  [[self openGLContext] flushBuffer];
+}
+@end
+
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= 1050
+@interface exlib_Cocoa_sg_viewer_win_delegate : NSObject {
+#else
+@interface exlib_Cocoa_sg_viewer_win_delegate : NSObject<NSWindowDelegate> {
+#endif
+  exlib::Cocoa::session* m_session;
+}
+- (id)init:(exlib::Cocoa::session*)a_session;
+- (void)dealloc;
+- (void)windowWillClose:(NSNotification*)a_not;
+@end
+@implementation exlib_Cocoa_sg_viewer_win_delegate
+- (id)init:(exlib::Cocoa::session*)a_session {
+  if(self = [super init]) {}
+  m_session = a_session;
+  return self;
+}
+- (void)dealloc {[super dealloc];}
+- (void)windowWillClose:(NSNotification*)a_not {
+  m_session->set_to_exit();
+}
+@end
+
+namespace exlib {
+namespace Cocoa {
+
+class sg_viewer : public sg::viewer {
+  INLIB_HEADER(sg_viewer,exlib::Cocoa::sg_viewer,sg::viewer)
+public:
+  sg_viewer(session& a_session,
+            int a_x = 0,int a_y = 0,
+            unsigned int a_width = 500,unsigned int a_height = 500,
+	    const std::string& a_win_title = "")
+  :parent(a_session.out(),a_width,a_height)
+  ,m_session(a_session)
+  ,m_win(0),m_GLView(0)
+  {
+    m_win = m_session.create_window(a_win_title.c_str(),a_x,a_y,a_width,a_height);
+    if(!m_win) return; //throw
+
+    exlib_Cocoa_sg_viewer_win_delegate* _win_delegate = [[exlib_Cocoa_sg_viewer_win_delegate alloc] init:&a_session];
+    [m_win setDelegate:_win_delegate];
+    
+    NSRect rect;
+    rect = [m_win frame];
+    rect = [m_win contentRectForFrameRect:rect]; //window content true size.
+    m_GLView = [[exlib_Cocoa_sg_viewer_GLView alloc] init:rect viewer:this];
+    [m_win setContentView:m_GLView];
+    [m_GLView release];
+  }
+  virtual ~sg_viewer() {
+    if(m_win) {
+      //m_session.delete_window(m_win);
+      //m_session.sync();
+    }
+  }
+protected:
+  sg_viewer(const sg_viewer& a_from)
+  :parent(a_from)
+  ,m_session(a_from.m_session)
+  ,m_win(0),m_GLView(0)
+  {}
+  sg_viewer& operator=(const sg_viewer& a_from) {
+    parent::operator=(a_from);
+    return *this;
+  }
+public:
+  bool has_window() const {return m_win?true:false;}
+  bool show() {
+    if(!m_win) return false;
+    m_session.show_window(m_win);
+    return true;
+  }
+protected:
+  session& m_session;
+  NSWindow* m_win;
+  exlib_Cocoa_sg_viewer_GLView* m_GLView;
+};
+
+}}
+
+//exlib_build_use Cocoa inlib
+
+#endif

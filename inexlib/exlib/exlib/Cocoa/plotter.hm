@@ -1,0 +1,72 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file exlib.license for terms.
+
+#ifndef exlib_Cocoa_plotter_hm
+#define exlib_Cocoa_plotter_hm
+
+#include "sg_viewer.hm"
+
+#include "../sg/text_freetype"
+
+#include <inlib/sg/noderef>
+#include <inlib/sg/ortho>
+#include <inlib/sg/plots>
+
+#include <inlib/sg/h2plot_cp>
+#include <inlib/sg/f2plot>
+#include <inlib/sg/xy2plot>
+#include <inlib/sg/fit2plot>
+#include <inlib/sg/cloud2plot_cp>
+
+#include <inlib/sys/dir>
+
+namespace exlib {
+namespace Cocoa {
+
+class plotter : public sg_viewer {
+  INLIB_HEADER(plotter,exlib::Cocoa::plotter,sg_viewer)
+public:
+  virtual void set_size(unsigned int a_w,unsigned int a_h) {
+    m_plots.adjust_size(a_w,a_h);
+    parent::set_size(a_w,a_h);
+  }
+public:
+  plotter(session& a_session,
+          unsigned int a_cols = 1,unsigned int a_rows = 1,
+          int a_x = 0,int a_y = 0,
+          unsigned int a_width = 500,unsigned int a_height = 500,
+          const std::string& a_win_title = "")
+  :parent(a_session,a_x,a_y,a_width,a_height,a_win_title)
+  ,m_ttf() //before m_plots.
+  ,m_plots(m_ttf)
+  {
+#include "../plotter_sg_common.icc"
+  }
+  virtual ~plotter() {}
+protected:
+  plotter(const plotter& a_from)
+  :parent(a_from)
+  ,m_camera(a_from.m_camera)
+  ,m_plots(a_from.m_plots)  
+  {}
+  plotter& operator=(const plotter& a_from) {
+    parent::operator=(a_from);
+    m_camera = a_from.m_camera;
+    m_plots = a_from.m_plots;
+    return *this;
+  }
+public:
+  bool steer() {return m_session.steer();}
+public:
+#include "../plotter_common.icc"
+protected:
+  inlib::sg::ortho m_camera;
+  sg::text_freetype m_ttf;
+  inlib::sg::plots m_plots;
+};
+
+}}
+
+//exlib_build_use Cocoa inlib freetype
+
+#endif
