@@ -191,7 +191,11 @@ for item in ${items} ; do
      #data_file="hdfs://134.158.75.222:8020//lsst/CosmoDC2/xyz_v1.0.parquet"
      #data_file="/Users/barrand/xyz_v1.0.parquet"
      #data_file="hdfs:///lsst/CosmoDC2/xyz_v1.0.parquet"
-      data_file="hdfs:///lsst/CosmoDC2/${file_name}"
+      if [ ${item} = "spark_parquet_colored_galaxies_vis.py" ] ; then
+        data_file="hdfs:///user/julien.peloton/${file_name}"
+      else	  
+        data_file="hdfs:///lsst/CosmoDC2/${file_name}"
+      fi	
     else
       data_file="/Users/barrand/${file_name}"
       if [ ! -f ${data_file} ] ; then
