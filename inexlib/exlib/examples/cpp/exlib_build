@@ -16,6 +16,7 @@ build_use_py3=no
 
 build_verbose=no
 build_res=no
+build_args=
 
 what=""
 args=""
@@ -29,13 +30,18 @@ while test $# -ge 1 ; do
     -ios)    echo "exlib/examples/cpp/build : -ios not accepted";exit;;
     -iossim) echo "exlib/examples/cpp/build : -iossim not accepted";exit;;
 
-    -res)    build_res=yes;;
-    
     -qt5)    build_use_qt5=yes;args="${args} $1";;
     -py3)    build_use_py3=yes;args="${args} $1";;
-    -v)      build_verbose=yes;args="${args} $1";;
+    
+    -res)    build_res=yes;;
+    -v)      build_verbose=yes
+             args="${args} $1"
+             build_args="${build_args} $1"
+             ;;
 
-    -*) args="${args} $1";;
+    -*) args="${args} $1"
+        build_args="${build_args} $1"
+        ;;
      *) if [ $# = 1 ] ; then
           what=$1
         else         
@@ -114,7 +120,7 @@ if [ ${base_name} = "clhep.cpp" ] ; then
     build_geant4_10x=no
   else    
     if [ ${on_macpro4} = yes ] ; then #clang++ knows c++11, but we do not have libc++ here.
-      args="${args} -gnu"
+      build_args="${build_args} -gnu"
     fi	
     build_arg_cxx11=yes
   fi
@@ -131,18 +137,17 @@ if [ ${base_name} = "hello_cling.cpp" ] ; then
 fi
 
 if [ ${build_arg_cxx11} = yes ] ; then
-  args="${args} -c++11 -bdir_suffix=_c++11"
+  build_args="${build_args} -c++11 -bdir_suffix=_c++11"
 fi
 
 if [ ${base_name} = "LHCb_artist_offscreen.cpp" ] ; then
-  args="${args} -bin_batch -inlib_gl"
+  build_args="${build_args} -bin_batch -inlib_gl"
   echo "exlib/examples/cpp/build : ${base_name} : enforce -bin_batch -inlib_gl."
 fi
 
 #//////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////
-build_args="${args}"
 . ${bush_home}/exlib_header
 
 build_distrib=no
