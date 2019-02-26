@@ -77,7 +77,8 @@ if [ "${what}" = "all" ] ; then
 fi
 
 if [ "${what}" = "" ] ; then
-  echo 'run : give a python script.'
+  # In the below, <bin_path>/<program> in case of running from inexlib_py distribution.
+  echo 'run : give a python script or a <bin_path>/<program> if in an inexlib_py distrib packing.'
   exit
 fi
 
@@ -86,13 +87,12 @@ if [ "`echo ${what} | sed -e 's:spark_::g'`" != "${what}" ] ; then
   exit
 fi
 
-script="${what}"
-if [ ! -f ${script} ] ; then
-  echo "run : ${script} not found."
+if [ ! -f ${what} ] ; then
+  echo "run : ${what} not found."
   exit
 fi
 
-base_name="`basename ${script}`"
+base_name="`basename ${what}`"
 suffix=`echo ${base_name} | sed 's:.*\.::'`
 if [ "${suffix}" != "${base_name}" ] ; then
   name=`echo ${base_name} | sed -e "s:\.${suffix}::g"`
@@ -218,6 +218,7 @@ py_exe=
 spy_dir=spy
 if [ ${on_lal_spark_cluster} = yes ] ; then
   if [ ${run_use_py3} = yes ] ; then
+    ld_path=/usr/lib64:/data2/anaconda3-5.2.0/lib
     py_exe=/opt/anaconda/bin/python3.6
     spy_dir=spy3    
   else
@@ -345,10 +346,21 @@ fi
 #/////////////////////////////////////////////////////////////////
 #/// run : ///////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
+# if running from inexlib_py distribution :
+items="cube_to_sg_serv h1d_spy hello_py lego_to_sg_serv mandel_py plotter_spy_screen"
+found_exe=no
+for item in ${items} ; do
+  if [ "${base_name}" = ${item} ] ; then
+    found_exe=yes
+    ${build_path}/${base_name}	
+  fi
+done
 
-if [ "${name}" = plotter_mt -o "${name}" = cfitsio_hst_mt -o "${name}" = cfitsio_hst_mp ] ; then
-  echo "run : within the Python prompt, do 'import ${name}'"
-  ${py_exe}
-else
-  ${py_exe} ${script} ${py_args}
+if [ ${found_exe} = no ] ; then
+  if [ "${name}" = plotter_mt -o "${name}" = cfitsio_hst_mt -o "${name}" = cfitsio_hst_mp ] ; then
+    echo "run : within the Python prompt, do 'import ${name}'"
+    ${py_exe}
+  else
+    ${py_exe} ${what} ${py_args}
+  fi
 fi
