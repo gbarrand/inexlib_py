@@ -249,7 +249,7 @@ for item in ${items} ; do
 done	
 
 #/////////////////////////////////////////////////////////////////
-#/// Python : ////////////////////////////////////////////////////
+#/// Python setup : //////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
 # WARNING : spark must use the Python used to build
@@ -276,6 +276,8 @@ else
     if [ ${run_use_py3} = yes ] ; then
       PYSPARK_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_PYTHON
       PYSPARK_DRIVER_PYTHON=/opt/anaconda/bin/python3.6;export PYSPARK_DRIVER_PYTHON
+      LD_PRELOAD=/usr/lib64/libexpat.so.1.6.0  # to avoid libGL using the anaconda libexpat.
+      export LD_PRELOAD
       spy_dir=spy3    
     else
       echo 'spark_run : inexlib_py not built with Python3.'
