@@ -19,6 +19,7 @@ if __name__ == "__main__":
   #/// args : ////////////////////////////////////////////////////////////////////////////
   #///////////////////////////////////////////////////////////////////////////////////////
   parser = argparse.ArgumentParser()
+  parser.add_argument('-verbose', dest='verbose',required=False,help='verbosity')
   parser.add_argument('-file', dest='file_name',required=True,help='Path to a data file')
   parser.add_argument('-hdu', dest='hdu',required=True,help='HDU index to load.')
   parser.add_argument('-vis_mode', dest='vis_mode',required=False,help='Visualization mode')

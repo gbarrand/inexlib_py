@@ -7,6 +7,7 @@
 import argparse
 
 parser = argparse.ArgumentParser()
+parser.add_argument('-verbose', dest='verbose',required=False,help='verbosity')
 parser.add_argument('-vis_mode', dest='vis_mode',required=False,help='Visualization mode')
 parser.add_argument('-vis_host', dest='vis_host',required=False,help='host to display on')
 parser.add_argument('-vis_port', dest='vis_port',required=False,help='port to display on')
