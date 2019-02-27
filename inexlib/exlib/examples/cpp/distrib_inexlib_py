@@ -69,8 +69,6 @@ find ../py -maxdepth 1 -name '*.py' -exec /bin/cp {} ${to}/. \;
 #/bin/rm -f ${to}/plotter_mt.py
 
 /bin/cp ./inexlib_py_distrib_README ${to}/README
-/bin/cp ./inexlib_py_distrib_setup.sh ${to}/setup.sh
-/bin/cp ./inexlib_py_distrib_setup.csh ${to}/setup.csh
 
 platform=`${bush_home}/platform "${cpp_compiler}"`
 if [ "${platform}" = "" ] ; then
