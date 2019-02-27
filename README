@@ -4,8 +4,8 @@
  The upper is for using a Python2.x, which is the default in bush scripts.
  If using a Python3, it is in:     
     <install_path>/bush/use/Python3
- Then, if needed, customize these files according your Python installation. When running, see
- the "IMPORTANT" notice below.
+ Then, if needed, customize these files according your Python installation. When running, you
+ may have to customize accordingly the "run, spark_run" scripts of the distribution packing.
 
   To build the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so modules
  wrapping inlib/exlib with swig:
