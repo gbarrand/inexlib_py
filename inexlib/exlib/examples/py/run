@@ -10,6 +10,8 @@
 run_verbose=no
 run_set_x=no
 
+run_gdb=no
+
 run_vis_mode=gui_window
 run_vis_host=
 run_vis_port=
@@ -26,6 +28,7 @@ while test $# -ge 1 ; do
     -x)       run_set_x=yes;   run_args="${run_args} $1";;
     -verbose) run_verbose=yes; run_args="${run_args} $1";;
     -v)       run_verbose=yes; run_args="${run_args} $1";;
+    -gdb)     run_gdb=yes;;
 
     -offscreen)  run_vis_mode=offscreen;  run_args="${run_args} $1";;
     -gui_window) run_vis_mode=gui_window; run_args="${run_args} $1";;
@@ -208,7 +211,7 @@ on_lal_spark_cluster=no
 if [ `uname -n` = vm-75222.lal.in2p3.fr ] ; then on_lal_spark_cluster=yes;fi
 
 #/////////////////////////////////////////////////////////////////
-#/// Python : ////////////////////////////////////////////////////
+#/// Python setup : //////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
 # WARNING : the Python program must be the one of the Python used to build
@@ -219,6 +222,8 @@ spy_dir=spy
 if [ ${on_lal_spark_cluster} = yes ] ; then
   if [ ${run_use_py3} = yes ] ; then
     ld_path=/usr/lib64:/data2/anaconda3-5.2.0/lib
+    LD_PRELOAD=/usr/lib64/libexpat.so.1.6.0  # to avoid libGL using the anaconda libexpat.
+    export LD_PRELOAD
     py_exe=/opt/anaconda/bin/python3.6
     spy_dir=spy3    
   else
@@ -344,6 +349,12 @@ if [ ${run_verbose} = yes ] ; then
 fi
 
 #/////////////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+#/////////////////////////////////////////////////////////////////
+gdb_exe=gdb
+if [ `uname` = "Darwin" ] ; then gdb_exe=lldb;fi
+
+#/////////////////////////////////////////////////////////////////
 #/// run : ///////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 # if running from inexlib_py distribution :
@@ -361,6 +372,11 @@ if [ ${found_exe} = no ] ; then
     echo "run : within the Python prompt, do 'import ${name}'"
     ${py_exe}
   else
-    ${py_exe} ${what} ${py_args}
+    if [ ${run_gdb} = yes ] ; then
+      echo "type : r ${what} ${py_args}"
+      ${gdb_exe} ${py_exe}	
+    else
+      ${py_exe} ${what} ${py_args}
+    fi	 
   fi
 fi
