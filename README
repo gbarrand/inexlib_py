@@ -1,5 +1,5 @@
 
- Note that the access to Python to build is in the shell script:
+  Note that the access to Python to build is in the shell script:
     <install_path>/bush/use/Python
  The upper is for using a Python2.x, which is the default in bush scripts.
  If using a Python3, it is in:     
@@ -7,7 +7,7 @@
  Then, if needed, customize these files according your Python installation. When running, see
  the "IMPORTANT" notice below.
 
- To build the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so modules
+  To build the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so modules
  wrapping inlib/exlib with swig:
     UNIX> cd <install_path>/inexlib/exlib/examples/py
     UNIX> ./build
@@ -15,6 +15,7 @@
     UNIX> ./build -py3
 
  (You can use the "-v" option to have coarse graining verbosity, or "-x" for a full traceback).
+ (UNIX is for Linux, macOS or Windows-10/cygwin).
 
  To build some C++ examples activating Python:
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
@@ -34,8 +35,6 @@
     UNIX> ./build cube_to_sg_serv.cpp
     UNIX> ./build lego_to_sg_serv.cpp
     
- (UNIX is for Linux, macOS or Windows-10/cygwin).
-
  To build the distribution:
     UNIX> cd <install_path>/inexlib/exlib/examples/cpp
     UNIX> ./distrib_inexlib_py
@@ -43,45 +42,9 @@
     <bin_dir>/distrib/inexlib_py-<version>-<platform>.zip
  ready for distribution.
 
- To install and run:
+  To install and run:
     UNIX> cd <somewhere>
     UNIX> <get inexlib_py-<version>-<platform>.zip>
     UNIX> unzip -q inexlib_py-<version>-<platform>.zip
     UNIX> cd inexlib_py/<version>
- to run C++ python apps:
-    UNIX> ./bin/hello_py
-    UNIX> ./bin/mandel_py           # this is a unitary test. If passing it says nothing.
-    UNIX> ./bin/h1d_spy             # example using inlib SWIG wrapping.
-    UNIX> ./bin/plotter_spy_screen  # example using inlib/exlib SWIG wrapping.
- to activate .py examples from the Python program:
-     csh> source ./setup.csh  # to setup PYTHONPATH
-    ( sh> . ./setup.sh )
-    UNIX> <python> ./h1d.py                 # inlib histo.
-    UNIX> <see README for more examples>
- or:
-    UNIX> <python>
-    >>> import h1d
- or:
-    <if needed, customize the run script file to find your Python>
-    UNIX> ./run ./<example>.py
-    UNIX> ./run ./h1d.py
-  To execute all examples:
-    UNIX> ./run all
-    
- IMPORTANT: in the upper, "<python>" means the program corresponding to the Python installation
- used to build. Someone must be aware than multiple Python installations may be present on one
- system, and must be cautious to use the python program corresponding to the one used to link
- the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so and the example
- applications. (On macOS, there is a Python under /System and another one may be found
- under /opt/local/bin coming indirectly from some Macports installation).
-
- To run a Spark python example:
-    <if needed, customize the spark_run script file to find your Spark and Python>
-    UNIX> ./spark_run ./spark_<example>.py
- for example:     
-    UNIX> ./spark_run ./spark_inlib_h1d_vis.py  # inlib histo and plotting.
-    UNIX> ./spark_run ./spark_fits_vis.py        # open spark_test_data.fits, do a simple collect, fill and plot an histo.
-
- To execute all examples:
-    UNIX> ./spark_run all
-
+    UNIX> <read the README file found here>
