@@ -10,9 +10,9 @@
  For example, on macOS, you may have a Python under /System and, if using Macports, another one somewhere
  under /opt/local and, if using various anaconda installations, other ones within them.
  When building/running inexlib_py you must be aware than multiple Python installations may be present
- on your machine and you must be cautious to use the Python program corresponding to the Python toolkit
- used to compile and link the inlib_swig_py.so, exlib_offscreen_swig_py.so, exlib_window_swig_py.so and
- the compiled example applications.
+ on your machine and you must be cautious, at run time, to use the Python program corresponding to the
+ Python toolkit used to compile and link the inlib_swig_py.so, exlib_offscreen_swig_py.so,
+ exlib_window_swig_py.so and the compiled example applications.
 
   When building, the access to Python to build is in the shell script:
 @verbatim
