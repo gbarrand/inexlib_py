@@ -7,6 +7,7 @@
  contains examples that have a "client" mode so that they can send scene graphs to the
  inexlib_serv application.
 
+@section inexlib_py_examples Examples
   There are C++ little applications that activate Python through it's library and
  a set of .py scripts that demonstrate how to activate inlib/exlib from a Python prompt by using
  the SWIG modules:
@@ -71,6 +72,46 @@
 @endverbatim
 
   See the README file on github for instructions on how to build, install and run.
+
+@section inexlib_py_swig What is wrapped ?
+
+  What is available of inlib/exlib from Python can be seen in the ".i" files given to SWIG.
+ These are available on github at :
+@verbatim
+    inexlib_py/inexlib/exlib/exlib/swig
+@endverbatim
+ 
+ In particular the file nodes.i shows the inlib::sg::nodes declared to SWIG along their "fields" ("sf" for a simple field
+ or "mf" for a multiple field). For example for inlib::sg::cube, what is declared to SWIG is :
+@verbatim
+    class cube : public node {
+    public:
+      virtual node* copy() const;
+    public:
+      cube();
+      virtual ~cube();
+      cube(const cube&);
+      cube& operator=(const cube&);
+    public:  
+      sf<float> width;    //simple field for the width of the cube.
+      sf<float> height;
+      sf<float> depth;
+    };
+@endverbatim
+ The upper permits, from Python, to do something as :
+@verbatim
+    import inlib
+    cube = inlib.sg_cube()
+    cube.width.value(3)
+@endverbatim
+
+  Note that we do not wrap all the C++ code with SWIG. In general in a C++ class, there are private  and protected
+ materials that are for developers and do not need to be seen from Python. The remaining public material can be split
+ in "public/developer" and "public/user". "public/developer" material is for the developer to help classes working together.
+ And the remaining "public/user" fields and methods are the "true" materials that a user want to see; it is the "spirit" for
+ what the class and package had been created. In inexlib_py, we declare to SWIG only the C++ which is "public/user".
+ For the moment, we do not have a nice web reference manual "a la doxygen" for the ".i", then the best is to jump directly
+ in the .i files to have informations. What is here is in general self explanatory and should be already helpfull.
 
 */
 
