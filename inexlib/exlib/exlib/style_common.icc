@@ -3,12 +3,17 @@
 
 // common code to exlib/[X11,Windows]/[gui_viewer,gui_plotter].
 
-    m_res_dir = ".";
-   {std::string path = "."+inlib::sep()+"res";
-    if(inlib::dir::is_a(path)) m_res_dir = path;}
-   {std::string path = ".."+inlib::sep()+"res";
-    if(inlib::dir::is_a(path)) m_res_dir = path;}
-    
+  {std::string EXLIB_RES_DIR;
+   if(inlib::get_env("EXLIB_RES_DIR",EXLIB_RES_DIR) && inlib::dir::is_a(EXLIB_RES_DIR)) {
+      m_res_dir = EXLIB_RES_DIR;
+   } else {
+      m_res_dir = ".";
+     {std::string path = "."+inlib::sep()+"res";
+      if(inlib::dir::is_a(path)) m_res_dir = path;}
+     {std::string path = ".."+inlib::sep()+"res";
+      if(inlib::dir::is_a(path)) m_res_dir = path;}
+   }}
+
     m_out_dir = ".";
 
     inlib::env_append_path("EXLIB_FONT_PATH",m_res_dir);
