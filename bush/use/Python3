@@ -72,6 +72,13 @@ if [ "${use_sys_Python3}" = "yes" ] ; then
       Python3_version=python3.5m
       Python3_lib="-L${Python3_home}/lib/x86_64-linux-gnu -lpython3.5m"
       py_exe="${Python3_home}/bin/python3.5m"
+
+    elif [ -d "${HOME}/lib/anaconda3" ] ; then  #USER=plaszczy
+      Python3_home="${HOME}/lib/anaconda3"
+      Python3_version=python3.6m
+      Python3_lib="-L${Python3_home}/lib -lpython3.6m"
+      py_exe="${Python3_home}/bin/python3.6"
+
     else      
       echo "bush/use/Python3 : Python3.x not found."
       exit
