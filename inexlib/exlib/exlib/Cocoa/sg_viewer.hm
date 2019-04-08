@@ -120,7 +120,7 @@ public:
   }
   virtual ~sg_viewer() {
     if(m_win) {
-      //m_session.delete_window(m_win);
+      m_session.delete_window(m_win);
       //m_session.sync();
     }
   }

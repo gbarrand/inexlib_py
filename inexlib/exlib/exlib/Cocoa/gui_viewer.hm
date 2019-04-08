@@ -154,12 +154,11 @@ public:
     push_home();
   }
   virtual ~gui_viewer() {
-  /*
     if(m_win) {
-      m_session.remove_dispatchers_with_window(m_win);
+      //m_session.remove_dispatchers_with_window(m_win);
       m_session.delete_window(m_win);
-      m_session.sync();
-    }*/
+      //m_session.sync();
+    }
   }
 protected:
   gui_viewer(const gui_viewer& a_from)

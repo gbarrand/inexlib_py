@@ -92,6 +92,16 @@ public:
     return window;
   }
   
+  void delete_window(NSWindow* a_window) const {
+    if(!m_app) return;
+    if([a_window isReleasedWhenClosed]==YES) {
+      [a_window close];
+    } else {
+      [a_window close];
+      [a_window release];
+    }
+  }
+  
   bool steer() {
     if(!m_app) return false;
     m_to_exit = false;
@@ -162,6 +172,7 @@ public: //not in SWIG.
     [m_app setMainMenu:menubar];}
   }    
   void set_to_exit() {m_to_exit = true;}    
+  bool to_exit() const {return m_to_exit;}    
 protected:
   std::ostream& m_out;
   NSAutoreleasePool* m_pool;
