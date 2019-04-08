@@ -124,7 +124,7 @@ file.close()
 vtxs.center()
 
 #////////////////////////////////////////////////////////////
-#/// plotting : /////////////////////////////////////////////
+#////////////////////////////////////////////////////////////
 #////////////////////////////////////////////////////////////
 width = 700
 height = 500
@@ -171,7 +171,7 @@ elif args.vis_mode == "client" :
     exit()
 
   if dc.send_string(inlib.sg_s_protocol_clear_static_sg()) == False:
-    print("send protocol_s_rwc_clear_static_scene() failed.")
+    print("send protocol_clear_static_scene() failed.")
     exit()
 
   opts = inlib.args()
