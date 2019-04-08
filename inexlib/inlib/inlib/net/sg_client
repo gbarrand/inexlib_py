@@ -63,6 +63,9 @@ public:
     if(m_socket.verbose()) {
       m_out << "inlib::sg_client::initialize : connected." << std::endl;
     }
+#ifdef INLIB_INET_SOCKET_TRY
+    m_socket.setup_tcp();
+#endif    
     return true;
   }
 
@@ -146,50 +149,42 @@ public:
   }
 
   bool send_string(const std::string& a_s) {return m_socket.send_string(a_s);}
+  bool fetch_string(std::string& a_s) {return m_socket.fetch_string(a_s);}
   
-  bool send_buffer_doc(uint64 a_uc_length,uint64 a_cp_length,const char* a_cp_buffer,const args& a_opts) {
-
-    std::vector<std::string> vopts;
-    a_opts.to_vector(vopts);
-    std::string sopts;
-    if(!nums2s<std::string>(vopts,sopts,sg::s_protocol_arg_sep())) return false;
-
+  bool send_buffer_doc(const std::string& a_opts,uint64 a_uc_length,uint64 a_cp_length,const char* a_cp_buffer) {
     if(!m_socket.send_string(sg::s_protocol_zdoc())) {
-      m_out << "inlib::sg_client::send_doc :"
-            << " send_string() failed."
-            << std::endl;
+      m_out << "inlib::sg_client::send_doc : send_string(protocol_zdoc) failed." << std::endl;
       return false;
     }
 
-    if(!m_socket.send_string(sopts)) {
-      m_out << "inlib::sg_client::send_doc :"
-            << " send_string() failed."
-            << std::endl;
+    if(!m_socket.send_string(a_opts)) {
+      m_out << "inlib::sg_client::send_doc : send_string(opts) failed." << std::endl;
       return false;
     }
 
     if(!m_socket.send<uint64>(a_uc_length)) { //uncompressed.
-      m_out << "inlib::sg_client::send_doc :"
-            << " send lengtj failed."
-            << std::endl;
+      m_out << "inlib::sg_client::send_doc : send uc_length failed." << std::endl;
       return false;
     }
 
     if(!m_socket.send<uint64>(a_cp_length)) { //compressed.
-      m_out << "inlib::sg_client::send_doc :"
-            << " send lengtj failed."
-            << std::endl;
+      m_out << "inlib::sg_client::send_doc : send cp_length failed." << std::endl;
       return false;
     }
 
     if(!m_socket.send_buffer(a_cp_buffer,a_cp_length)) { //compressed buffer.
-      m_out << "inlib::sg_client::send_doc :"
-            << " send_buffer() failed."
-            << std::endl;
+      m_out << "inlib::sg_client::send_doc : send_buffer() failed." << std::endl;
       return false;
     }
 
     return true;
+  }
+  bool send_buffer_doc(uint64 a_uc_length,uint64 a_cp_length,const char* a_cp_buffer,const args& a_opts) {
+    std::vector<std::string> vopts;
+    a_opts.to_vector(vopts);
+    std::string sopts;
+    if(!nums2s<std::string>(vopts,sopts,sg::s_protocol_arg_sep())) return false;
+    return send_buffer_doc(sopts,a_uc_length,a_cp_length,a_cp_buffer);
   }
 public:
   bool get_sg_serv_params(std::string& a_params) {

@@ -220,6 +220,12 @@ public:
     return true;
   }
 
+  bool add_line_strip(const std::vector<float>& a_xyzs){
+    const float* _xyzs = vec_data<float>(a_xyzs);
+    draw_vertex_array(gl::line_strip(),a_xyzs.size(),_xyzs);
+    return true;
+  }
+
 /*
   /////////////////////////////////////////////////////////
   /// for sg::markers and gstos : /////////////////////////

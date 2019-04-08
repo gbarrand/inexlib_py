@@ -31,7 +31,7 @@ inline cid matrix_cid()         {return base_cid()+10;}
 inline cid leaf_string_cid()    {return base_cid()+11;}
 inline cid leaf_element_cid()   {return base_cid()+12;}
 
-inline cid StreamerInfo_cid()      {return base_cid()+13;}
+inline cid streamer_info_cid()     {return base_cid()+13;}
 inline cid streamer_element_cid()  {return base_cid()+14;}
 
 inline cid stl_vector_string_cid() {return base_cid()+16;}

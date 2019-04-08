@@ -179,6 +179,13 @@ public:
     orientation.value(orientation.value() * rotf(up,a_delta));
   }
 
+  void rotate_around_x(float a_delta){
+    vec3f dir;
+    orientation.value().mul_vec(vec3f(0,0,-1),dir);
+    orientation.value(rotf(vec3f(1,0,0),a_delta) * orientation.value());
+    orientation.value().mul_vec(vec3f(0,0,-1),dir);
+  }
+
   void rotate_around_y_at_focal(float a_delta){
     //from coin SoGuiExaminerViewerP::rotYWheelMotion.
     vec3f dir;

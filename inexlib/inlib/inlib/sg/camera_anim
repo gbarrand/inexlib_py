@@ -85,6 +85,11 @@ public:
     } else if(m_what==move_rotate_left) {
       CAMERA::rotate_around_up(_da);
 
+    } else if(m_what==move_rotate_up) {
+      CAMERA::rotate_around_x(_da);
+    } else if(m_what==move_rotate_down) {
+      CAMERA::rotate_around_x(-_da);
+
     } else if(m_what==move_translate_right) {
       CAMERA::translate_along_side(_dx);
     } else if(m_what==move_translate_left) {
@@ -110,6 +115,12 @@ public:
 
     } else if(m_what==move_rotate_around_focal_left) {
       CAMERA::rotate_around_y_at_focal(_da);
+
+    } else if(m_what==move_rotate_around_focal_up) {
+      CAMERA::rotate_around_x_at_focal(_da);
+
+    } else if(m_what==move_rotate_around_focal_down) {
+      CAMERA::rotate_around_x_at_focal(-_da);
 
     } else if(m_what==move_zoom_in_out) {
       float t = float(atime::diff(a_now,m_start).value());      //secs

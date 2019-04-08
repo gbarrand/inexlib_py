@@ -768,7 +768,7 @@ public:
   :m_out(a_out)
   ,m_fac(a_fac)
 
-  ,m_streamed_baskets(m_fac,true,true)
+  ,m_streamed_baskets(m_fac)
   ,m__read_basket(0)
 
   //,m_bits(0)
@@ -776,8 +776,8 @@ public:
   ,m_title("")
   ,fAutoDelete(false)
 
-  ,m_branches(m_fac,true,true)
-  ,m_leaves(m_fac,true,true)
+  ,m_branches(m_fac)
+  ,m_leaves(m_fac)
 
   ,fEntryOffsetLen(0)
   ,m_write_basket(0)
@@ -801,11 +801,11 @@ protected:
   branch(const branch& a_from)
   :iro(a_from)
   ,m_out(a_from.m_out),m_fac(a_from.m_fac)
-  ,m_streamed_baskets(m_fac,false,true)
+  ,m_streamed_baskets(m_fac)
   ,m__read_basket(0)
   ,fAutoDelete(false)
-  ,m_branches(m_fac,false,true)
-  ,m_leaves(m_fac,false,true)
+  ,m_branches(m_fac)
+  ,m_leaves(m_fac)
   ,fEntryOffsetLen(1000)
   ,m_write_basket(0)
   ,m_entry_number(0)

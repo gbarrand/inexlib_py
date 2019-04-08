@@ -72,18 +72,19 @@ inline bool AttAxis_stream(buffer& a_buffer){
 
 class dummy_fac : public virtual ifac {
 public: //ifac
+  virtual std::ostream& out() const {return m_out;}
   virtual iro* create(const std::string& a_class,const args& a_args) {
     if(rcmp(a_class,"TGraph")) { //for TH_read_1D/List.
       return new graph();
 
     // for read_sinfos() :
     } else if(rcmp(a_class,"TStreamerInfo")) {
-      return new StreamerInfo(*this);
+      return new streamer_info(*this);
     } else if(rcmp(a_class,"TObjArray")) {
       std::string* sc = ifac::arg_class(a_args);
       if(sc) {
         if((*sc)==streamer_element::s_class()){
-          return new obj_array<streamer_element>(*this,true,true);
+          return new obj_array<streamer_element>(*this);
         } else {
           m_out << "inlib::rroot::dummy_fac::create :"
                 << " Can't create TObjArray of " << *sc << "."
@@ -91,7 +92,7 @@ public: //ifac
           return 0;
         }
       } else {
-        return new iros(*this,true,true);
+        return new iros(*this);
       }
 
     } else if(rcmp(a_class,"TStreamerBase")
@@ -114,7 +115,6 @@ public: //ifac
     }
     return 0;
   }
-  virtual void destroy(iro*& a_obj) {delete a_obj;a_obj = 0;}
 public:
   dummy_fac(std::ostream& a_out):m_out(a_out){}
   virtual ~dummy_fac(){}
@@ -288,7 +288,7 @@ inline bool TH_read_1D(buffer& a_buffer,hd_data& a_data,
     }
 
    {dummy_fac fac(a_buffer.out());
-    obj_list dummy(fac,true,true);
+    obj_list dummy(fac);
     if(!dummy.stream(a_buffer)) {
       a_buffer.out() << "inlib::rroot::TH_read_1D :"
                      << " obj_list stream failed."
@@ -985,10 +985,10 @@ inline bool read_sinfos(rroot::ifile& a_file){
   }
   rroot::buffer b(out,a_file.byte_swap(),sz,buf,k.key_length(),false);
   dummy_fac fac(out);
-  obj_list infos(fac,true,true);
+  obj_list infos(fac);
   if(!infos.stream(b)) return false;
   inlib_vforcit(iro*,infos,it) {
-    StreamerInfo* info = safe_cast<iro,StreamerInfo>(*(*it));
+    streamer_info* info = safe_cast<iro,streamer_info>(*(*it));
     if(!info) return false;
     info->out(out);
   }

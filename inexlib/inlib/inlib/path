@@ -137,6 +137,18 @@ inline bool path_name_suffix(const std::string& a_string,std::string& a_path,std
   //   a_path = ".."
   //   a_name.clear()
   //   a_suffix.clear()
+  // If a_string = dir0/dir1/dir2/dir3/
+  //   a_path = dir0/dir1/dir2/dir3
+  //   a_name.clear()
+  //   a_suffix.clear()
+  // If a_string = dir0/dir1/dir2/dir3/.
+  //   a_path = dir0/dir1/dir2/dir3
+  //   a_name = "."
+  //   a_suffix.clear()
+  // If a_string = dir0/dir1/dir2/dir3/..
+  //   a_path = dir0/dir1/dir2/dir3
+  //   a_name = ".."
+  //   a_suffix.clear()
   if(a_string==".") {
     a_path = ".";
     a_name.clear();

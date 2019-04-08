@@ -381,7 +381,7 @@ public:
                 << std::endl;
           //restore a good buffer position :
           //m_pos = m_buffer+startpos+sizeof(unsigned int); 
-          a_fac.destroy(obj);
+          delete obj;
           return false;
         }
 
@@ -464,7 +464,7 @@ public:
                 << " for object of class " << sout(sclass) << "." << std::endl;
           //restore a good buffer position :
           //m_pos = m_buffer+startpos+bcnt+sizeof(unsigned int);
-          a_fac.destroy(obj);
+          delete obj;
           return false;
         }
 
@@ -476,7 +476,7 @@ public:
                 << " check_byte_count failed "
                 << "for object of class " 
                 << sout(sclass) << "." << std::endl;
-          a_fac.destroy(obj);
+          delete obj;
           return false;
         }
 
@@ -623,18 +623,15 @@ protected:
   obj_map m_objs;
 };
 
-inline bool dummy_TXxx_pointer_stream(buffer& a_buffer,ifac& a_fac,bool a_del = true) {
+inline bool dummy_TXxx_pointer_stream(buffer& a_buffer,ifac& a_fac) {
   ifac::args args;
   iro* obj;
   bool created;
   bool status = a_buffer.read_object(a_fac,args,obj,created);
-  if(obj && a_del) {
+  if(obj) {
     if(created) {
       if(a_buffer.map_objs()) a_buffer.remove_in_map(obj);
       delete obj;
-    } else {
-      a_buffer.out() << "dummy_TXxx_pointer_stream : warning : ask to delete an object of class " << sout(obj->s_cls())
-                     << " not created here." << std::endl;
     }
   }
   return status;
@@ -644,16 +641,17 @@ template <class T>
 inline bool pointer_stream(buffer& a_buffer,
                            ifac& a_fac,ifac::args& a_args,
                            const std::string& a_T_class,
-                           T*& a_obj){
+                           T*& a_obj,bool& a_created){
   iro* obj;
-  bool created;
-  if(!a_buffer.read_object(a_fac,a_args,obj,created)) {
+  if(!a_buffer.read_object(a_fac,a_args,obj,a_created)) {
     a_buffer.out() << "inlib::rroot::pointer_stream : read_object failed." << std::endl;
     a_obj = 0;
+    a_created = false;
     return false;
   }
   if(!obj) {
     a_obj = 0;
+    a_created = false;
   } else {
     a_obj = (T*)obj->cast(a_T_class);
     if(!a_obj) {
@@ -661,6 +659,8 @@ inline bool pointer_stream(buffer& a_buffer,
                      << " inlib::cast to " << a_T_class << " failed."
                      << ". Object is a " << obj->s_cls() << "."
                      << std::endl;
+      if(a_created) delete obj;
+      a_created = false;
       return false;
     }
   }
@@ -671,16 +671,17 @@ template <class T>
 inline bool pointer_stream(buffer& a_buffer,
                            ifac& a_fac,ifac::args& a_args,
                            cid a_T_class,
-                           T*& a_obj){
+                           T*& a_obj,bool& a_created){
   iro* obj;
-  bool created;
-  if(!a_buffer.read_object(a_fac,a_args,obj,created)) {
+  if(!a_buffer.read_object(a_fac,a_args,obj,a_created)) {
     a_buffer.out() << "inlib::rroot::pointer_stream : read_object failed." << std::endl;
     a_obj = 0;
+    a_created = false;
     return false;
   }
   if(!obj) {
     a_obj = 0;
+    a_created = false;
   } else {
     a_obj = (T*)obj->cast(a_T_class);
     if(!a_obj) {
@@ -688,6 +689,8 @@ inline bool pointer_stream(buffer& a_buffer,
                      << " inlib::cast to " << a_T_class << " failed."
                      << ". Object is a " << obj->s_cls() << "."
                      << std::endl;
+      if(a_created) delete obj;
+      a_created = false;
       return false;
     }
   }
@@ -695,9 +698,9 @@ inline bool pointer_stream(buffer& a_buffer,
 }
 
 template <class T>
-inline bool pointer_stream(buffer& a_buffer,ifac& a_fac,ifac::args& a_args,T*& a_obj){
-  //return pointer_stream(a_buffer,a_fac,a_args,T::s_class(),a_obj);
-  return pointer_stream(a_buffer,a_fac,a_args,T::id_class(),a_obj);
+inline bool pointer_stream(buffer& a_buffer,ifac& a_fac,ifac::args& a_args,T*& a_obj,bool& a_created){
+  //return pointer_stream(a_buffer,a_fac,a_args,T::s_class(),a_obj,a_created);
+  return pointer_stream(a_buffer,a_fac,a_args,T::id_class(),a_obj,a_created);
 }
 
 template <class T>

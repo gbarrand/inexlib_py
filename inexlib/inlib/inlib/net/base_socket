@@ -132,6 +132,17 @@ inline bool set_input_timer(std::ostream& a_out,int a_socket,unsigned int a_micr
   return true;
 }
 
+/*
+inline bool set_tcp_nodelay(std::ostream& a_out,int a_socket) {
+  int one = 1;
+  if(::setsockopt(a_socket,SOL_TCP,TCP_NODELAY,&one,sizeof(one))<0) {
+    a_out << "inlib::base_socket::set_tcp_nodelay : setsockopt() : " << serror() << std::endl;
+    return false;
+  }
+  return true;
+}
+*/
+
 inline bool set_send_timeout(std::ostream& a_out,int a_socket,unsigned int a_secs,unsigned int a_milli_secs) {
 #ifdef _WIN32
   DWORD val = a_secs*1000+a_milli_secs;  //millisecs

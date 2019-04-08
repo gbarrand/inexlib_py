@@ -175,6 +175,7 @@ public:
     m_params.m_plane_viewer = true;
     m_params.m_cam_tiled = true;
     m_scene_light = 0;
+    m_scene_blend = 0;
     hide_sliders();    
     //stop_cam_anim();  //any cam_anim node are now deleted.
     //NOTE : we do not stop the event anim here. Someone may want to
@@ -392,16 +393,18 @@ public:
   ,m_scene_camera(0)
   ,m_reset_camera(0)
   ,m_scene_light(0)
+  ,m_scene_blend(0)
 
   ,m_gui(0)
 
-  ,m_camenu_shift_button(a_ttf)
+  ,m_camenu_anim_mode_button(a_ttf)
   ,m_camenu_sshoot_text_button(a_ttf)
   ,m_camenu_90_text_button(a_ttf)
   ,m_camenu_focal_button(a_ttf)
   ,m_camenu_viewing_button(a_ttf)
   ,m_camenu_gsto_button(a_ttf)
   ,m_camenu_light_button(a_ttf)
+  ,m_camenu_blend_button(a_ttf)
   ,m_camenu_plane_exam_button(a_ttf)
   ,m_camenu_disable_anim_text_button(a_ttf)
   ,m_console(a_ttf)
@@ -514,16 +517,18 @@ protected:
   ,m_scene_camera(0)
   ,m_reset_camera(0)
   ,m_scene_light(0)
+  ,m_scene_blend(0)
 
   ,m_gui(0)
 
-  ,m_camenu_shift_button(m_ttf)
+  ,m_camenu_anim_mode_button(m_ttf)
   ,m_camenu_sshoot_text_button(m_ttf)
   ,m_camenu_90_text_button(m_ttf)
   ,m_camenu_focal_button(m_ttf)
   ,m_camenu_viewing_button(m_ttf)
   ,m_camenu_gsto_button(m_ttf)
   ,m_camenu_light_button(m_ttf)
+  ,m_camenu_blend_button(m_ttf)
   ,m_camenu_plane_exam_button(m_ttf)
   ,m_camenu_disable_anim_text_button(m_ttf)
   ,m_console(m_ttf)
@@ -591,6 +596,7 @@ protected:
     delete m_reset_camera;
     m_reset_camera = a_from.m_reset_camera?a_from.m_reset_camera->copy():0;
     m_scene_light = 0;
+    m_scene_blend = 0;
 
     m_popup_cbks = a_from.m_popup_cbks;
 
@@ -817,6 +823,25 @@ public:
     return true;
   }
 
+  blend* scene_blend() const {return m_scene_blend;}
+  void set_scene_blend(blend* a_blend) {
+    //we don't get ownership of a_blend.
+    m_scene_blend = a_blend;
+    if(m_scene_blend) m_scene_blend->on = m_params.m_blend_on;
+  }
+
+  bool set_scene_blend_on(bool a_value) {
+    if(!m_scene_blend) return false;
+    m_scene_blend->on = a_value;
+    m_params.m_blend_on = a_value; //keep in sync.
+    if(a_value) {
+      m_camenu_blend_button.back_area::color = colorf_pink();
+    } else {
+      m_camenu_blend_button.back_area::color = m_params.m_gui_back_color;
+    }
+    return true;
+  }
+
   void set_use_gsto(bool a_value) {
     m_use_gsto = a_value;
     m_params.m_use_gsto = a_value; //keep in sync m_params.
@@ -893,9 +918,9 @@ public:
     delete cbk;
   }
 
-  void update_anim_motion(anim_what a_anim,bool a_shift) {
+  void update_anim_motion(anim_what a_anim,anim_mode a_anim_mode) {
     int move;
-    if(!anim2motion(a_anim,a_shift,move)) return;
+    if(!anim2motion(a_anim,a_anim_mode,move)) return;
     update_motion(move);
     hide_meta_zone();
   }
@@ -912,6 +937,11 @@ private:
     } else if(a_what==move_rotate_left) {
       m_scene_camera->rotate_around_up(da);
 
+    } else if(a_what==move_rotate_up) {
+      m_scene_camera->rotate_around_x(da);
+    } else if(a_what==move_rotate_down) {
+      m_scene_camera->rotate_around_x(-da);
+      
     } else if(a_what==move_translate_right) {
       m_scene_camera->translate_along_side(dx);
     } else if(a_what==move_translate_left) {
@@ -937,6 +967,12 @@ private:
 
     } else if(a_what==move_rotate_around_focal_left) {
       m_scene_camera->rotate_around_y_at_focal(da);
+
+    } else if(a_what==move_rotate_around_focal_up) {
+      m_scene_camera->rotate_around_x_at_focal(da);
+
+    } else if(a_what==move_rotate_around_focal_down) {
+      m_scene_camera->rotate_around_x_at_focal(-da);
 
     }
 
@@ -1056,25 +1092,27 @@ public:
     return visibles?true:false;
   }
 
-  std::string anim_shift_button_label() const {
+  std::string anim_mode_button_label() const {
     //logic must be in sync with the below update_anim_motion. 
     if(m_params.m_camera_type.empty()) return "nil";
 
     if(m_params.m_plane_viewer) {
-      if(m_params.m_anim_shift) {
-        return "P/Z"; //P=Pane, Z=Zoom
-      } else {
+      if(m_params.m_anim_mode==anim_mode_0) {
         return "P";
+      } else {
+        return "P/Z"; //P=Pane, Z=Zoom
       }
     } else { //exam viewer.
-      if(m_params.m_anim_shift) {
+      if(m_params.m_anim_mode==anim_mode_0) {
+        return "R/Z"; //R=Rotate. Z=Zoom.
+      } else if(m_params.m_anim_mode==anim_mode_1) {
         return "P";
+      } else if(m_params.m_anim_mode==anim_mode_2) {
+        return "R/RX";
+      } else if(m_params.m_anim_mode==anim_mode_3) {
+        return "R/FB";
       } else {
-        if(m_params.m_camera_type==s_camera_ortho()){
-          return "R/Z"; //R=Rotate.
-        } else {
-          return "R/T"; //T=Translate (in z)
-        }
+        return "nil";
       }
     }
   }
@@ -1153,16 +1191,13 @@ public:
   }
 */
 
-  bool anim2motion(anim_what a_anim,bool a_shift,int& a_move) {
+  bool anim2motion(anim_what a_anim,anim_mode a_anim_mode,int& a_move) {
     if(a_anim==anim_left) {
       if(m_params.m_plane_viewer) {
         a_move = move_translate_left;
         return true;
       } else { //exam viewer.
-        if(a_shift) {
-          a_move = move_translate_left;
-          return true;
-        } else {
+        if((a_anim_mode==anim_mode_0)||(a_anim_mode==anim_mode_2)||(a_anim_mode==anim_mode_3)) {
           if(m_params.m_anim_around_focal) {
             a_move = move_rotate_around_focal_left;
             return true;
@@ -1170,6 +1205,9 @@ public:
             a_move = move_rotate_left;
             return true;
           }
+        } else if(a_anim_mode==anim_mode_1) {
+          a_move = move_translate_left;
+          return true;
         }
       }
 
@@ -1178,10 +1216,7 @@ public:
         a_move = move_translate_right;
         return true;
       } else { //exam viewer.
-        if(a_shift) {
-          a_move = move_translate_right;
-          return true;
-        } else {
+        if((a_anim_mode==anim_mode_0)||(a_anim_mode==anim_mode_2)||(a_anim_mode==anim_mode_3)) {
           if(m_params.m_anim_around_focal) {
             a_move = move_rotate_around_focal_right;
             return true;
@@ -1189,54 +1224,67 @@ public:
             a_move = move_rotate_right;
             return true;
           }
+        } else if(a_anim_mode==anim_mode_1) {
+          a_move = move_translate_right;
+          return true;
         }
       }
 
     } if(a_anim==anim_up) {
       if(m_params.m_plane_viewer) {
-        if(a_shift) {
-          a_move = move_zoom_in;
+        if(a_anim_mode==anim_mode_0) {
+          a_move = move_up;
           return true;
         } else {
-          a_move = move_up;
+          a_move = move_zoom_in;
           return true;
         }
       } else { //exam viewer.
-        if(a_shift) {
+        if(a_anim_mode==anim_mode_0) {
+          a_move = move_zoom_in;
+          return true;
+        } else if(a_anim_mode==anim_mode_1) {
           a_move = move_up;
           return true;
-        } else {
-          if(m_params.m_camera_type==s_camera_ortho()){
-            a_move = move_zoom_in;
-            return true;
-          } else {
-            a_move = move_forward;
-            return true;
-          }
+        } else if(a_anim_mode==anim_mode_2) {
+          if(m_params.m_anim_around_focal) {
+            a_move = move_rotate_around_focal_up;
+	  } else {
+            a_move = move_rotate_up;
+	  }
+          return true;
+        } else if(a_anim_mode==anim_mode_3) {
+          a_move = move_forward;
+          return true;
         }
       }
 
     } if(a_anim==anim_down) {
       if(m_params.m_plane_viewer) {
-        if(a_shift) {
-          a_move = move_zoom_out;
+        if(a_anim_mode==anim_mode_0) {
+          a_move = move_down;
           return true;
         } else {
-          a_move = move_down;
+          a_move = move_zoom_out;
           return true;
         }
       } else { //exam viewer.
-        if(a_shift) {
+        if(a_anim_mode==anim_mode_0) {
+          a_move = move_zoom_out;
+          return true;
+        } else if(a_anim_mode==anim_mode_1) {
           a_move = move_down;
           return true;
-        } else {
-          if(m_params.m_camera_type==s_camera_ortho()){
-            a_move = move_zoom_out;
-            return true;
-          } else {
-            a_move = move_backward;
-            return true;
+        } else if(a_anim_mode==anim_mode_2) {
+          if(m_params.m_anim_around_focal) {
+            a_move = move_rotate_around_focal_down;
+	  } else {
+            a_move = move_rotate_down;
           }
+          return true;
+        } else if(a_anim_mode==anim_mode_3) {
+          a_move = move_backward;
+          return true;
         }
       }
     }
@@ -1617,7 +1665,7 @@ public:
   }
   
   void set_camera_menu_labels() {
-    set_arconf(m_params,m_camenu_shift_button,anim_shift_button_label());
+    set_arconf(m_params,m_camenu_anim_mode_button,anim_mode_button_label());
     set_arconf(m_params,m_camenu_viewing_button,viewing_button_label());
 
     set_img_from_res_file(single_shoot_image_button_file(),m_camenu_sshoot_image_button.img.value());
@@ -1657,6 +1705,10 @@ public:
 
   void toggle_light() {
     set_scene_light_on(m_params.m_light_on?false:true);
+  }
+  
+  void toggle_blend() {
+    set_scene_blend_on(m_params.m_blend_on?false:true);
   }
   
   void toggle_gsto() {
@@ -2518,9 +2570,9 @@ protected:
     //inside "shift" button :
     create_main_button(m_params,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
-                       a_nb-2,1,anim_shift_button_label(),
-                       m_camenu_shift_button,
-                       new gv_cbk(*this,action_toggle_param_anim_shift));
+                       a_nb-2,1,anim_mode_button_label(),
+                       m_camenu_anim_mode_button,
+                       new gv_cbk(*this,action_toggle_param_anim_mode));
 
     //outside top-left "single shoot" button :
     create_main_button(m_out,m_res_dir,m_params,m_image_readers,
@@ -2586,12 +2638,12 @@ protected:
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-5,2,"mv","","",
                        new gv_cbk(*this,action_cam_choose_anim));
-
+/*
     create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-5,1,"EA","","object_rotate_left.jpg",
                        new gv_cbk(*this,action_enable_anim));
-		       
+*/		       
     create_main_button(m_out,m_res_dir,m_params,m_image_readers,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-5,0,
@@ -2606,12 +2658,11 @@ protected:
       m_camenu_disable_anim_image_button.color = m_params.m_gui_back_color;
     }		          
 
-/*
     create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
                        m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
                        a_nb-5,1,"P/O","","",
                        new gv_cbk(*this,action_swap_camera_kind));
-*/
+		       
     ///////////////////////////////////////////////////////////////////////
     /// camenu left area //////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
@@ -2655,6 +2706,17 @@ protected:
       m_camenu_light_button.back_area::color = colorf_pink();
     } else {
       m_camenu_light_button.back_area::color = m_params.m_gui_back_color;
+    }
+
+    create_main_button(m_params,
+                       m_camenu_sep,a_wcw,a_wch,a_wb,a_hb,0,
+                       2,0,"~",
+                       m_camenu_blend_button,
+                       new gv_cbk(*this,action_toggle_blend));
+    if(m_params.m_blend_on) {
+      m_camenu_blend_button.back_area::color = colorf_pink();
+    } else {
+      m_camenu_blend_button.back_area::color = m_params.m_gui_back_color;
     }
 
     create_main_button(m_params,
@@ -2966,6 +3028,8 @@ public:
     float dx,dy,dz;
     if(!_action.box().get_cube_size(dx,dy,dz)) return false;    
 
+    // at this point, we assume dx, dy and dz are not zero.
+
     //::printf("debug : gui_viewer::adapt_camera : center = %g %g %g, size = %g %g %g\n",c.x(),c.y(),c.z(),dx,dy,dz);
 
     group* grp = find_container<group>(m_out,*m_scene,*cam,false);
@@ -2978,10 +3042,23 @@ public:
     float ortho_cam_height = 0;
     if(dy>=dx) {
       ortho_cam_height = dy*1.2f;
+      
+      float aspect = float(m_ww)/float(m_wh);
+      float cam_width = ortho_cam_height*aspect;
+      if(dx>=cam_width) {
+        float factor = dx/cam_width;
+        ortho_cam_height *= factor*1.2F;
+      }
+
     } else {
       float cam_width = dx*1.2f;
       float aspect = float(m_ww)/float(m_wh);
       ortho_cam_height = cam_width/aspect;
+
+      if(dy>=ortho_cam_height) {
+        float factor = dy/ortho_cam_height;
+        ortho_cam_height *= factor*1.2F;
+      }
     }
 
     base_camera* new_cam = 0;
@@ -3075,9 +3152,9 @@ public:
     set_scene_camera(new_cam,false); //WARNING : false
   }
 
-  void start_cam_anim(anim_what a_anim,bool a_shift,unsigned int a_cycle) {
+  void start_cam_anim(anim_what a_anim,anim_mode a_anim_mode,unsigned int a_cycle) {
     int move;
-    if(!anim2motion(a_anim,a_shift,move)) {
+    if(!anim2motion(a_anim,a_anim_mode,move)) {
       m_out << "inlib::sg::gui_viewer::start_cam_anim :"
                     << " unknown anim code " << a_anim
                     << std::endl;       
@@ -3094,7 +3171,7 @@ public:
     search_action sa(m_out);
     const path_t& _path = find_path(sa,*m_scene,*m_scene_camera,false);
     if(_path.empty()) {
-      m_out << "inlib::sg::gui_viewer::start_cam_anim :"
+      m_out << "inlib::sg::gui_viewer::start_cam_move :"
                     << " path not found for current camera."
                     << std::endl;       
       return;
@@ -3102,7 +3179,7 @@ public:
 
     group* grp = container<group>(_path);
     if(!grp) {
-      m_out << "inlib::sg::gui_viewer::start_cam_anim :"
+      m_out << "inlib::sg::gui_viewer::start_cam_move :"
                     << " camera group not found."
                     << std::endl;       
       return;
@@ -3123,7 +3200,7 @@ public:
       new_cam = new camera_anim<lrbt>(*lc,_now,-1,a_move,a_cycle);
 
     } else {
-      m_out << "inlib::sg::gui_viewer::start_cam_anim :"
+      m_out << "inlib::sg::gui_viewer::start_cam_move :"
                     << " camera not ortho and not perspective."
                     << std::endl;
       return;
@@ -3385,23 +3462,44 @@ public:
     return status;     
   }
 
-  //bool anim_shift() const {return m_params.m_anim_shift;}
+  //bool anim_mode() const {return m_params.m_anim_mode;}
 
   void set_params_camenu(const gui_params& a_params) {
     m_params = a_params;
     set_param_single_shoot(a_params.m_single_shoot);    
     set_param_90(a_params.m_90);    
-    set_param_anim_shift(a_params.m_anim_shift);    
+    set_param_anim_mode(a_params.m_anim_mode);    
     set_param_anim_around_focal(a_params.m_anim_around_focal);    
     set_param_viewing(a_params.m_viewing);    
   }
 
-  void set_param_anim_shift(bool a_value) {
-    m_params.m_anim_shift = a_value;
-    m_camenu_shift_button.set_label(anim_shift_button_label());
+  void set_param_anim_mode(anim_mode a_anim_mode) {
+    m_params.m_anim_mode = a_anim_mode;
+    m_camenu_anim_mode_button.set_label(anim_mode_button_label());
   }
-  void toggle_param_anim_shift() {
-    set_param_anim_shift(m_params.m_anim_shift?false:true);
+  void toggle_param_anim_mode() {
+    unsigned int mode = m_params.m_anim_mode;
+    if(m_params.m_plane_viewer) {
+      if(mode==anim_mode_0) {
+        set_param_anim_mode(anim_mode_1);
+      } else if(mode==anim_mode_1) {
+        set_param_anim_mode(anim_mode_0);
+      } else if(mode==anim_mode_2) {
+        set_param_anim_mode(anim_mode_0);
+      } else if(mode==anim_mode_3) {
+        set_param_anim_mode(anim_mode_0);
+      }
+    } else { //exam viewer.
+      if(mode==anim_mode_0) {
+        set_param_anim_mode(anim_mode_1);
+      } else if(mode==anim_mode_1) {
+        set_param_anim_mode(anim_mode_2);
+      } else if(mode==anim_mode_2) {
+        set_param_anim_mode(anim_mode_3);
+      } else if(mode==anim_mode_3) {
+        set_param_anim_mode(anim_mode_0);
+      }
+    }
   }
 
   void set_param_anim_around_focal(bool a_value) {
@@ -3765,8 +3863,7 @@ public:
     float znear = 0.1f*a_radius;
     float near_height = 2 * znear * (a_radius/cam_pos);
 
-    base_camera* camera =
-      create_camera(camera_perspective,near_height,znear);
+    base_camera* camera = create_camera(camera_perspective,near_height,znear);
     if(!camera) {
       m_out << "inlib::sg::gui_viewer::create_3D_camera :"
             << " create_camera failed."
@@ -3842,23 +3939,23 @@ public:
           anim = anim_down;
 
         // do we want to change things in the cam panel ?
-        // Huum, yes as long as m_params.m_anim_shift
+        // Huum, yes as long as m_params.m_anim_mode
         // belongs to gui_viewer.
-        set_param_anim_shift(a_shift);
+        set_param_anim_mode(a_shift?anim_mode_1:anim_mode_0);
 
-        start_cam_anim(anim,a_shift,m_params.m_cycle_secs);
+        start_cam_anim(anim,a_shift?anim_mode_1:anim_mode_0,m_params.m_cycle_secs);
       }
       return false; //do not render.
 
     } else {
       if(a_key==key_left)
-        update_anim_motion(anim_left,a_shift);
+        update_anim_motion(anim_left,a_shift?anim_mode_1:anim_mode_0);
       else if(a_key==key_right)
-        update_anim_motion(anim_right,a_shift);
+        update_anim_motion(anim_right,a_shift?anim_mode_1:anim_mode_0);
       else if(a_key==key_up)
-        update_anim_motion(anim_up,a_shift);
+        update_anim_motion(anim_up,a_shift?anim_mode_1:anim_mode_0);
       else if(a_key==key_down)
-        update_anim_motion(anim_down,a_shift);
+        update_anim_motion(anim_down,a_shift?anim_mode_1:anim_mode_0);
 
       return true; //to render.
     }
@@ -3944,7 +4041,7 @@ public:
 
   ACTION_GUI_RENDER(toggle_param_single_shoot)      //action_single_shoot
   ACTION_GUI_RENDER(toggle_param_90)                //action_90
-  ACTION_GUI_RENDER(toggle_param_anim_shift)        //action_anim_shift
+  ACTION_GUI_RENDER(toggle_param_anim_mode)         //action_anim_mode
   ACTION_GUI_RENDER(toggle_param_anim_around_focal) //action_anim_around_focal
   ACTION_GUI_RENDER(toggle_param_viewing)           //action_viewing
   ACTION_GUI_RENDER(hide_camera_menu)               //action_hide_camenu
@@ -3953,6 +4050,7 @@ public:
 //ACTION_GUI_RENDER(start_anim_around_focal)
   ACTION_GUI_RENDER(count_points) 
   ACTION_GUI_RENDER(toggle_light)
+  ACTION_GUI_RENDER(toggle_blend)
   ACTION_GUI_RENDER(toggle_gsto)
   ACTION_GUI_RENDER(toggle_plane_exam)
   ACTION_GUI_RENDER(swap_scene_clear_color)
@@ -4032,13 +4130,13 @@ public:
 
     if(a_gv.m_params.m_single_shoot) {
 
-      a_gv.update_anim_motion(a_action,a_gv.m_params.m_anim_shift);
+      a_gv.update_anim_motion(a_action,a_gv.m_params.m_anim_mode);
 
     } else {
       if(a_gv.cam_anim_is_running()) {
         a_gv.stop_cam_anim();
       } else {             
-        a_gv.start_cam_anim(a_action,a_gv.m_params.m_anim_shift,a_gv.m_params.m_cycle_secs);
+        a_gv.start_cam_anim(a_action,a_gv.m_params.m_anim_mode,a_gv.m_params.m_cycle_secs);
       }
     }
     return return_to_render;
@@ -4283,7 +4381,7 @@ public:
     static unsigned int action_reset_camera() {return 9;}    
     static unsigned int action_single_shoot()      {return 4;}
     static unsigned int action_90()                {return 5;}
-    static unsigned int action_anim_shift()        {return 6;}
+    static unsigned int action_anim_mode()         {return 6;}
     static unsigned int action_anim_around_focal() {return 7;}
     static unsigned int action_viewing()           {return 8;}
     static unsigned int action_clear_scene()             {return 21;}
@@ -4420,7 +4518,10 @@ protected:
     virtual return_action action() {
       //m_gv.out() << "debug : anim_work::action" << std::endl;
       if(m_gv.treat_anim(atime::now())) return return_to_render;     
-      return return_none;     
+      //return return_none;
+      // no anim consumer, we stop the anim_work.
+      m_gv.disable_anim();
+      return return_to_render;     
     }
   public:
     anim_work(gui_viewer& a_gv)
@@ -4725,6 +4826,7 @@ protected:
   base_camera* m_scene_camera;
   node* m_reset_camera;
   torche* m_scene_light;
+  blend* m_scene_blend;
 
 private:
   selection* m_gui;
@@ -4736,7 +4838,7 @@ protected:
   _switch m_camenu_switch;
   separator m_camenu_sep;
 
-  text_button m_camenu_shift_button;
+  text_button m_camenu_anim_mode_button;
   image_button m_camenu_sshoot_image_button;
   text_button m_camenu_sshoot_text_button;
   image_button m_camenu_90_image_button;
@@ -4745,6 +4847,7 @@ protected:
   text_button m_camenu_viewing_button;  
   text_button m_camenu_gsto_button;  
   text_button m_camenu_light_button;  
+  text_button m_camenu_blend_button;  
   text_button m_camenu_plane_exam_button;
 
   image_button m_camenu_disable_anim_image_button;
@@ -4990,6 +5093,7 @@ ACTION_GV_RENDER(console_mag_two)
 ACTION_GV_RENDER(adapt_camera_to_scene)
 ACTION_GV_RENDER(toggle_gsto)
 ACTION_GV_RENDER(toggle_light)
+ACTION_GV_RENDER(toggle_blend)
 
 ACTION_GV_HIDE_MAIN_MENU(reset_camera)
 ACTION_GV_HIDE_MAIN_MENU(start_anim_around_focal)

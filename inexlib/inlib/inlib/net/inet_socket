@@ -18,6 +18,11 @@ typedef unsigned long in_addr_t;
 #include <fcntl.h>
 #endif
 
+//#define INLIB_INET_SOCKET_TRY
+#ifdef INLIB_INET_SOCKET_TRY
+#include <netinet/tcp.h>
+#endif
+
 /*
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
@@ -101,6 +106,25 @@ inline bool restore_blocking(std::ostream& a_out,SOCKET a_socket,int a_old_flags
 #endif
   return true;
 }
+
+#ifdef INLIB_INET_SOCKET_TRY
+inline bool set_tcp_nodelay(std::ostream& a_out,int a_socket) {
+  int one = 1;
+  if(::setsockopt(a_socket,SOL_TCP,TCP_NODELAY,&one,sizeof(one))<0) {
+    a_out << "inlib::base_socket::set_tcp_nodelay : setsockopt() : " << serror() << std::endl;
+    return false;
+  }
+  return true;
+}
+inline bool set_tcp_rm_cork(std::ostream& a_out,int a_socket) {
+  int zero = 0;
+  if(::setsockopt(a_socket,SOL_TCP,TCP_CORK,&zero,sizeof(zero))<0) {
+    a_out << "inlib::base_socket::set_tcp_cork : setsockopt() : " << serror() << std::endl;
+    return false;
+  }
+  return true;
+}
+#endif
 
 inline bool socket_failure(SOCKET a_socket) {
 #ifdef _WIN32
@@ -674,6 +698,26 @@ public:
     return false;
   }
 
+#ifdef INLIB_INET_SOCKET_TRY
+  bool setup_tcp() {
+    if(m_socket==INVALID_SOCKET) return false;
+    bool status = true;
+    if(!set_tcp_nodelay(m_out,m_socket)) {
+      m_out << "set_tcp_no_delay failed." << std::endl;
+      status = false;
+    } else {
+      m_out << "set_tcp_no_delay ok." << std::endl;
+    }
+    if(!set_tcp_rm_cork(m_out,m_socket)) {
+      m_out << "set_tcp_rm_cork failed." << std::endl;
+      status = false;
+    } else {
+      m_out << "set_tcp_rm_cork ok." << std::endl;
+    }
+    return status;
+  }
+#endif
+  
 protected:        
   after_bind_func m_after_bind_func;
   void* m_after_bind_tag;

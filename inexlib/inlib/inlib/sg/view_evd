@@ -50,15 +50,19 @@ protected:
 
   static unsigned int GEOM_CAMERA()  {return 0;}
 //static unsigned int GEOM_TORCHE()  {return 1;}
+//static unsigned int GEOM_BLEND()   {return 2;}
 
   static unsigned int SCREEN_CAMERA()  {return 0;}
 public:
   bool insh__dispatch(const std::string& a_cmd,const std::vector<std::string>& a_args) {
-    if(a_cmd=="clear_static_scene") {
+    if(a_cmd==s_insh_clear_static_scene()) {
       static_sg().clear();
       return true;
-    } else if(a_cmd=="clear_dynamic_scene") {
+    } else if(a_cmd==s_insh_clear_dynamic_scene()) {
       dynamic_sg().clear();
+      return true;
+    } else if(a_cmd==s_insh_clear_screen_scene()) {
+      screen_sg().clear();
       return true;
     }
     return false;
@@ -149,6 +153,9 @@ public:
     m_light.on = m_gv.m_params.m_light_on;
     _sep->add(new noderef(m_light)); //GEOM_TORCHE()
 
+    m_blend.on = m_gv.m_params.m_blend_on;
+    _sep->add(new noderef(m_blend)); //GEOM_BLEND()
+
     m_layout.set_identity();
     _sep->add(new noderef(m_layout));
     _sep->add(new clrref<separator>(m_event));
@@ -158,6 +165,7 @@ public:
 
     m_gv.set_scene_camera(camera);
     m_gv.set_scene_light(&m_light);
+    m_gv.set_scene_blend(&m_blend);
     m_gv.set_plane_viewer(false);
     }
 
@@ -497,6 +505,7 @@ protected:
 private:
   gui_viewer& m_gv;
   head_light m_light;
+  blend m_blend;
   matrix m_layout;
   separator m_detector;
   separator m_event;

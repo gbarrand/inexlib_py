@@ -24,6 +24,7 @@
 #include "legend"
 #include "text"
 #include "torche"
+#include "ellipse"
 
 #include "../data_axis"
 #include "../hatcher"
@@ -1663,6 +1664,7 @@ public:
     m_x_axis.modeling = a_v;
     m_y_axis.modeling = a_v;
     m_z_axis.modeling = a_v;
+    m_cmap_axis.modeling = a_v;
   }
 
   void set_axes_color(const colorf& a_color){
@@ -1683,6 +1685,12 @@ public:
     m_z_axis.labels_style().color = a_color;
     m_z_axis.title_style().color = a_color;
     m_z_axis.mag_style().color = a_color;
+    
+    m_cmap_axis.line_style().color = a_color;
+    m_cmap_axis.ticks_style().color = a_color;
+    m_cmap_axis.labels_style().color = a_color;
+    m_cmap_axis.title_style().color = a_color;
+    m_cmap_axis.mag_style().color = a_color;
   }
 
   void set_axes_text_scale(float a_v){
@@ -1697,40 +1705,68 @@ public:
     m_z_axis.labels_style().scale = a_v;
     m_z_axis.title_style().scale = a_v;
     m_z_axis.mag_style().scale = a_v;
+
+    m_cmap_axis.labels_style().scale = a_v;
+    m_cmap_axis.title_style().scale = a_v;
+    m_cmap_axis.mag_style().scale = a_v;
   }
 
   void set_axes_line_pattern(unsigned short a_v){
     m_x_axis.line_style().pattern = a_v;
     m_y_axis.line_style().pattern = a_v;
     m_z_axis.line_style().pattern = a_v;
+    m_cmap_axis.line_style().pattern = a_v;
   }
   
   void set_axes_line_width(int a_v){
     m_x_axis.line_style().width = float(a_v);
     m_y_axis.line_style().width = float(a_v);
     m_z_axis.line_style().width = float(a_v);
+    m_cmap_axis.line_style().width = float(a_v);
   
     m_x_axis.ticks_style().width = float(a_v);
     m_y_axis.ticks_style().width = float(a_v);
     m_z_axis.ticks_style().width = float(a_v);
+    m_cmap_axis.ticks_style().width = float(a_v);
   }
   
   void set_axes_tick_length(float a_v){
     m_x_axis.tick_length = a_v;
     m_y_axis.tick_length = a_v;
     m_z_axis.tick_length = a_v;
+    m_cmap_axis.tick_length = a_v;
   }
   
   void set_axes_title_height(float a_v){
     m_x_axis.title_height = a_v;
     m_y_axis.title_height = a_v;
     m_z_axis.title_height = a_v;
+    m_cmap_axis.title_height = a_v;
   }
   
   void set_axes_label_height(float a_v){
     m_x_axis.label_height = a_v;
     m_y_axis.label_height = a_v;
     m_z_axis.label_height = a_v;
+    m_cmap_axis.label_height = a_v;
+  }
+
+  void set_axes_font_modeling(font_modeling a_v){
+    m_x_axis.labels_style().font_modeling = a_v;
+    m_x_axis.title_style().font_modeling = a_v;
+    m_x_axis.mag_style().font_modeling = a_v;
+  
+    m_y_axis.labels_style().font_modeling = a_v;
+    m_y_axis.title_style().font_modeling = a_v;
+    m_y_axis.mag_style().font_modeling = a_v;
+  
+    m_z_axis.labels_style().font_modeling = a_v;
+    m_z_axis.title_style().font_modeling = a_v;
+    m_z_axis.mag_style().font_modeling = a_v;
+
+    m_cmap_axis.labels_style().font_modeling = a_v;
+    m_cmap_axis.title_style().font_modeling = a_v;
+    m_cmap_axis.mag_style().font_modeling = a_v;
   }
 
 protected:
@@ -3107,6 +3143,8 @@ public:
           update_primitive_text(*ptext);
         } else if(plottable_box* pbox = safe_cast<plotprim,plottable_box>(*(*it))) {
           update_primitive_box(a_out,*pbox);
+        } else if(plottable_ellipse* pellipse = safe_cast<plotprim,plottable_ellipse>(*(*it))) {
+          update_primitive_ellipse(a_out,*pellipse);
         } else if(plottable_img* pimg = safe_cast<plotprim,plottable_img>(*(*it))) {
           update_primitive_img(a_out,*pimg);
 	}
@@ -7859,12 +7897,19 @@ protected: //rep
       text_hershey* text = new text_hershey;
       text->encoding = "PAW";
       text->strings.add(a_obj.m_TEXT);
-      if(a_obj.m_JUST=='R') {
+      if(a_obj.m_HJUST=='R') {
         text->hjust = right;
-      } else if(a_obj.m_JUST=='C') {
+      } else if(a_obj.m_HJUST=='C') {
         text->hjust = center;
       } else {
         text->hjust = left;
+      }
+      if(a_obj.m_VJUST=='T') {
+        text->vjust = top;
+      } else if(a_obj.m_VJUST=='M') {
+        text->vjust = middle;
+      } else {
+        text->vjust = bottom;
       }
       sep->add(text);
   
@@ -7873,7 +7918,23 @@ protected: //rep
       base_freetype* text = base_freetype::create(m_ttf);
       
       text->font = a_obj.m_FONT;
-      
+      if(a_obj.m_HJUST=='R') {
+        text->hjust = right;
+      } else if(a_obj.m_HJUST=='C') {
+        text->hjust = center;
+      } else {
+        text->hjust = left;
+      }
+      if(a_obj.m_VJUST=='T') {
+        text->vjust = top;
+      } else if(a_obj.m_VJUST=='M') {
+        text->vjust = middle;
+      } else {
+        text->vjust = bottom;
+      }
+
+      text->modeling = a_obj.m_font_modeling;
+
       //text->encoding = "PAW"
       //text->smooting = a_obj.m_SMOOTHING;
       //text->hinting = a_obj.m_HINTING;
@@ -8074,7 +8135,7 @@ protected: //rep
       draw_style* ds = new draw_style;
       ds->style = draw_lines;
       ds->line_pattern = line_solid;
-      ds->line_width = 1;
+      ds->line_width = a_obj.m_LWID;
       sep->add(ds);
   
       vertices* vtxs = new vertices;
@@ -8176,6 +8237,146 @@ protected: //rep
   
     } else if(a_obj.m_FAIS==plottable_box::PATTERN) {
       a_out << "inlib::sg::plotter::update_plottable_box FAIS PATTERN not yet handled." << std::endl;      
+    }
+    
+  }
+
+  void update_primitive_ellipse(std::ostream& a_out,const plottable_ellipse& a_obj){
+  
+    float z = xy_depth.value()*1.1F;
+  
+    vec3f pos;
+    axis_2_data_frame(vec3f(a_obj.m_X,a_obj.m_Y,z),pos);
+    xx_2_yy(pos,pos);
+    
+    vec3f pos2;
+    axis_2_data_frame(vec3f(a_obj.m_X+a_obj.m_R1,a_obj.m_Y+a_obj.m_R2,z),pos2);
+    xx_2_yy(pos2,pos2);
+
+    float rx = pos2[0]-pos[0];
+    float ry = pos2[1]-pos[1];
+    
+    z = pos[2];
+
+    //::printf("debug : inlib::sg::plotter::update_primitive_ellipse : FAIS %d : %g %g %g : %g %g\n",a_obj.m_FAIS,
+    //         pos.x(),pos.y(),pos.z(),rx,ry);
+  
+    if(a_obj.m_FAIS==plottable_ellipse::HOLLOW) {
+    
+      separator* sep = new separator;
+  
+      matrix* _tsf = new matrix;
+      _tsf->set_translate(pos);
+      sep->add(_tsf);
+      
+      rgba* mat = new rgba();
+      mat->color = a_obj.m_PLCI;
+      sep->add(mat);
+  
+      draw_style* ds = new draw_style;
+      ds->style = draw_lines;
+      ds->line_pattern = line_solid;
+      ds->line_width = a_obj.m_LWID;
+      sep->add(ds);
+  
+      ellipse* _ellipse = new ellipse;
+      _ellipse->rx = rx;
+      _ellipse->ry = ry;
+      sep->add(_ellipse);
+
+      m_primitives_sep.add(sep);
+
+/*      
+    } else if(a_obj.m_FAIS==plottable_ellipse::SOLID) {
+      separator* sep = new separator;
+  
+      rgba* mat = new rgba();
+      mat->color = a_obj.m_FACI;
+      sep->add(mat);
+  
+      draw_style* ds = new draw_style;
+      ds->style = draw_filled;
+      sep->add(ds);
+  
+      vertices* vtxs = new vertices;
+      vtxs->mode = gl::triangle_fan();
+      sep->add(vtxs);
+  
+      vtxs->add(pos1[0],pos1[1],z);
+      vtxs->add(pos2[0],pos1[1],z);
+      vtxs->add(pos2[0],pos2[1],z);
+      vtxs->add(pos1[0],pos2[1],z);
+  
+      m_primitives_sep.add(sep);
+      
+    } else if(a_obj.m_FAIS==plottable_ellipse::HATCHED) {
+    
+     {separator* sep = new separator;
+  
+      rgba* mat = new rgba();
+      mat->color = a_obj.m_FACI;
+      sep->add(mat);
+  
+      hatching_policy hatching;
+      float spacing;
+      float angle_right;
+      float angle_left;
+      PAW_hatch(a_obj.m_FASI,hatching,spacing,angle_right,angle_left);
+      float stripWidth = 0;
+  
+      if((hatching==hatching_right)||((hatching==hatching_left_and_right))) {
+        rep_box_hatch(*sep,spacing,angle_right,stripWidth,pos1[0],pos1[1],pos2[0],pos2[1],z);
+      }
+      if((hatching==hatching_left)||((hatching==hatching_left_and_right))) {
+        rep_box_hatch(*sep,spacing,angle_left,stripWidth,pos1[0],pos1[1],pos2[0],pos2[1],z);
+      }
+      
+      if(hatching==hatching_none) {
+        draw_style* ds = new draw_style;
+        ds->style = draw_filled;
+        sep->add(ds);
+        vertices* vtxs = new vertices;
+        vtxs->mode = gl::triangle_fan();
+        sep->add(vtxs);
+        vtxs->add(pos1[0],pos1[1],z);
+        vtxs->add(pos2[0],pos1[1],z);
+        vtxs->add(pos2[0],pos2[1],z);
+        vtxs->add(pos1[0],pos2[1],z);
+      }
+  
+      m_primitives_sep.add(sep);}
+  
+      if(a_obj.m_BORD) {
+        separator* sep = new separator;
+        rgba* mat = new rgba();
+        mat->color = a_obj.m_PLCI;
+        sep->add(mat);
+  
+        draw_style* ds = new draw_style;
+        ds->style = draw_lines;
+        ds->line_pattern = line_solid;
+        ds->line_width = 1;
+        sep->add(ds);
+  
+        vertices* vtxs = new vertices;
+        vtxs->mode = gl::line_strip();
+        sep->add(vtxs);
+  
+        z *= 1.01F;
+        vtxs->add(pos1[0],pos1[1],z);
+        vtxs->add(pos2[0],pos1[1],z);
+        vtxs->add(pos2[0],pos2[1],z);
+        vtxs->add(pos1[0],pos2[1],z);
+        vtxs->add(pos1[0],pos1[1],z);
+  
+        m_primitives_sep.add(sep);
+      }
+  
+    } else if(a_obj.m_FAIS==plottable_ellipse::PATTERN) {
+      a_out << "inlib::sg::plotter::update_plottable_box FAIS PATTERN not yet handled." << std::endl;
+*/      
+    } else {
+      a_out << "inlib::sg::plotter::update_plottable_box FAIS " << a_obj.m_FAIS << " not yet handled." << std::endl;
     }
     
   }

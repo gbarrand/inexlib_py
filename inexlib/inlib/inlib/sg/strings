@@ -52,6 +52,11 @@ inline const std::string& s_font_outline() {static const std::string s_v("font_o
 inline const std::string& s_font_filled()  {static const std::string s_v("font_filled");return s_v;}
 inline const std::string& s_font_pixmap()  {static const std::string s_v("font_pixmap");return s_v;}
 
+inline const std::string& s_anim_mode_0()  {static const std::string s_v("anim_mode_0");return s_v;}
+inline const std::string& s_anim_mode_1()  {static const std::string s_v("anim_mode_1");return s_v;}
+inline const std::string& s_anim_mode_2()  {static const std::string s_v("anim_mode_2");return s_v;}
+inline const std::string& s_anim_mode_3()  {static const std::string s_v("anim_mode_3");return s_v;}
+
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -237,6 +242,10 @@ INLIB_GLOBAL_STRING(row)
 
 INLIB_GLOBAL_STRING_VALUE(white_jpg,white.jpg)
 
+// for <scenario> EsbRootView.scenarios
+INLIB_GLOBAL_STRING(rotation)
+INLIB_GLOBAL_STRING(translation)
+
 //slides :
 INLIB_GLOBAL_STRING(pos_x_wcam)
 INLIB_GLOBAL_STRING(pos_y_hcam)
@@ -277,6 +286,20 @@ INLIB_GLOBAL_STRING_VALUE(protocol_clear_static_sg,rwc_clear_static_scene)
 INLIB_GLOBAL_STRING_VALUE(protocol_clear_dynamic_sg,rwc_clear_dynamic_scene)
 INLIB_GLOBAL_STRING_VALUE(protocol_clear_screen_sg,rwc_clear_screen_scene)
 
+INLIB_GLOBAL_STRING(protocol_view_all)
+INLIB_GLOBAL_STRING(protocol_set_background_black)
+INLIB_GLOBAL_STRING(protocol_set_background_white)
+INLIB_GLOBAL_STRING(protocol_disable_anim)
+INLIB_GLOBAL_STRING(protocol_reset_camera)
+
+/*
+protocol_set_plane_viewer(bool)
+protocol_set_scene_light_on(bool)
+protocol_hide_main_menu
+protocol_hide_meta_zone
+protocol_show_camera_menu
+*/
+
 INLIB_GLOBAL_STRING_VALUE(dir_diaporama,diaporama)
 
 // sg_serv params :
@@ -286,6 +309,12 @@ INLIB_GLOBAL_STRING_VALUE(sg_serv_bw,bw)
 INLIB_GLOBAL_STRING_VALUE(sg_serv_bh,bh)
 INLIB_GLOBAL_STRING_VALUE(sg_serv_cols,cols)
 INLIB_GLOBAL_STRING_VALUE(sg_serv_rows,rows)
+
+
+// insh commands :
+INLIB_GLOBAL_STRING_VALUE(insh_clear_static_scene,clear_static_scene)
+INLIB_GLOBAL_STRING_VALUE(insh_clear_dynamic_scene,clear_dynamic_scene)
+INLIB_GLOBAL_STRING_VALUE(insh_clear_screen_scene,clear_screen_scene)
 
 }}
 
