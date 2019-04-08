@@ -57,6 +57,12 @@ const std::string& s_send_clear();
 %rename(sg_s_protocol_clear_dynamic_sg)  inlib::sg::s_protocol_clear_dynamic_sg;
 %rename(sg_s_protocol_clear_screen_sg)   inlib::sg::s_protocol_clear_screen_sg;
 
+%rename(sg_s_protocol_view_all)                inlib::sg::s_protocol_view_all;
+%rename(sg_s_protocol_set_background_black)    inlib::sg::s_protocol_set_background_black;
+%rename(sg_s_protocol_set_background_white)    inlib::sg::s_protocol_set_background_white;
+%rename(sg_s_protocol_disable_anim)            inlib::sg::s_protocol_disable_anim;
+%rename(sg_s_protocol_reset_camera)            inlib::sg::s_protocol_reset_camera;
+
 namespace inlib {
 namespace sg {
 
@@ -68,6 +74,12 @@ const std::string& s_protocol_arg_sep();
 const std::string& s_protocol_clear_static_sg();
 const std::string& s_protocol_clear_dynamic_sg();
 const std::string& s_protocol_clear_screen_sg();
+
+const std::string& s_protocol_view_all();
+const std::string& s_protocol_set_background_black();
+const std::string& s_protocol_set_background_white();
+const std::string& s_protocol_disable_anim();
+const std::string& s_protocol_reset_camera();
 
 }}
 
