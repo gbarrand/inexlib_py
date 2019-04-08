@@ -104,24 +104,27 @@ public:
   HWND hwnd() const {return m_hwnd;}
 
   void set_client_area_size(unsigned int a_w,unsigned int a_h) {
-    unsigned ww,wh;
-   {RECT rect;
-    ::GetWindowRect(m_hwnd,&rect);
-    ww = rect.right-rect.left;
-    wh = rect.bottom-rect.top;}
+    RECT wrect;
+    ::GetWindowRect(m_hwnd,&wrect);
+    unsigned int ww = wrect.right-wrect.left;
+    unsigned int wh = wrect.bottom-wrect.top;
 
-    unsigned int cw,ch;
-   {RECT rect;
-    ::GetClientRect(m_hwnd,&rect);
-    cw = rect.right-rect.left;
-    ch = rect.bottom-rect.top;}
+    RECT carect;
+    ::GetClientRect(m_hwnd,&carect);
+    unsigned int cw = carect.right-carect.left;
+    unsigned int ch = carect.bottom-carect.top;
 
     unsigned int woffset = ww-cw;
     unsigned int hoffset = wh-ch;
 
+    ::MoveWindow(m_hwnd,wrect.left,wrect.top,a_w+woffset,a_h+hoffset,TRUE);
+  }
+  void move(unsigned int a_x,unsigned int a_y) {
     RECT rect;
     ::GetWindowRect(m_hwnd,&rect);
-    ::MoveWindow(m_hwnd,rect.left,rect.top,a_w+woffset,a_h+hoffset,TRUE);
+    unsigned int w = rect.right-rect.left;
+    unsigned int h = rect.bottom-rect.top;
+    ::MoveWindow(m_hwnd,a_x,a_y,w,h,TRUE);
   }
 protected:
   static LRESULT CALLBACK proc(HWND a_hwnd,UINT a_msg,WPARAM a_wparam,LPARAM a_lparam) {

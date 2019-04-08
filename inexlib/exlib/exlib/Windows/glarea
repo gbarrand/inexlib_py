@@ -15,6 +15,8 @@
 
 #include <string>
 
+//#include <inlib/log_file>
+
 namespace exlib {
 namespace Windows {
 
@@ -57,6 +59,7 @@ public:
   virtual void left_button_up(unsigned int a_x,unsigned int a_y) {}
   virtual void left_button_down(unsigned int a_x,unsigned int a_y) {}
   virtual void mouse_move(unsigned int a_x,unsigned int a_y,bool) {}
+  virtual void close(){}
 public:
   glarea(HWND a_parent)
   :m_parent(a_parent)
@@ -69,6 +72,8 @@ public:
     // The WS_BORDER is needed. Else probleme of size at startup.
     RECT rect;
     ::GetClientRect(m_parent,&rect);
+    //printf("debug : glarea : ca : %d %d\n",rect.right-rect.left,rect.bottom-rect.top);
+    //inlib::log_file::get().writef("debug : glarea : ca : %d %d\n",rect.right-rect.left,rect.bottom-rect.top);
     m_hwnd = ::CreateWindow(s_class().c_str(),
                              NULL,
                              WS_CHILD | WS_VISIBLE,
@@ -151,6 +156,11 @@ public:
 protected:
   glarea& operator=(const glarea&){return *this;}
 public:
+  void set_client_area_size(unsigned int a_w,unsigned int a_h) {
+    RECT rect;
+    ::GetClientRect(m_hwnd,&rect);
+    ::MoveWindow(m_hwnd,rect.left,rect.top,a_w,a_h,TRUE);
+  }
   HWND hwnd() const {return m_hwnd;}
   void post_WM_PAINT() const {
     ::PostMessage(m_hwnd,WM_PAINT,(WPARAM)0,(LPARAM)0);
@@ -170,6 +180,9 @@ public:
       unsigned int w = rect.right-rect.left;
       unsigned int h = rect.bottom-rect.top;
   
+      //printf("debug : glarea : paint : %d %d\n",w,h);
+      //inlib::log_file::get().writef("debug : glarea : paint : %d %d\n",w,h);
+
       paint(w,h);
   
       ::SwapBuffers(m_HDC);
@@ -332,6 +345,7 @@ protected:
   static void wm__destroy(HWND a_hwnd) { 
     glarea* _this = (glarea*)::GetWindowLongPtr(a_hwnd,GWLP_USERDATA);
     if(_this) { //How to be sure that we have a glarea* ???
+      _this->close();
       if(_this->m_hwnd!=a_hwnd) {
         //::printf("WinTk::Component::wm_destroy : HWND mismatch !\n");
       }
