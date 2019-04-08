@@ -1,4 +1,24 @@
+1.3.0 :
+  - run, spark_run : handle run_dir variable to be able to run from other dir than install dir.
+    In particular it is used to set EXLIB_RES_DIR that permits to find fonts and icon files.
+  - run, spark_run : handle "-h".
+  - bush : use/Python3 : handle : elif [ -d "${HOME}/lib/anaconda3" ].
+  - cube_to_sg_serv : -secs=<seconds> argument for sleep().
+  - cube_to_sg_serv : send "clear static sg, red cube, blue cube, disconnect" with sleep(5) in between.
+    It helps to see if sending to a remote inexlib_serv is trueely done "per send". 
+  - inexlib_py : to help customize the remote inexlib_serv layout, have protocols :
+      protocol_view_all
+      protocol_set_background_black
+      protocol_set_background_white
+      protocol_disable_anim
+      protocol_reset_camera
+  - vertices_vis.py : send a inlib::sg::vertices without passing by a sg::plotter.
+    It helps to test in charge the client mode when sending data to a remote inexlib_serv program.
+  - exlib : exlib/style_common.icc : handle EXLIB_RES_DIR env variable.
 
-24/Feb/2019:
-- have py examples as client to inexlib_serv. (-client, -vis_host, -vis_port options to run, spark_run startup scripts).
+1.2.0 :
+ - have py examples as client to inexlib_serv. (-client, -vis_host, -vis_port options to run, spark_run startup scripts).
+ - release on github.
+
+
 
