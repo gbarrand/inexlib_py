@@ -3199,6 +3199,26 @@ sg_s_protocol_clear_dynamic_sg = exlib_offscreen_swig_py.sg_s_protocol_clear_dyn
 def sg_s_protocol_clear_screen_sg() -> "std::string const &" :
   return exlib_offscreen_swig_py.sg_s_protocol_clear_screen_sg()
 sg_s_protocol_clear_screen_sg = exlib_offscreen_swig_py.sg_s_protocol_clear_screen_sg
+
+def sg_s_protocol_view_all() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_view_all()
+sg_s_protocol_view_all = exlib_offscreen_swig_py.sg_s_protocol_view_all
+
+def sg_s_protocol_set_background_black() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_set_background_black()
+sg_s_protocol_set_background_black = exlib_offscreen_swig_py.sg_s_protocol_set_background_black
+
+def sg_s_protocol_set_background_white() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_set_background_white()
+sg_s_protocol_set_background_white = exlib_offscreen_swig_py.sg_s_protocol_set_background_white
+
+def sg_s_protocol_disable_anim() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_disable_anim()
+sg_s_protocol_disable_anim = exlib_offscreen_swig_py.sg_s_protocol_disable_anim
+
+def sg_s_protocol_reset_camera() -> "std::string const &" :
+  return exlib_offscreen_swig_py.sg_s_protocol_reset_camera()
+sg_s_protocol_reset_camera = exlib_offscreen_swig_py.sg_s_protocol_reset_camera
 class gui_viewer(viewer):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")

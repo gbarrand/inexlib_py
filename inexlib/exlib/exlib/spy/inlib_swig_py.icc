@@ -24096,6 +24096,28 @@ SWIGINTERN PyObject *_wrap_sg_s_protocol_clear_screen_sg(PyObject *SWIGUNUSEDPAR
   if(!PyArg_UnpackTuple(args,(char *)"sg_s_protocol_clear_screen_sg",0,0)) SWIG_fail;
   result = (std::string *) &inlib::sg::s_protocol_clear_screen_sg();
   resultobj = SWIG_From_std_string(static_cast< std::string >(*result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_sg_s_protocol_view_all(PyObject *SWIGUNUSEDPARM(self), PyObject *args) { PyObject *resultobj = 0;
+  std::string *result = 0 ; if(!PyArg_UnpackTuple(args,(char *)"sg_s_protocol_view_all",0,0)) SWIG_fail;
+  result = (std::string *) &inlib::sg::s_protocol_view_all();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_sg_s_protocol_set_background_black(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0; std::string *result = 0 ;
+  if(!PyArg_UnpackTuple(args,(char *)"sg_s_protocol_set_background_black",0,0)) SWIG_fail;
+  result = (std::string *) &inlib::sg::s_protocol_set_background_black();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_sg_s_protocol_set_background_white(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0; std::string *result = 0 ;
+  if(!PyArg_UnpackTuple(args,(char *)"sg_s_protocol_set_background_white",0,0)) SWIG_fail;
+  result = (std::string *) &inlib::sg::s_protocol_set_background_white();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_sg_s_protocol_disable_anim(PyObject *SWIGUNUSEDPARM(self), PyObject *args) { PyObject *resultobj = 0;
+  std::string *result = 0 ; if(!PyArg_UnpackTuple(args,(char *)"sg_s_protocol_disable_anim",0,0)) SWIG_fail;
+  result = (std::string *) &inlib::sg::s_protocol_disable_anim();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result)); return resultobj; fail: return NULL; }
+SWIGINTERN PyObject *_wrap_sg_s_protocol_reset_camera(PyObject *SWIGUNUSEDPARM(self), PyObject *args) { PyObject *resultobj = 0;
+  std::string *result = 0 ; if(!PyArg_UnpackTuple(args,(char *)"sg_s_protocol_reset_camera",0,0)) SWIG_fail;
+  result = (std::string *) &inlib::sg::s_protocol_reset_camera();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result)); return resultobj; fail: return NULL; }
 SWIGINTERN PyObject *_wrap_gui_viewer_res_dir(PyObject *SWIGUNUSEDPARM(self), PyObject *args) { PyObject *resultobj = 0;
   inlib::sg::gui_viewer *arg1 = (inlib::sg::gui_viewer *) 0 ; void *argp1 = 0 ; int res1 = 0 ; PyObject * obj0 = 0 ;
   std::string *result = 0 ; if(!PyArg_UnpackTuple(args,(char *)"gui_viewer_res_dir",1,1,&obj0)) SWIG_fail;
@@ -27608,6 +27630,11 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"sg_s_protocol_clear_static_sg", _wrap_sg_s_protocol_clear_static_sg, METH_VARARGS, NULL},
 	 { (char *)"sg_s_protocol_clear_dynamic_sg", _wrap_sg_s_protocol_clear_dynamic_sg, METH_VARARGS, NULL},
 	 { (char *)"sg_s_protocol_clear_screen_sg", _wrap_sg_s_protocol_clear_screen_sg, METH_VARARGS, NULL},
+	 { (char *)"sg_s_protocol_view_all", _wrap_sg_s_protocol_view_all, METH_VARARGS, NULL},
+	 { (char *)"sg_s_protocol_set_background_black", _wrap_sg_s_protocol_set_background_black, METH_VARARGS, NULL},
+	 { (char *)"sg_s_protocol_set_background_white", _wrap_sg_s_protocol_set_background_white, METH_VARARGS, NULL},
+	 { (char *)"sg_s_protocol_disable_anim", _wrap_sg_s_protocol_disable_anim, METH_VARARGS, NULL},
+	 { (char *)"sg_s_protocol_reset_camera", _wrap_sg_s_protocol_reset_camera, METH_VARARGS, NULL},
 	 { (char *)"gui_viewer_res_dir", _wrap_gui_viewer_res_dir, METH_VARARGS, NULL},
 	 { (char *)"gui_viewer_opener", _wrap_gui_viewer_opener, METH_VARARGS, NULL},
 	 { (char *)"gui_viewer_show_console", _wrap_gui_viewer_show_console, METH_VARARGS, NULL},
