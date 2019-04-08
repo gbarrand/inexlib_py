@@ -212,7 +212,7 @@ fi
 
 build_root_path="`printenv BUSH_BUILD_ROOT_PATH`"
 if [ "${build_root_path}" != "" ] ; then
-  echo 'bush/header : experimental : use BUSH_BUILD_ROOT_PATH.'
+  #echo 'bush/header : experimental : use BUSH_BUILD_ROOT_PATH.'
   if [ ${build_verbose} = yes ] ; then
     echo "bush/header : BUSH_BUILD_ROOT_PATH value is \"${build_root_path}\""
   fi
