@@ -14,13 +14,15 @@ build_verbose=no
 build_all_args=
 build_args=
 build_res=no
+build_rm_swig=no
 
 while test $# -ge 1 ; do
   build_all_args="${build_all_args} $1"
   case $1 in
-    -v) build_verbose=yes;build_args="${build_args} $1";;
-    -res)    build_res=yes;;
-    -*) build_args="${build_args} $1";;
+    -v)        build_verbose=yes;build_args="${build_args} $1";;
+    -res)      build_res=yes;;
+    -rm_swig)  build_rm_swig=yes;;
+    -*)        build_args="${build_args} $1";;
      *) if [ $# = 1 ] ; then what=$1; else echo "exlib/mgr/build : unknown option : $1"; fi;;
   esac
   shift
@@ -32,6 +34,12 @@ if [ ${build_res} = yes ] ; then
   else
     ${exlib_home}/mgr/build_res
   fi      
+  exit
+fi
+
+if [ ${build_rm_swig} = yes ] ; then  # to help searching in hand written code.
+  ${bush_home}/find_rm ../exlib '*_swig*.icc'
+  ${bush_home}/find_rm ../exlib '*.py'
   exit
 fi
 
