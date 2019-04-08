@@ -60,7 +60,7 @@ class plotter(base_plots.base_plots):
 
   def send_clear_static_scene(self):
     if self.m_dc.send_string(inlib.sg_s_protocol_clear_static_sg()) == False:
-      print("inexlib_client.plotter.clear_static_scene : send protocol_s_rwc_clear_static_scene() failed.")
+      print("inexlib_client.plotter.clear_static_scene : send protocol_clear_static_scene() failed.")
       return False
     return True
     
