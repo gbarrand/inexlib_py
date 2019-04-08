@@ -7,6 +7,8 @@
 #/// arguments : /////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
+run_dir="`dirname $0`"
+
 run_verbose=no
 run_set_x=no
 
@@ -17,6 +19,7 @@ run_vis_host=
 run_vis_port=
 run_vis_format=
 run_file=
+run_help=no
 
 run_args=
 
@@ -25,6 +28,7 @@ what=
 
 while test $# -ge 1 ; do
   case $1 in
+    -h)       run_help=yes;    run_args="${run_args} $1";;
     -x)       run_set_x=yes;   run_args="${run_args} $1";;
     -verbose) run_verbose=yes; run_args="${run_args} $1";;
     -v)       run_verbose=yes; run_args="${run_args} $1";;
@@ -72,6 +76,39 @@ while test $# -ge 1 ; do
   shift
 done
 
+if [ ${run_help} = yes ] ; then
+  echo '//////////////////////////////////////////////////////////////////////////////////'    
+  echo '/// this script usage : //////////////////////////////////////////////////////////'
+  echo '//////////////////////////////////////////////////////////////////////////////////'
+  echo '  UNIX> ./run <options> <python script>'
+  echo 'Example :'
+  echo '  UNIX> ./run c3d_vis.py'
+  echo '  UNIX> ./run -offscreen c3d_vis.py  # it produces a out_c3d_vis.png and out_c3d_vis.ps'
+  echo ' '
+  echo 'This script options :'
+  echo '-h                         : show this message.'
+  echo '-x                         : bash full verbose mode. It set "set -x".'
+  echo '-v, -verbose               : dump PYTHONPATH and, if applicable, PATH, LD_LIBRARY_PATH.'
+  echo '-gdb                       : run a debugger (lldb on macOS, gdb on Linux) on the Python program.'
+  echo '-gui_window                : set Python option -vis_mode to "gui_window". It is the default.'
+  echo '-offscreen                 : set Python option -vis_mode to "offscreen".'
+  echo '-window                    : set Python option -vis_mode to "window".'
+  echo '                             There is no GUI in this mode, just open a window and display a scene graph.'
+  echo '-client                    : set Python option -vis_mode to "client".'
+  echo '-vis_host <IP>             : if vis_mode is "client", permit to pass the host IP where a inexlib_serv is running.'
+  echo '-vis_port <port>           : if vis_mode is "client", permit to pass the port on which a inexlib_serv is listening.'
+  echo '-vis_format [bsg,<else>]   : if vis_mode is "offscreen", permit to give the output file format.'
+  echo '                             If "bsg", a out_<script>.bsg file is produced.'
+  echo '                             BSG is for "Binary Scene Graph" file format. It is a inlib/exlib file format'
+  echo '                             used to stream a scene graph in a binary file or in a buffer to be passed'
+  echo '                             to a listening inexlib_serv application.'
+  echo '                             If not "bsg", a out_<script>.ps and a out_<script>.png are produced.'
+  echo '-file <file>               : if applicable, permit to give a data file.'
+  echo '-number_of_points <number> : if applicable, permit to pass the number of points to create.'
+
+  if [ "${what}" = "" ] ; then exit; fi
+fi
+
 if [ ${run_set_x} = "yes" ] ; then set -x; fi
 
 if [ "${what}" = "all" ] ; then
@@ -95,6 +132,14 @@ if [ ! -f ${what} ] ; then
   exit
 fi
 
+if [ ${run_help} = yes ] ; then
+  echo '  '
+  echo '//////////////////////////////////////////////////////////////////////////////////'    
+  echo '/// .py arguments : //////////////////////////////////////////////////////////////'    
+  echo '//////////////////////////////////////////////////////////////////////////////////'    
+  py_args="${py_args} -h"
+fi
+
 base_name="`basename ${what}`"
 suffix=`echo ${base_name} | sed 's:.*\.::'`
 if [ "${suffix}" != "${base_name}" ] ; then
@@ -115,7 +160,7 @@ fi
 
 items="polyhedron_vis.py c3d_vis.py two_cubes_vis.py cfitsio_hst_vis.py tree.py"
 items="${items} plotter_vis.py csv_c3d_vis.py csv_h1d_vis.py csv_vertices_vis.py csv_vertices_gui_viewer_vis.py"
-items="${items} rdirs_vis.py"
+items="${items} rdirs_vis.py vertices_vis.py"
 for item in ${items} ; do
   #echo ${item}
   if [ "${base_name}" = ${item} ] ; then
@@ -137,23 +182,23 @@ done
 
 items="csv_c3d_vis.py csv_h1d_vis.py csv_vertices_vis.py csv_vertices_gui_viewer_vis.py"
 for item in ${items} ; do
-  if [ "${run_file}" = "" ] ; then
-    run_file_name=cosmo_dc2_rdz_cut.csv
-    run_file="../../data/${run_file_name}"
-    if [ ! -f ${run_file} ] ; then
-      run_file="./data/${run_file_name}"  # if running from inexlib_py distribution.
+  if [ "${base_name}" = ${item} ] ; then
+    if [ "${run_file}" = "" ] ; then
+      run_file_name=cosmo_dc2_rdz_cut.csv
+      run_file="${run_dir}/../../data/${run_file_name}"
       if [ ! -f ${run_file} ] ; then
-        echo "run : data file ${run_file_name} not found."
-        exit      
+        run_file="${run_dir}/data/${run_file_name}"  # if running from inexlib_py distribution.
+        if [ ! -f ${run_file} ] ; then
+          echo "run : data file ${run_file_name} not found."
+          exit      
+        fi
       fi
     fi
-  fi
-  if [ "${base_name}" = ${item} ] ; then
     py_args="${py_args} -file ${run_file}"
   fi
 done
 
-items="c3d_vis.py tree.py"
+items="c3d_vis.py tree.py vertices_vis.py"
 for item in ${items} ; do
   if [ "${base_name}" = ${item} ] ; then
     if [ "${run_vis_mode}" = "offscreen" -a "${run_vis_format}" != "" ] ; then
@@ -193,16 +238,19 @@ fi
 #/////////////////////////////////////////////////////////////////
 #/// where : /////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
-if [ -x ./modules/inlib_swig_py.so ] ; then
+if [ -x ${run_dir}/modules/inlib_swig_py.so ] ; then
   # running from an inexlib_py distribution :
-  build_path=./bin    
-  modules_path=./modules
+  build_path=${run_dir}/bin    
+  modules_path=${run_dir}/modules
 else    
+  BUSH_BUILD_ROOT_PATH="${run_dir}";export BUSH_BUILD_ROOT_PATH
   build_args=
-  bush_home=`dirname $0`/../../../../bush
-  . ${bush_home}/exlib_header  # to get build_path
+  bush_home=${run_dir}/../../../../bush
+  . ${bush_home}/header  # to get build_path
   modules_path=${build_path}
 fi
+
+EXLIB_RES_DIR=${run_dir}/res;export EXLIB_RES_DIR
 
 run_use_py3=no
 if [ "`${build_path}/which_py`" = Python3 ] ; then run_use_py3=yes;fi    
@@ -274,8 +322,8 @@ fi
 sep=':'
 if [ "`uname | grep CYGWIN`" != "" ] ; then sep=';' ;fi
 
-py_path="./res/py"
-py_path="${py_path}${sep}./res/${spy_dir}"
+py_path="${run_dir}/res/py"
+py_path="${py_path}${sep}${run_dir}/res/${spy_dir}"
 py_path="${py_path}${sep}${modules_path}"
 
 py_curr=`printenv PYTHONPATH`
