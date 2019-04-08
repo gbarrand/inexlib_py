@@ -76,6 +76,7 @@
     rdirs_vis.py           # random clouds of points in a plot.
     two_cubes_vis.pye      # show the "blender effect" on a coarse grained rearranged random points.
     
+    vertices_vis.py        # create and visualize 3D random points by using inlib/sg only.
     c3d_vis.py             # create, fill and plot a 3D cloud of 3D random points.
     csv_c3d_vis.py         # read points from cosmo_dc2_rdz_cut.csv, fill and plot a 3D cloud.
     csv_h1d_vis.py         # read points from cosmo_dc2_rdz_cut.csv, fill and plot histos.
