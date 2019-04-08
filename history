@@ -15,6 +15,7 @@
   - vertices_vis.py : send a inlib::sg::vertices without passing by a sg::plotter.
     It helps to test in charge the client mode when sending data to a remote inexlib_serv program.
   - exlib : exlib/style_common.icc : handle EXLIB_RES_DIR env variable.
+  - macOS : now, by default, "window, gui_window" modes display by using Cocoa (and no more X11).
 
 1.2.0 :
  - have py examples as client to inexlib_serv. (-client, -vis_host, -vis_port options to run, spark_run startup scripts).
