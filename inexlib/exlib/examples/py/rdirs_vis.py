@@ -111,6 +111,9 @@ if args.vis_mode == "offscreen" :
   import offscreen
   p = offscreen.plotter(inlib.get_cout(),1,1,400,400)
   set_plotters(p,c_1,c_2,c_3)
+  p.plot_cloud3D(c_1)
+  p.plot_cloud3D(c_2)
+  p.plot_cloud3D(c_3)
   if args.vis_format == "bsg":
     p.out_bsg('out_rdirs_vis.bsg')
   else:      
