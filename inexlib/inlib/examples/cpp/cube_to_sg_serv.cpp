@@ -15,6 +15,8 @@
 #include <inlib/sg/rgba>
 #include <inlib/sg/cube>
 
+#include <inlib/sys/sleep>
+
 #include <inlib/args>
 #include <iostream>
 
@@ -96,7 +98,7 @@ int main(int argc,char** argv) {
   }
 
   if(verbose) std::cout << "sleep (" << secs << " secs)..." << std::endl;
-  ::sleep(secs);
+  inlib::sleep_secs(secs);
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
@@ -112,7 +114,7 @@ int main(int argc,char** argv) {
   }
 
   if(verbose) std::cout << "sleep..." << std::endl;
-  ::sleep(secs);
+  inlib::sleep_secs(secs);
 
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
@@ -128,7 +130,7 @@ int main(int argc,char** argv) {
   }
 
   if(verbose) std::cout << "sleep..." << std::endl;
-  ::sleep(secs);
+  inlib::sleep_secs(secs);
   
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
@@ -138,7 +140,7 @@ int main(int argc,char** argv) {
   dc.socket().disconnect();
 
   if(verbose) std::cout << "sleep..." << std::endl;
-  ::sleep(secs);
+  inlib::sleep_secs(secs);
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
