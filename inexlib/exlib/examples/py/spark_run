@@ -7,8 +7,11 @@
 #/// arguments : /////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
 
+run_dir="`dirname $0`"
+
 run_set_x=no
 run_args=
+run_help=no
 run_vis_mode=gui_window
 run_vis_host=
 run_vis_port=
@@ -22,7 +25,8 @@ what=
 
 while test $# -ge 1 ; do
   case $1 in
-    -x) run_set_x=yes;run_args="${run_args} $1";;
+    -h)          run_help=yes;               run_args="${run_args} $1";;
+    -x)          run_set_x=yes;              run_args="${run_args} $1";;
       
     -offscreen)  run_vis_mode=offscreen;     run_args="${run_args} $1";;
     -gui_window) run_vis_mode=gui_window;    run_args="${run_args} $1";;
@@ -66,6 +70,36 @@ while test $# -ge 1 ; do
   shift
 done
 
+if [ ${run_help} = yes ] ; then
+  echo '//////////////////////////////////////////////////////////////////////////////////'    
+  echo '/// this script usage : //////////////////////////////////////////////////////////'
+  echo '//////////////////////////////////////////////////////////////////////////////////'
+  echo '  UNIX> ./spark_run <options> spark_<script>.py'
+  echo 'Example :'
+  echo '  UNIX> ./spark_run spark_fits_vis.py'
+  echo ' '
+  echo 'This script options :'
+  echo '-h                         : show this message.'
+  echo '-x                         : bash full verbose mode. It set "set -x".'
+  echo '-gui_window                : set Python option -vis_mode to "gui_window". It is the default.'
+  echo '-offscreen                 : set Python option -vis_mode to "offscreen".'
+  echo '-window                    : set Python option -vis_mode to "window".'
+  echo '                             There is no GUI in this mode, just open a window and display a scene graph.'
+  echo '-client                    : set Python option -vis_mode to "client".'
+  echo '-vis_host <IP>             : if vis_mode is "client", permit to pass the host IP where a inexlib_serv is running.'
+  echo '-vis_port <port>           : if vis_mode is "client", permit to pass the port on which a inexlib_serv is listening.'
+  echo '-vis_format [bsg,<else>]   : if vis_mode is "offscreen", permit to give the output file format.'
+  echo '                             If "bsg", a out_<script>.bsg file is produced.'
+  echo '                             BSG is for "Binary Scene Graph" file format. It is a inlib/exlib file format'
+  echo '                             used to stream a scene graph in a binary file or in a buffer to be passed'
+  echo '                             to a listening inexlib_serv application.'
+  echo '                             If not "bsg", a out_<script>.ps and a out_<script>.png are produced.'
+  echo '-redshift_min <value>      : if applicable, permit to give a redshift min cut.'
+  echo '-redshift_max <value>      : if applicable, permit to give a redshift max cut.'
+
+  if [ "${what}" = "" ] ; then exit; fi
+fi
+
 if [ ${run_set_x} = "yes" ] ; then set -x; fi
 
 if [ "${what}" = "all" ] ; then
@@ -91,6 +125,14 @@ spark_flags=
 
 pack_spark_fits=com.github.astrolabsoftware:spark-fits_2.11:0.6.0
 
+if [ ${run_help} = yes ] ; then
+  echo '  '
+  echo '//////////////////////////////////////////////////////////////////////////////////'    
+  echo '/// .py arguments : //////////////////////////////////////////////////////////////'    
+  echo '//////////////////////////////////////////////////////////////////////////////////'    
+  spark_args="${spark_args} -h"
+fi
+
 #/////////////////////////////////////////////////////////////////
 #/// where : /////////////////////////////////////////////////////
 #/////////////////////////////////////////////////////////////////
@@ -110,21 +152,24 @@ fi
 on_nersc_cori_nid=no
 if [ "`uname -n | grep nid`" != "" ] ; then on_nersc_cori_nid=yes; fi
 
-if [ -x ./modules/inlib_swig_py.so ] ; then
+if [ -x ${run_dir}/modules/inlib_swig_py.so ] ; then
   # running from an inexlib_py distribution :
-  build_path=./bin    
-  modules_path=./modules
+  build_path=${run_dir}/bin    
+  modules_path=${run_dir}/modules
 else    
   if [ ${on_nersc_cori_nid} = yes ] ; then
-    build_path=./bin_gnu
-    modules_path=./bin_gnu
+    build_path=${run_dir}/bin_gnu
+    modules_path=${run_dir}/bin_gnu
   else      
+    BUSH_BUILD_ROOT_PATH="${run_dir}";export BUSH_BUILD_ROOT_PATH
     build_args=
-    bush_home=`dirname $0`/../../../../bush
-    . ${bush_home}/exlib_header  # to get build_path
+    bush_home=${run_dir}/../../../../bush
+    . ${bush_home}/header  # to get build_path
     modules_path=${build_path}
   fi    
 fi
+
+EXLIB_RES_DIR=${run_dir}/res;export EXLIB_RES_DIR
 
 run_use_py3=no
 if [ ! -e "${build_path}/which_py" ] ; then
@@ -234,9 +279,9 @@ for item in ${items} ; do
       if [ "`basename ${script}`" = "spark_fits_ntuple_vis.py" ] ; then
         data_file_name=cfitsio_write_ntuple.fits
       fi
-      data_file="../../data/${data_file_name}"
+      data_file="${run_dir}/../../data/${data_file_name}"
       if [ ! -f ${data_file} ] ; then
-        data_file="./data/${data_file_name}"  # if running from inexlib_py distribution.
+        data_file="${run_dir}/data/${data_file_name}"  # if running from inexlib_py distribution.
         if [ ! -f ${data_file} ] ; then
           echo "spark_run : data file ${data_file_name} not found."
           exit      
@@ -310,8 +355,8 @@ fi
 sep=':'
 if [ "`uname | grep CYGWIN`" != "" ] ; then sep=';' ;fi
 
-py_path="./res/py"
-py_path="${py_path}${sep}./res/${spy_dir}"
+py_path="${run_dir}/res/py"
+py_path="${py_path}${sep}${run_dir}/res/${spy_dir}"
 py_path="${py_path}${sep}${modules_path}"
 
 py_curr=`printenv PYTHONPATH`
