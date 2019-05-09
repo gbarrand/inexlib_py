@@ -2035,6 +2035,8 @@ winding_ccw = exlib_offscreen_swig_py.winding_ccw
 winding_cw = exlib_offscreen_swig_py.winding_cw
 move_rotate_right = exlib_offscreen_swig_py.move_rotate_right
 move_translate_right = exlib_offscreen_swig_py.move_translate_right
+move_rotate_up = exlib_offscreen_swig_py.move_rotate_up
+move_rotate_down = exlib_offscreen_swig_py.move_rotate_down
 move_rotate_left = exlib_offscreen_swig_py.move_rotate_left
 move_translate_left = exlib_offscreen_swig_py.move_translate_left
 move_up = exlib_offscreen_swig_py.move_up
@@ -2045,6 +2047,8 @@ move_zoom_in = exlib_offscreen_swig_py.move_zoom_in
 move_zoom_out = exlib_offscreen_swig_py.move_zoom_out
 move_rotate_around_focal_right = exlib_offscreen_swig_py.move_rotate_around_focal_right
 move_rotate_around_focal_left = exlib_offscreen_swig_py.move_rotate_around_focal_left
+move_rotate_around_focal_up = exlib_offscreen_swig_py.move_rotate_around_focal_up
+move_rotate_around_focal_down = exlib_offscreen_swig_py.move_rotate_around_focal_down
 move_zoom_in_out = exlib_offscreen_swig_py.move_zoom_in_out
 move_zoom_in_out_rot = exlib_offscreen_swig_py.move_zoom_in_out_rot
 move_curve = exlib_offscreen_swig_py.move_curve
@@ -2052,6 +2056,10 @@ anim_left = exlib_offscreen_swig_py.anim_left
 anim_right = exlib_offscreen_swig_py.anim_right
 anim_up = exlib_offscreen_swig_py.anim_up
 anim_down = exlib_offscreen_swig_py.anim_down
+anim_mode_0 = exlib_offscreen_swig_py.anim_mode_0
+anim_mode_1 = exlib_offscreen_swig_py.anim_mode_1
+anim_mode_2 = exlib_offscreen_swig_py.anim_mode_2
+anim_mode_3 = exlib_offscreen_swig_py.anim_mode_3
 key_left = exlib_offscreen_swig_py.key_left
 key_right = exlib_offscreen_swig_py.key_right
 key_up = exlib_offscreen_swig_py.key_up
@@ -2761,6 +2769,23 @@ class sg_atb_vertices(sg_vertices):
 sg_atb_vertices_swigregister = exlib_offscreen_swig_py.sg_atb_vertices_swigregister
 sg_atb_vertices_swigregister(sg_atb_vertices)
 
+class sg_colored_sized_points(sg_vertices):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    def copy(self): return exlib_offscreen_swig_py.sg_colored_sized_points_copy(self)
+    __swig_destroy__ = exlib_offscreen_swig_py.delete_sg_colored_sized_points
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = exlib_offscreen_swig_py.new_sg_colored_sized_points(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    rgbas = _swig_property(exlib_offscreen_swig_py.sg_colored_sized_points_rgbas_get, exlib_offscreen_swig_py.sg_colored_sized_points_rgbas_set)
+    sizes = _swig_property(exlib_offscreen_swig_py.sg_colored_sized_points_sizes_get, exlib_offscreen_swig_py.sg_colored_sized_points_sizes_set)
+    def add(self, *args): return exlib_offscreen_swig_py.sg_colored_sized_points_add(self, *args)
+    def clear(self): return exlib_offscreen_swig_py.sg_colored_sized_points_clear(self)
+sg_colored_sized_points_swigregister = exlib_offscreen_swig_py.sg_colored_sized_points_swigregister
+sg_colored_sized_points_swigregister(sg_colored_sized_points)
+
 class base_freetype(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined")
@@ -3233,10 +3258,14 @@ class gui_viewer(viewer):
     def hide_camera_menu(self): return exlib_offscreen_swig_py.gui_viewer_hide_camera_menu(self)
     def show_camera_menu(self): return exlib_offscreen_swig_py.gui_viewer_show_camera_menu(self)
     def adapt_camera_to_scene(self): return exlib_offscreen_swig_py.gui_viewer_adapt_camera_to_scene(self)
+    def view_all(self): return exlib_offscreen_swig_py.gui_viewer_view_all(self)
     def set_scene_light_on(self, *args): return exlib_offscreen_swig_py.gui_viewer_set_scene_light_on(self, *args)
     def toggle_light(self): return exlib_offscreen_swig_py.gui_viewer_toggle_light(self)
     def set_plane_viewer(self, *args): return exlib_offscreen_swig_py.gui_viewer_set_plane_viewer(self, *args)
     def hide_meta_zone(self): return exlib_offscreen_swig_py.gui_viewer_hide_meta_zone(self)
+    def set_scene_clear_color(self, *args): return exlib_offscreen_swig_py.gui_viewer_set_scene_clear_color(self, *args)
+    def set_gui_clear_color(self, *args): return exlib_offscreen_swig_py.gui_viewer_set_gui_clear_color(self, *args)
+    def reset_camera(self): return exlib_offscreen_swig_py.gui_viewer_reset_camera(self)
     def scene(self, *args): return exlib_offscreen_swig_py.gui_viewer_scene(self, *args)
     def styles(self, *args): return exlib_offscreen_swig_py.gui_viewer_styles(self, *args)
     def set_scene_camera(self, *args): return exlib_offscreen_swig_py.gui_viewer_set_scene_camera(self, *args)
