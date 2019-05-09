@@ -28,8 +28,8 @@ public:
   //  return true;
   //}
 public:
-  session(std::ostream& a_out)
-  :parent(a_out)
+  session(std::ostream& a_out,unsigned int a_monitor = 0)
+  :parent(a_out,a_monitor)
   ,m_vinfo(0)
   ,m_ctx(0)
   ,m_colormap(0)
@@ -87,7 +87,7 @@ protected:
       None};
 
     //NOTE : macOS : glXChooseVisual leaks 640 bytes.
-    m_vinfo = ::glXChooseVisual(m_display,DefaultScreen(m_display),(int*)atbs_alpha);
+    m_vinfo = ::glXChooseVisual(m_display,m_monitor,(int*)atbs_alpha);
     if(!m_vinfo) {
       m_out << "exlib::X11::session::initialize :"
             << " can't get a visual with alpha. Try without alpha..."
@@ -102,7 +102,7 @@ protected:
         GLX_DEPTH_SIZE, 1,
         None};
 
-      m_vinfo = ::glXChooseVisual(m_display,DefaultScreen(m_display),(int*)atbs);
+      m_vinfo = ::glXChooseVisual(m_display,m_monitor,(int*)atbs);
       if(!m_vinfo) {
         m_out << "exlib::X11::session::initialize :"
               << " can't choose a visual."
@@ -138,8 +138,8 @@ protected:
     }
 
     // It is better to create a colormap adapted to the visual.
-    m_colormap = ::XCreateColormap(m_display,::XDefaultRootWindow(m_display),m_vinfo->visual,AllocNone);
-    //m_colormap = ::XDefaultColormap(m_display,DefaultScreen(m_display));
+    m_colormap = ::XCreateColormap(m_display,::XRootWindow(m_display,m_monitor),m_vinfo->visual,AllocNone);
+    //m_colormap = ::XDefaultColormap(m_display,m_monitor);
     if(m_colormap==0L) {
       m_out << "exlib::X11::session::initialize :"
             << " can't get a default colormap."
@@ -178,7 +178,7 @@ public:
     swa.border_pixel = 0L;
 
     Window window = ::XCreateWindow(m_display, 
-                                    ::XDefaultRootWindow(m_display),
+                                    ::XRootWindow(m_display,m_monitor),
                                     a_x,a_y,a_width,a_height,
 				    0,
                                     m_vinfo->depth,

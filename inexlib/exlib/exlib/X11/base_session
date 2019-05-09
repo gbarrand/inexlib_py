@@ -30,8 +30,9 @@ public:
   //  return true;
   //}
 public:
-  base_session(std::ostream& a_out)
+  base_session(std::ostream& a_out,unsigned int a_monitor = 0)
   :m_out(a_out)
+  ,m_monitor(a_monitor)
   ,m_display(0)
   ,m_WM_DELETE_WINDOW_atom(None)
   ,m_SESSION_EXIT_STEER_atom(None)
@@ -46,6 +47,7 @@ public:
 public:
   base_session(const base_session& a_from)
   :m_out(a_from.m_out)
+  ,m_monitor(a_from.m_monitor)
   ,m_display(0)
   ,m_WM_DELETE_WINDOW_atom(None)
   ,m_SESSION_EXIT_STEER_atom(None)
@@ -55,6 +57,7 @@ public:
   }
   base_session& operator=(const base_session& a_from){
     if(&a_from==this) return *this;
+    m_monitor = a_from.m_monitor;
     clear_dispatchers();
     finalize();
     copy_dispatchers(a_from.m_dispatchers);
@@ -69,6 +72,14 @@ protected:
     m_display = ::XOpenDisplay(NULL);
     if(!m_display) {
       m_out << "exlib::X11::base_session::initialize : can't open display." << std::endl;
+      return false;
+    }
+
+    int monitors = ::XScreenCount(m_display);
+    if(int(m_monitor)>=monitors) {
+      m_out << "exlib::X11::base_session::initialize : bad monitor index " << m_monitor << ". (#monitors " << monitors << ")." << std::endl;
+      ::XCloseDisplay(m_display);
+      m_display = 0;
       return false;
     }
 
@@ -175,10 +186,10 @@ public:
        | PointerMotionMask
        | KeyPressMask;
        
-    swa.background_pixel = ::XWhitePixel(m_display,::XDefaultScreen(m_display));
+    swa.background_pixel = ::XWhitePixel(m_display,m_monitor);
 
     Window window = ::XCreateWindow(m_display,
-                                    ::XDefaultRootWindow(m_display),
+                                    ::XRootWindow(m_display,m_monitor),
                                     a_x,a_y,a_width,a_height,
 				    0,
                                     (int)CopyFromParent,
@@ -397,6 +408,7 @@ protected:
 
 protected:
   std::ostream& m_out;
+  unsigned int  m_monitor;
   Display*      m_display;
   Atom          m_WM_DELETE_WINDOW_atom;
   Atom          m_SESSION_EXIT_STEER_atom;
