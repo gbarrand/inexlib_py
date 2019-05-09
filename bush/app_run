@@ -32,6 +32,7 @@ while test $# -ge 1 ; do
     
     -v)           build_args="${build_args} $1";;
     -x)           build_args="${build_args} $1";;
+    -g)           build_args="${build_args} $1";;
 
     # local options : 
     -offscreen) run_offscreen=yes;;
