@@ -33,9 +33,12 @@ int main(int argc,char** argv) {
 
   if(args.is_arg("-h")) {
     std::cout << "-verbose" << std::endl;
-    std::cout << "-host : computer on which sg_serv is running." << std::endl;
-    std::cout << "-port : port on which sg_serv is listening." << std::endl;
-    std::cout << "-secs : seconds to sleep between each sending." << std::endl;
+    std::cout << "-host=<string>  : computer on which sg_serv is running." << std::endl;
+    std::cout << "-port=<uint>    : port on which sg_serv is listening." << std::endl;
+    std::cout << "-secs=<uint>    : seconds to sleep between each sending." << std::endl;
+    std::cout << "-red            : send red cube only." << std::endl;
+    std::cout << "-blue           : send blue cube only." << std::endl;
+    std::cout << "-numbers=<uint> : to loop on sending." << std::endl;
     return EXIT_SUCCESS;
   }
   
@@ -52,6 +55,15 @@ int main(int argc,char** argv) {
 
   unsigned int secs;
   args.find<unsigned int>("-secs",secs,3);
+
+  unsigned int numbers;
+  args.find<unsigned int>("-numbers",numbers,1);
+
+  bool send_blue = true;
+  bool send_red = true;
+  
+  if(args.is_arg("-red"))  send_blue = false;
+  if(args.is_arg("-blue")) send_red = false;
 
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
@@ -89,6 +101,11 @@ int main(int argc,char** argv) {
   sep.add(cub);
 
   //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+  for(size_t count=0;count<numbers;count++) {
+  
+  //////////////////////////////////////////////////////////
   /// send scene graph : ///////////////////////////////////
   //////////////////////////////////////////////////////////
   if(verbose) std::cout << "send clear static sg..." << std::endl;
@@ -102,36 +119,46 @@ int main(int argc,char** argv) {
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
-  if(verbose) std::cout << "send red cube..." << std::endl;
 
   inlib::args opts;
   opts.add(inlib::sg::s_send_placement(),inlib::sg::s_placement_static());
   opts.add(inlib::sg::s_send_radius(),"2");
 
-  if(!inlib::sg::send(dc,sep,0,opts)){
-    std::cout << "send() failed." << std::endl;
-    return EXIT_FAILURE;
+  if(send_red) {
+    if(verbose) std::cout << "send red cube..." << std::endl;
+    col->color = inlib::colorf_red();
+    mtx->set_translate(-1,0,0);
+    if(!inlib::sg::send(dc,sep,0,opts)){
+      std::cout << "send() failed." << std::endl;
+      return EXIT_FAILURE;
+    }
+    if(verbose) std::cout << "sleep..." << std::endl;
+    inlib::sleep_secs(secs);
   }
-
-  if(verbose) std::cout << "sleep..." << std::endl;
-  inlib::sleep_secs(secs);
+  
 
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
-  if(verbose) std::cout << "send blue cube..." << std::endl;
   
-  col->color = inlib::colorf_blue();
-  mtx->set_translate(1,0,0);
-  
-  if(!inlib::sg::send(dc,sep,0,opts)){
-    std::cout << "send() failed." << std::endl;
-    return EXIT_FAILURE;
+  if(send_blue) {
+    if(verbose) std::cout << "send blue cube..." << std::endl;
+    col->color = inlib::colorf_blue();
+    mtx->set_translate(1,0,0);
+    if(!inlib::sg::send(dc,sep,0,opts)){
+      std::cout << "send() failed." << std::endl;
+      return EXIT_FAILURE;
+    }
+    if(verbose) std::cout << "sleep..." << std::endl;
+    inlib::sleep_secs(secs);
   }
-
-  if(verbose) std::cout << "sleep..." << std::endl;
-  inlib::sleep_secs(secs);
   
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+
+  } //count
+
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
