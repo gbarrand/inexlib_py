@@ -27,10 +27,11 @@ import inlib
 #///////////////////////////////////
 all_sep = inlib.sg_separator()
 #all_sep.thisown = 0
-  
+
 camera = inlib.sg_ortho()
 camera.thisown = 0
 camera.position.value(inlib.vec3f(0,0,5))
+camera.focal.value(5)
 camera.height.value(2)
 camera.znear.value(0.1)
 camera.zfar.value(100)
@@ -61,6 +62,12 @@ m = inlib.sg_matrix()
 m.thisown = 0
 sep.add(m)
 
+#ds = inlib.sg_draw_style()
+#ds.thisown = 0
+#ds.style.value(inlib.draw_points)
+#ds.point_size.value(10)
+#sep.add(ds)
+
 vtxs = inlib.sg_atb_vertices()
 #vtxs = inlib.sg_vertices()
 vtxs.thisown = 0
@@ -84,8 +91,17 @@ first_line = False
 line_count = 0
 num_items = 0
 redshift_index = 2  # csv files with (ra,dec,redshift)
+
+pos_x_min = 0
+pos_x_max = 0
+pos_y_min = 0
+pos_y_max = 0
+pos_z_min = 0
+pos_z_max = 0
+  
 for row in csv_reader:
   if 0 <= line_count : 
+ #if 0 <= line_count and line_count < 180 :
  #if 0 <= line_count and line_count < 180000 :
  #if 0 <= line_count and line_count < 360000 :
  #if 0 <= line_count and line_count < 540000 :
@@ -97,13 +113,31 @@ for row in csv_reader:
     if first_line == False:
       first_line = True
       num_items = len(row)
-      #print("num_items = "+str(num_items))
-      #print(row[0])
+      print("num_items = "+str(num_items))
+      print(row)
       if num_items < 3 :
         print("expect num columns >= 3.")
         exit(0)
       if num_items >=4 : redshift_index = 3 # csv file with (pos_x,pos_y,pos_z,redshift)
     else:
+      pos_x = float(row[0])
+      pos_y = float(row[1])
+      pos_z = float(row[2])
+      if line_count == 1 :
+        pos_x_min = pos_x
+        pos_x_max = pos_x
+        pos_y_min = pos_y
+        pos_y_max = pos_y
+        pos_z_min = pos_z
+        pos_z_max = pos_z
+      else:
+        if pos_x < pos_x_min : pos_x_min = pos_x
+        if pos_x > pos_x_max : pos_x_max = pos_x
+        if pos_y < pos_y_min : pos_y_min = pos_y
+        if pos_y > pos_y_max : pos_y_max = pos_y
+        if pos_z < pos_z_min : pos_z_min = pos_z
+        if pos_z > pos_z_max : pos_z_max = pos_z
+
       color_factor = (float(row[redshift_index])-redshift_min)/redshift_delta
       #r = _color.r()*color_factor
       #g = _color.g()*color_factor
@@ -116,12 +150,19 @@ for row in csv_reader:
       g = SOPI_color.g()
       b = SOPI_color.b()
       a = 1
-     #vtxs.add(float(row[0]),float(row[1]),float(row[2]))
-      vtxs.add_pos_color(float(row[0]),float(row[1]),float(row[2]),r,g,b,a)
+     #vtxs.add(float(pos_x,pos_y,pos_z)
+      vtxs.add_pos_color(pos_x,pos_y,pos_z,r,g,b,a)
   line_count += 1
   
 file.close()
 vtxs.center()
+
+print("pos_x_min = "+str(pos_x_min))
+print("pos_x_max = "+str(pos_x_max))
+print("pos_y_min = "+str(pos_y_min))
+print("pos_y_max = "+str(pos_y_max))
+print("pos_z_min = "+str(pos_z_min))
+print("pos_z_max = "+str(pos_z_max))
 
 #////////////////////////////////////////////////////////////
 #////////////////////////////////////////////////////////////
@@ -199,18 +240,18 @@ else:
       sep.thisown = 0
       all_sep.add(sep)
       all_sep.thisown = 0
-      viewer.scene().add(all_sep);
-      viewer.set_scene_camera(camera);
-      viewer.set_scene_light(light);
-      viewer.set_plane_viewer(False);
-      viewer.set_scene_light_on(True);
+      viewer.scene().add(all_sep)
+      viewer.set_scene_camera(camera)
+      viewer.set_scene_light(light)
+      viewer.set_plane_viewer(False)
+      viewer.set_scene_light_on(True)
   
-      viewer.hide_main_menu();
-      viewer.hide_meta_zone();
-      viewer.show_camera_menu();
+      viewer.hide_main_menu()
+      viewer.hide_meta_zone()
+      viewer.show_camera_menu()
 
-      viewer.show();
-      viewer.steer();
+      viewer.show()
+      viewer.steer()
       
     del viewer
   del smgr
