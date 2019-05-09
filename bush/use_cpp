@@ -40,9 +40,11 @@ if [ ${build_gnu} = "yes" ] ; then
     cpp_linker=g++
   fi
 
-  if [ ${build_cxx11} = "yes" ] ; then
+  if [ ${build_gnu11} = yes ] ; then
+    cppflags="${cppflags} -std=gnu++11"   # cygwin+gnu on ourex/geant4.10.x.
+  elif [ ${build_cxx11} = yes ] ; then
     cppflags="${cppflags} -std=c++11"
-  elif [ ${build_cxx14} = "yes" ] ; then
+  elif [ ${build_cxx14} = yes ] ; then
     cppflags="${cppflags} -std=c++14"
   fi
 
@@ -426,7 +428,7 @@ elif [ ${build_sdk_android} = "yes" ] ; then
 
 else
 
-  if [ ${build_cxx11} = "yes" -o ${build_cxx14} = "yes" ] ; then
+  if [ ${build_cxx11} = "yes" -o ${build_gnu11} = "yes" -o ${build_cxx14} = "yes" ] ; then
     G4_cppflags="-W -Wall -pedantic -Wno-non-virtual-dtor -Wno-long-long -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"
   else
     G4_cppflags="-W -Wall -ansi -pedantic -Wno-non-virtual-dtor -Wno-long-long -Wwrite-strings -Wpointer-arith -Woverloaded-virtual"
