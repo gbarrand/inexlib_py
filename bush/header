@@ -19,6 +19,8 @@ build_m32=no
 
 build_cxx11=no
 build_cxx14=no
+build_gnu11=no
+
 build_debug=no
 build_set_x=no
 build_verbose=no
@@ -49,6 +51,7 @@ build_shlib=yes
 build_use_shlib=no
 build_inlib_gl=no
 build_keep_symbs=no
+build_skip_done=no
 
 build_use_not_our=
 build_D=
@@ -89,6 +92,8 @@ for arg in ${build_args} ; do
 
     -c++11)        build_cxx11=yes;;
     -c++14)        build_cxx14=yes;;
+    -g++11)        build_gnu11=yes;;
+    
     -g)            build_debug=yes;;
     -debug)        build_debug=yes;;
     -x)            build_set_x=yes;;
@@ -128,6 +133,7 @@ for arg in ${build_args} ; do
     -inlib_stl)    build_use_our_stl=yes;;
     -inlib_gl)     build_inlib_gl=yes;;
     -keep_symbs)   build_keep_symbs=yes;;
+    -skip_done)    build_skip_done=yes;;
 
     -*) echo "bush/header : unknown option : $arg for ${package}." ; exit ;;
 
