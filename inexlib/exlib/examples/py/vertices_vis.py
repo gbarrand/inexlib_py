@@ -31,6 +31,7 @@ all_sep = inlib.sg_separator()
 camera = inlib.sg_ortho()
 camera.thisown = 0
 camera.position.value(inlib.vec3f(0,0,5))
+camera.focal.value(5)
 camera.height.value(2)
 camera.znear.value(0.1)
 camera.zfar.value(100)
@@ -194,18 +195,26 @@ else:  #gui_window
       sep.thisown = 0
       all_sep.add(sep)
       all_sep.thisown = 0
-      viewer.scene().add(all_sep);
-      viewer.set_scene_camera(camera);
-      viewer.set_scene_light(light);
-      viewer.set_plane_viewer(False);
-      viewer.set_scene_light_on(True);
+      viewer.scene().add(all_sep)
+      
+     #viewer.set_scene_clear_color(inlib.colorf_black())
+      viewer.set_scene_clear_color(0,0,0)
+     #viewer.set_gui_clear_color(inlib.colorf_dimgrey())
+     #viewer.set_gui_clear_color(0.5,0.5,0.5)
+ 
+      viewer.set_scene_camera(camera)
+      viewer.set_scene_light(light)
+      viewer.set_plane_viewer(False)
+      viewer.set_scene_light_on(True)
   
-      viewer.hide_main_menu();
-      viewer.hide_meta_zone();
-      viewer.show_camera_menu();
+      viewer.hide_main_menu()
+      viewer.hide_meta_zone()
+      viewer.show_camera_menu()
 
-      viewer.show();
-      viewer.steer();
+      viewer.view_all()  # must be after set_scene_camera().
+      
+      viewer.show()
+      viewer.steer()
       
     del viewer
   del smgr
