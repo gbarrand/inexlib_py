@@ -58,6 +58,10 @@ fi
 #           be seen as a kind of advanced archive, and as such
 #           don't have to be linked.
 
+arex=a
+ar_flags=
+ranlib_flags=
+
 shopts=
 if [ ${build_sdk_android} = "yes" ] ; then
   shex=so
@@ -66,12 +70,15 @@ if [ ${build_sdk_android} = "yes" ] ; then
   ar_cmd="${ndk_ar_cmd}"
   ranlib_cmd="${ndk_ranlib_cmd}"
 
-elif [ ${build_visual} = "yes" ] ; then
-
-  shex=lib
+elif [ "`uname | grep CYGWIN`" != "" ] ; then
+  if [ ${build_visual} = "yes" ] ; then
+    shex=lib
+  else
+    shex=dll.a
+  fi
   ar_cmd=ar
   ranlib_cmd=ranlib
-
+  
 elif [ `uname` = Darwin ] ; then
   shex=dylib
   shopts="${shopts} -dynamiclib -twolevel_namespace"
@@ -79,7 +86,9 @@ elif [ `uname` = Darwin ] ; then
 
   ar_cmd=ar
   ranlib_cmd=ranlib
-
+  
+  #ranlib_flags=-no_warning_for_no_symbols
+  
 else
   shex=so
   shopts="${shopts} -shared"
