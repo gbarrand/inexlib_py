@@ -7,16 +7,12 @@ if [ "${use_GLU}" = "yes" ] ; then
   elif [ ${build_sdk_android} = "yes" ] ; then
     echo dummy > /dev/null
   else
-    if [ `uname` = Darwin ] ; then
-      echo dummy > /dev/null
-    else
-      inc_dirs="/usr/include"
-      inc_to_find=GL/glu.h
-      . ${bush_home}/find_inc
+    inc_dirs="/usr/include /opt/X11/include"
+    inc_to_find=GL/glu.h
+    . ${bush_home}/find_inc
 
-      lib_dirs="/usr/${lib} /usr/lib/x86_64-linux-gnu"
-      lib_to_find=GLU
-      . ${bush_home}/find_lib
-    fi
+    lib_dirs="/usr/${lib} /usr/lib/x86_64-linux-gnu /opt/X11/lib"
+    lib_to_find=GLU
+    . ${bush_home}/find_lib
   fi
 fi
