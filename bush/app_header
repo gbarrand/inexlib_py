@@ -173,14 +173,17 @@ if [ "${inlib_home}" = "" ] ; then
   inlib_home=${bush_home}/../inexlib/inlib
 fi
 
-if [ ${build_visual} = "yes" ] ; then
-  cppflags="${cppflags} -bigobj"
-  app_lower="`echo ${app} | tr '[:upper:]' '[:lower:]'`"
-  if [ ${app} != ${app_lower} ] ; then
-    cppflags="${cppflags} -I../${app}"  # to bypass "../<app>/main" not found on CYGWIN if the app name contains uppercase chars.
-  fi
-  if [ ${build_webgl} = "yes" ] ; then
-    cppflags="${cppflags} -I${inlib_home}/inlib/WebGL"  # to bypass "wrap_main_js" not found in inlib/WebGL/render.
+if [ "`uname | grep CYGWIN`" != "" ] ; then
+  if [ ${build_visual} = "yes" ] ; then
+    cppflags="${cppflags} -bigobj"
+    app_lower="`echo ${app} | tr '[:upper:]' '[:lower:]'`"
+    if [ ${app} != ${app_lower} ] ; then
+      cppflags="${cppflags} -I../${app}"  # to bypass "../<app>/main" not found on CYGWIN if the app name contains uppercase chars.
+    fi
+    if [ ${build_webgl} = "yes" ] ; then
+      cppflags="${cppflags} -I${inlib_home}/inlib/WebGL"  # to bypass "wrap_main_js" not found in inlib/WebGL/render.
+    fi
+  else  
+    cppflags="${cppflags} -Wa,-mbig-obj"
   fi
 fi
-
