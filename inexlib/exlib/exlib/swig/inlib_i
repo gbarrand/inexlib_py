@@ -67,6 +67,7 @@
 #include <inlib/sg/blend>
 #include <inlib/glprims>
 #include <inlib/sg/atb_vertices>
+#include <inlib/sg/colored_sized_points>
 
 #include <inlib/sg/shade_model>
 

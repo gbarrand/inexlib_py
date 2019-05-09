@@ -23,8 +23,9 @@
 
 %rename(sg_sphere)        inlib::sg::sphere;
 
-%rename(sg_vertices)      inlib::sg::vertices;
-%rename(sg_atb_vertices)  inlib::sg::atb_vertices;
+%rename(sg_vertices)             inlib::sg::vertices;
+%rename(sg_atb_vertices)         inlib::sg::atb_vertices;
+%rename(sg_colored_sized_points) inlib::sg::colored_sized_points;
 
 %rename(sg_draw_style)    inlib::sg::draw_style;
 %rename(sg_shade_model)   inlib::sg::shade_model;
@@ -459,6 +460,24 @@ public:
                             float a_ex,float a_ey,float a_ez,
                             unsigned int a_num_dash,
                             float a_r,float a_g,float a_b,float a_a);
+  void clear();
+};
+ 
+class colored_sized_points : public vertices {
+public:
+  virtual node* copy() const;
+public:
+  colored_sized_points();
+  virtual ~colored_sized_points();
+  colored_sized_points(const colored_sized_points&);
+  colored_sized_points& operator=(const colored_sized_points&);
+public:
+  mf<float> rgbas;
+  mf<float> sizes;
+public:  
+  void add(float a_x,float a_y,float a_z,float a_r,float a_g,float a_b,float a_a,float a_size);
+  template <class VEC,class COLOR>
+  void add(const VEC& a_pos,const COLOR& a_col,float a_size);
   void clear();
 };
  

@@ -1236,10 +1236,16 @@ public:
   void hide_camera_menu();
   void show_camera_menu();
   bool adapt_camera_to_scene();
+  bool view_all();
   bool set_scene_light_on(bool);
   void toggle_light();
   void set_plane_viewer(bool);
   void hide_meta_zone();
+  void set_scene_clear_color(const colorf&);
+  void set_scene_clear_color(float,float,float,float = 1);
+  void set_gui_clear_color(const colorf&);
+  void set_gui_clear_color(float,float,float,float = 1);
+  void reset_camera();
 public:
   const selection& scene() const;
   selection& scene();
