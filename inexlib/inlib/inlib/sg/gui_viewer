@@ -273,12 +273,14 @@ public:
     add_work(new anim_work(*this));
     m_params.m_anim_on = true;
     m_camenu_disable_anim_image_button.color = colorf_pink();
+    m_camenu_disable_anim_text_button.back_area::color = colorf_pink();
   }
 
   virtual void disable_anim() {
     invalidate_works(anim_work::s_class());
     m_params.m_anim_on = false;
     m_camenu_disable_anim_image_button.color = m_params.m_gui_back_color;
+    m_camenu_disable_anim_text_button.back_area::color = m_params.m_gui_back_color;
   }
 
   virtual void ask_to_sync_clients() {}
@@ -918,15 +920,16 @@ public:
     delete cbk;
   }
 
-  void update_anim_motion(anim_what a_anim,anim_mode a_anim_mode) {
+  bool update_anim_motion(anim_what a_anim,anim_mode a_anim_mode) {
     int move;
-    if(!anim2motion(a_anim,a_anim_mode,move)) return;
-    update_motion(move);
+    if(!anim2motion(a_anim,a_anim_mode,move)) return false;
+    if(!update_motion(move)) return false;
     hide_meta_zone();
+    return true;
   }
 private:
-  void update_motion(int a_what) {
-    if(!m_scene_camera) return;
+  bool update_motion(int a_what) { //return true = win_render.
+    if(!m_scene_camera) return false; 
 
     float dx = m_scene_camera->dx;
     float da = m_scene_camera->da;
@@ -934,48 +937,65 @@ private:
 
     if(a_what==move_rotate_right) {
       m_scene_camera->rotate_around_up(-da);
+      return true;      
     } else if(a_what==move_rotate_left) {
       m_scene_camera->rotate_around_up(da);
+      return true;
 
     } else if(a_what==move_rotate_up) {
       m_scene_camera->rotate_around_x(da);
+      return true;
     } else if(a_what==move_rotate_down) {
       m_scene_camera->rotate_around_x(-da);
+      return true;
       
     } else if(a_what==move_translate_right) {
       m_scene_camera->translate_along_side(dx);
+      return true;
     } else if(a_what==move_translate_left) {
       m_scene_camera->translate_along_side(-dx);
+      return true;
 
     } else if(a_what==move_up) {
       m_scene_camera->translate_along_up(dx);
+      return true;
     } else if(a_what==move_down) {
       m_scene_camera->translate_along_up(-dx);
+      return true;
 
     } else if(a_what==move_forward) {
       m_scene_camera->translate_along_dir(dx);
+      return true;
     } else if(a_what==move_backward) {
       m_scene_camera->translate_along_dir(-dx);
+      return true;
 
     } else if(a_what==move_zoom_in) {
       m_scene_camera->zoom(ds);
+      return true;
     } else if(a_what==move_zoom_out) {
       m_scene_camera->zoom(1.0f/ds);
+      return true;
 
     } else if(a_what==move_rotate_around_focal_right) {
       m_scene_camera->rotate_around_y_at_focal(-da);
+      return true;
 
     } else if(a_what==move_rotate_around_focal_left) {
       m_scene_camera->rotate_around_y_at_focal(da);
+      return true;
 
     } else if(a_what==move_rotate_around_focal_up) {
       m_scene_camera->rotate_around_x_at_focal(da);
+      return true;
 
     } else if(a_what==move_rotate_around_focal_down) {
       m_scene_camera->rotate_around_x_at_focal(-da);
+      return true;
 
     }
-
+    
+    return false;
   }
 public:
   ////////////////////////////////////////////
@@ -1609,6 +1629,17 @@ public:
     }
   }
 
+  void set_gui_clear_color(const colorf& a_color) {
+    m_params.m_gui_screen_color = a_color;
+    if(m_main_menu_switch.which.value()==SHOWN()) {
+      m_clear_color = m_params.m_gui_screen_color;
+    }
+  }
+
+  void set_gui_clear_color(float a_r,float a_g,float a_b,float a_a = 1) {
+    set_gui_clear_color(colorf(a_r,a_g,a_b,a_a));
+  }
+  
   //virtual
   void show_main_menu() {
     if(m_main_menu_switch.which.value()==HIDDEN()) {
@@ -2654,8 +2685,10 @@ protected:
                        new gv_cbk(*this,action_disable_anim));
     if(m_params.m_anim_on) {
       m_camenu_disable_anim_image_button.color = colorf_pink();
+      m_camenu_disable_anim_text_button.back_area::color = colorf_pink();
     } else {
       m_camenu_disable_anim_image_button.color = m_params.m_gui_back_color;
+      m_camenu_disable_anim_text_button.back_area::color = m_params.m_gui_back_color;
     }		          
 
     create_main_button(m_out,m_res_dir,m_params,m_image_readers,m_ttf,
@@ -3015,6 +3048,7 @@ public:
   }
 
   bool adapt_camera_to_scene() {return adapt_camera(scene());}
+  bool view_all() {return adapt_camera(scene());}
 
   bool adapt_camera(node& a_node) {
     base_camera* cam = scene_camera();
