@@ -1,7 +1,7 @@
 1.4.0 :
   - exlib/examples/py/[polyhedron_vis, two_cubes_vis, csv_vertices_gui_view_vis, csv_vertices_vis].py :set camera focal distance.
   - exlib/examples/py : add examples using node colored_sized_points :
-      colored_sized_points.py
+      colored_sized_points_vis.py
       spark_parquet_xyzr_colored_vis.py
   - inlib/examples/cpp/cube_to_sg_serv.cpp : -secs, -numbers : to loop on sending cubes.
   - SWIG : add class colored_sized_points.
