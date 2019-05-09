@@ -96,6 +96,11 @@
           set_scene_light_on(m_params.m_light_on);
         }
 
+      } else if(rcmp(label,gui_params::s_blend_on())) {
+        INLIB_ARGS2PARAMS_BOOL(blend_on) {
+          set_scene_light_on(m_params.m_blend_on);
+        }
+
       } else if(rcmp(label,gui_params::s_solid())) {
         INLIB_ARGS2PARAMS_BOOL(solid) {
           // should force update_sg ?
