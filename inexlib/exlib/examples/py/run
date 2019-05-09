@@ -158,7 +158,7 @@ if [ `uname` = "Darwin" ] ; then
   done
 fi
 
-items="polyhedron_vis.py c3d_vis.py two_cubes_vis.py cfitsio_hst_vis.py tree.py"
+items="polyhedron_vis.py c3d_vis.py two_cubes_vis.py colored_sized_points_vis.py cfitsio_hst_vis.py tree.py"
 items="${items} plotter_vis.py csv_c3d_vis.py csv_h1d_vis.py csv_vertices_vis.py csv_vertices_gui_viewer_vis.py"
 items="${items} rdirs_vis.py vertices_vis.py"
 for item in ${items} ; do
