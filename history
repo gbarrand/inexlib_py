@@ -1,8 +1,20 @@
 1.4.0 :
-  - add examples using node colored_sized_points :
-      inexlib/exlib/examples/py/colored_sized_points.py
-      inexlib/exlib/examples/py/spark_parquet_xyzr_colored_vis.py
-  - add scene graph node inlib::sg::colored_sized_points.
+  - exlib/examples/py/[polyhedron_vis, two_cubes_vis, csv_vertices_gui_view_vis, csv_vertices_vis].py :set camera focal distance.
+  - exlib/examples/py : add examples using node colored_sized_points :
+      colored_sized_points.py
+      spark_parquet_xyzr_colored_vis.py
+  - inlib/examples/cpp/cube_to_sg_serv.cpp : -secs, -numbers : to loop on sending cubes.
+  - SWIG : add class colored_sized_points.
+  - SWIG : add to gui_viewer :
+      bool view_all();
+      void set_scene_clear_color(const colorf&);
+      void set_scene_clear_color(float,float,float,float = 1);
+      void set_gui_clear_color(const colorf&);
+      void set_gui_clear_color(float,float,float,float = 1);
+      void reset_camera();
+  - inlib/sg : add scene graph node inlib::sg::colored_sized_points.
+  - exlib/X11/gui_dispatcher : handle mouse wheel.
+  - exlib/X11/base_session, session : handle multiple monitors.
 
 1.3.0 :
   - run, spark_run : handle run_dir variable to be able to run from other dir than install dir.
