@@ -2,8 +2,9 @@
 # See the file bush.license for terms.
 
 if [ "${use_Qt}" = "yes" ] ; then
+
   if [ ${build_visual} = "yes" ] ; then
-    echo "bush/use/Qt : cl.exe : use_Qt not yet supported."
+    echo "bush/use/Qt : Qt (<=4) not found."
     exit
   fi
 
@@ -55,6 +56,11 @@ if [ "${use_Qt}" = "yes" ] ; then
       Qt_home=/opt/local/libexec/qt4
 
       cppflags="${cppflags} -I${Qt_home}/include"
+
+      # if including as : #include <qobject.h>  # used in ourex/g4vis.
+      Qt_incs_no_guard="${Qt_incs_no_guard} -I${Qt_home}/Library/Frameworks/QtCore.framework/Headers"
+      Qt_incs_no_guard="${Qt_incs_no_guard} -I${Qt_home}/Library/Frameworks/QtGui.framework/Headers"
+      Qt_incs_no_guard="${Qt_incs_no_guard} -I${Qt_home}/Library/Frameworks/QtOpenGL.framework/Headers"
 
       libs="${libs} -L${Qt_home}/lib -lQtOpenGL -lQtGUI -lQtCore"
 
