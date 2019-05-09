@@ -4,8 +4,10 @@
 if [ "${use_GL}" = "yes" ] ; then
   if [ ${build_visual} = "yes" ] ; then
     libs="${libs} opengl32.lib"
+    
   elif [ ${build_sdk_android} = "yes" ] ; then
     echo dummy > /dev/null
+
   else
     if [ `uname` = Darwin ] ; then
       ccflags="${ccflags} -DGL_SILENCE_DEPRECATION"  # since 10.14 (Mojave). Sigh.
