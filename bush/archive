@@ -54,10 +54,10 @@ else
 
   else
 
-    ${ar_cmd} -cr ${file_a} ${objs}
+    ${ar_cmd} -cr ${ar_flags} ${file_a} ${objs}
 
     # Android plugin wants ranlib on the .a :
-    ${ranlib_cmd} ${file_a}
+    ${ranlib_cmd} ${ranlib_flags} ${file_a}
 
   fi
 
@@ -124,6 +124,11 @@ else
         echo "bush/archive : android : ${libname} : we do not build shared lib."
       fi
 
+    elif [ ${build_gnu} = "yes" -a "`uname | grep CYGWIN`" != "" ] ; then
+      if [ ${build_verbose} = yes ] ; then
+        echo "bush/archive : cygwin/gnu : ${libname} : we do not build shared lib."
+      fi
+    
     else # Mac, Linux :
       file_sh="${build_path}/lib${libname}.${shex}"
       /bin/rm -f ${file_sh}
