@@ -186,7 +186,6 @@ else:
       viewer.show()
       viewer.steer()
       
-      viewer.show()
     del viewer      
   del smgr
   
