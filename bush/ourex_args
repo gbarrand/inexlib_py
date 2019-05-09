@@ -9,6 +9,7 @@ for arg in ${build_args} ; do
     -cling_clang)  ourex_args="${ourex_args} ${arg}";;
     -c++11)        ourex_args="${ourex_args} ${arg}";;
     -c++14)        ourex_args="${ourex_args} ${arg}";;
+    -g++11)        ourex_args="${ourex_args} ${arg}";;
     -visual)       ourex_args="${ourex_args} ${arg}";;
     -sdk_mac)      ourex_args="${ourex_args} ${arg}";;
     -sdk_mac_gnu)  ourex_args="${ourex_args} ${arg}";;
@@ -23,6 +24,7 @@ for arg in ${build_args} ; do
     -a_only)       ourex_args="${ourex_args} ${arg}";;
     -m32)          ourex_args="${ourex_args} ${arg}";;
     -use_shlib)    ourex_args="${ourex_args} ${arg}";;
+    -skip_done)    ourex_args="${ourex_args} ${arg}";;
     -bin_*)        ourex_args="${ourex_args} ${arg}";;
     -bdir_suffix*) ourex_args="${ourex_args} ${arg}";;
     -sys_*)        ourex_args="${ourex_args} ${arg}";;
