@@ -1,3 +1,9 @@
+1.4.0 :
+  - add examples using node colored_sized_points :
+      inexlib/exlib/examples/py/colored_sized_points.py
+      inexlib/exlib/examples/py/spark_parquet_xyzr_colored_vis.py
+  - add scene graph node inlib::sg::colored_sized_points.
+
 1.3.0 :
   - run, spark_run : handle run_dir variable to be able to run from other dir than install dir.
     In particular it is used to set EXLIB_RES_DIR that permits to find fonts and icon files.
