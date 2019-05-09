@@ -27,10 +27,20 @@ if [ "${use_wx}" = "yes" ] ; then
 
   else 
   
-    ${bush_home}/check_app wx-config 'wx-config program not found. You have to <source setup> wxWidgets.'
-    use_status=$?;if [ ${use_status} != 0 ] ; then exit ${use_status};fi
+    wx_config=
+    ${bush_home}/check_app wx-config
+    use_status=$?;if [ ${use_status} = 0 ] ; then
+      wx_config=wx-config
+    else
+      ${bush_home}/check_app wx-config-3.0 'wx-config program not found. You have to <source setup> wxWidgets.'
+      use_status=$?;if [ ${use_status} = 0 ] ; then
+        wx_config=wx-config-3.0
+      else
+        exit ${use_status}
+      fi
+    fi
    
-    version="`wx-config --release`"
+    version="`${wx_config} --release`"
     . ${bush_home}/vertoks
     #echo ${version_items}
     #echo ${version_major}
@@ -59,9 +69,9 @@ if [ "${use_wx}" = "yes" ] ; then
       fi
     fi
 
-    cppflags="${cppflags} `wx-config --cppflags`"
-    libs="${libs} `wx-config --libs`"
-    libs="${libs} `wx-config --optional-libs gl`"
+    cppflags="${cppflags} `${wx_config} --cppflags`"
+    libs="${libs} `${wx_config} --libs`"
+    libs="${libs} `${wx_config} --optional-libs gl`"
 
   fi
 
