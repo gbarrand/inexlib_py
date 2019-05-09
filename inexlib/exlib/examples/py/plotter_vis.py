@@ -132,6 +132,7 @@ else:
   p.plot_cloud2D(c2)
   p.next()
   p.plot_cloud3D(c3)
+ #p.m_plotter.set_scene_clear_color(0,0,0)
   p.show()
   p.steer()
   del p
