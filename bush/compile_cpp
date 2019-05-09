@@ -32,6 +32,7 @@ build_archive_headers="${archive_headers}"
 build_diro="${build_diro}"
 build_path="${build_path}"
 build_do_compile="${build_do_compile}"
+build_skip_done="${build_skip_done}"
 cpp_compiler="${cpp_compiler}"
 cppflags="${cppflags}"
 . ${bush_home}/compile_one_cpp
