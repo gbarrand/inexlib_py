@@ -40,6 +40,22 @@ if [ "${app_uses}" != "" ] ; then
   fi
 fi
 
+app_uses="`grep ${auto_use_pack}_Windows_build_use ${auto_use_file}`"  # used in exlib/examples/cpp/cube_SoQt.cpp
+if [ "${app_uses}" != "" ] ; then
+  if [ ${build_visual} = "yes" ] ; then
+    app_uses=`echo ${app_uses} | sed -e "s:${auto_use_pack}_Windows_build_use::g"`
+    for item in ${app_uses} ; do
+      #echo "set use_${item}"
+      if [ ${item} = "//" -o ${item} = '/*' -o ${item} = '*/' -o ${item} = '#' ] ; then
+        echo dummy > /dev/null
+      else
+        use_var="use_${item}"
+        eval ${use_var}=yes
+      fi
+    done
+  fi
+fi
+
 app_cfiles="`grep ${auto_use_pack}_build_cfile ${auto_use_file}`"
 if [ "${app_cfiles}" != "" ] ; then
   app_cfiles=`echo ${app_cfiles} | sed -e "s:${auto_use_pack}_build_cfile::g"`
@@ -176,12 +192,12 @@ if [ ${build_visual} = "yes" ] ; then
     fi
     exit
   fi
-  if [ "${use_Qt}" = "yes" ] ; then
-    if [ ${build_verbose} = yes ] ; then
-      echo "bush/auto_use : use_Qt and build_visual are not compatible. Skip ${auto_use_file}."
-    fi
-    exit
-  fi
+  #if [ "${use_Qt}" = "yes" ] ; then
+  #  if [ ${build_verbose} = yes ] ; then
+  #   echo "bush/auto_use : use_Qt and build_visual are not compatible. Skip ${auto_use_file}."
+  #  fi
+  #  exit
+  #fi
 else
   if [ "${use_Windows}" = "yes" ] ; then
     if [ ${build_verbose} = yes ] ; then
