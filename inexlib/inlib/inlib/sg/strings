@@ -292,7 +292,7 @@ INLIB_GLOBAL_STRING(protocol_set_background_white)
 INLIB_GLOBAL_STRING(protocol_disable_anim)
 INLIB_GLOBAL_STRING(protocol_reset_camera)
 
-/*
+/* if adding protocols, think to declare corresponding methods to SWIG.
 protocol_set_plane_viewer(bool)
 protocol_set_scene_light_on(bool)
 protocol_hide_main_menu
