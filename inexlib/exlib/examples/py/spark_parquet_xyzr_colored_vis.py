@@ -3,7 +3,7 @@
 
 # To work on xyz_v1.1.4.parquet
 
-# visualilze points (pos_x,pos_y,pos_z,redshift) and colored according redshift in midas colormap.
+# visualize points (pos_x,pos_y,pos_z,redshift) and colored according redshift in midas colormap.
 
 #///////////////////////////////////////////////////////////////////////////////////////
 #/// main : ////////////////////////////////////////////////////////////////////////////
