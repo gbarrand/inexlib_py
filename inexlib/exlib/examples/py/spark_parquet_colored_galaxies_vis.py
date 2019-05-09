@@ -111,6 +111,7 @@ if __name__ == "__main__":
   camera = inlib.sg_ortho()
   camera.thisown = 0
   camera.position.value(inlib.vec3f(0,0,5))
+  camera.focal.value(5)
   camera.height.value(2)
   camera.znear.value(0.1)
   camera.zfar.value(100)
@@ -290,19 +291,19 @@ if __name__ == "__main__":
         sep.thisown = 0
         all_sep.add(sep)
         all_sep.thisown = 0
-        viewer.scene().add(all_sep);
+        viewer.scene().add(all_sep)
         
-        viewer.set_scene_camera(camera);
-        viewer.set_scene_light(light);
+        viewer.set_scene_camera(camera)
+        viewer.set_scene_light(light)
   
-        viewer.set_plane_viewer(False);
-        viewer.set_scene_light_on(True);
+        viewer.set_plane_viewer(False)
+        viewer.set_scene_light_on(True)
     
         viewer.adapt_camera_to_scene()
         
-        viewer.hide_main_menu();
-        viewer.hide_meta_zone();
-        viewer.show_camera_menu();
+        viewer.hide_main_menu()
+        viewer.hide_meta_zone()
+        viewer.show_camera_menu()
   
         viewer.scene_camera().da.value(0.0017)
         viewer.scene_camera().ds.value(0.999)
@@ -310,8 +311,8 @@ if __name__ == "__main__":
         #ortho = inlib.sg_cast_ortho(viewer.scene_camera())
         #print(ortho.height.value_cp())
     
-        viewer.show();
-        viewer.steer();
+        viewer.show()
+        viewer.steer()
 
         print("end steer.")
       
