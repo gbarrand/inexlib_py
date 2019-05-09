@@ -29,6 +29,7 @@ def polyhedron():
   camera = inlib.sg_ortho()
   camera.thisown = 0
   camera.position.value(inlib.vec3f(0,0,5))
+  camera.focal.value(5)
   camera.height.value(10)
   camera.znear.value(0.1)
   camera.zfar.value(100)
