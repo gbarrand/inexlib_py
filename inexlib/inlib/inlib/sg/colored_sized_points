@@ -53,6 +53,8 @@ public:
       if(_id) {
         a_action.begin_gsto(_id);
 	
+        a_action.set_point_smooth(true);
+	
         bufpos pos_xyzs = 0;
         bufpos pos_rgbas = npt*3*sizeof(float);
 	
@@ -84,6 +86,7 @@ public:
         }
     
         a_action.point_size(state.m_point_size);
+        a_action.set_point_smooth(state.m_GL_POINT_SMOOTH);
 	
         a_action.end_gsto();
         return;
@@ -97,6 +100,8 @@ public:
     }
 
     // immediate rendering :
+    a_action.set_point_smooth(true);
+    
     float* _xyzs = vec_data<float>(xyzs.values());
     float* _rgbas = vec_data<float>(rgbas.values());
     float* _sizes = vec_data<float>(sizes.values());
@@ -125,6 +130,7 @@ public:
     }
     
     a_action.point_size(state.m_point_size);
+    a_action.set_point_smooth(state.m_GL_POINT_SMOOTH);
 
   }
 public:
